@@ -83,6 +83,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 return $response;
             }
 
+            // Share the props the layout needs. This response is built
+            // outside the Inertia middleware, so nothing is shared onto it
+            // automatically — without this the footer and header render empty.
+            Inertia::share((new HandleInertiaRequests)->share($request));
+
             return Inertia::render('Error', [
                 'status' => $status,
                 'reference' => $status === 500

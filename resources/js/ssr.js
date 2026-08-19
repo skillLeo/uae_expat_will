@@ -27,12 +27,23 @@ createServer((page) =>
         },
 
         setup({ App, props, plugin }) {
-            return createSSRApp({ render: () => h(App, props) })
-                .use(plugin)
-                .use(ZiggyVue, {
-                    ...page.props.ziggy,
-                    location: new URL(page.props.ziggy.location),
+            const app = createSSRApp({ render: () => h(App, props) }).use(plugin);
+
+            // Ziggy's shared props are absent on an error response: that
+            // response is built inside the exception handler, which runs
+            // outside the Inertia middleware that shares them. Dereferencing
+            // them unguarded threw during setup and took SSR down for every
+            // error page, so the 404 fell back to client-side rendering.
+            const ziggy = page.props?.ziggy;
+
+            if (ziggy) {
+                app.use(ZiggyVue, {
+                    ...ziggy,
+                    ...(ziggy.location ? { location: new URL(ziggy.location) } : {}),
                 });
+            }
+
+            return app;
         },
     }),
 );
