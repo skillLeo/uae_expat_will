@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureClientPortalEnabled;
 use App\Http\Middleware\EnsureTwoFactorChallengePassed;
 use App\Http\Middleware\EnsureTwoFactorIsConfirmed;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -39,6 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.2fa' => EnsureTwoFactorIsConfirmed::class,
             'admin.2fa.passed' => EnsureTwoFactorChallengePassed::class,
+            'client.enabled' => EnsureClientPortalEnabled::class,
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
