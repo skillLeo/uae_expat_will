@@ -107,6 +107,17 @@ pkill -f "bootstrap/ssr/ssr.js"; ./ssr-watchdog.sh
 
 ---
 
+## Post-deploy checks specific to this build
+
+```bash
+php artisan content:verify-legal     # reports any legal page short of the spec
+php artisan retention:apply --dry-run
+```
+
+`content:verify-legal` exits non-zero while the Privacy Policy, Payment and Refund Policy
+and Legal Disclaimer remain short. That is expected until Summit supplies the full wording,
+and is not a deploy failure.
+
 ## Verifying a deploy
 
 ```bash

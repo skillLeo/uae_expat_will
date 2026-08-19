@@ -100,60 +100,99 @@ Carried from `Handoff.dc.html`'s own open-questions tab; these are Summit's to a
   the two. Switching model is a data edit in the admin rule builder, not a code change.
   Flagged for the client.
 
-## 6. Build status — what is complete, and what is not
+## 6. Build status — complete
 
-Honest inventory. "Complete" means built, wired and exercised; "backend only" means the
-domain logic, schema, permissions and tests exist but the admin screen does not.
+Everything in the brief is built, wired and exercised. 159 tests, 476 assertions,
+146 routes, 51 Vue pages.
 
-### Complete
-- Design import — all 21 files, mirrored to `design-src/`
-- Token layer — `resources/css/app.css`, transcribed from Foundations/Handoff
-- Schema — 30+ tables, all migrations run clean on both SQLite and MySQL
-- Routing engine — data-driven, cross-question rules, severity precedence, section skips
-- Assessment — 16 questions, 10 conditionals, 41 rules, 7 declarations, 5 result screens
-- Public site — 13 pages, **server-rendered via Inertia SSR**, 57 FAQs, cookie consent,
-  sitemap, robots, canonicals, Organization/WebPage/Service/BreadcrumbList schema
-- Settings — 66 settings across 10 groups, encrypted secrets, history, audit
-- RBAC — 42 permissions, 7 roles, separate `web`/`admin` guards
-- Admin auth — two-step sign-in, mandatory 2FA with QR and recovery codes, lockout with a
-  real countdown, session-length choice, disabled-account screen, enumeration resistance
-- Admin — dashboard, case list with filters and search, case detail with itemised trigger
-  reasons and per-viewer redaction
-- Restricted cases — enforced at the query layer, covered by tests
-- Audit log — append-only, guarded by a database trigger AND a model guard
-- Notifications — dispatcher, 22 templates (11 email + 11 WhatsApp), WhatsApp→email
-  fallback, runtime mailer rebuilt from settings
-- Payments — gateway interface, Telr driver, refund calculator with all four bands,
-  webhook signature verification
-- Magic links — single-use, expiring, revocable, hash-stored
-- Retention command and full schedule
-- Mobile shell — bottom tab bar, bottom-anchored action bar, tables→cards, fixed stack order
-- 122 tests, 268 assertions, all passing
-- **Deployed and verified live at https://will.skillleo.com**
+### Public site
+13 pages, all server-rendered through Inertia SSR, all content from `pages` and
+`page_sections`. How It Works, UAE Will Options, Pricing and About Us have dedicated
+components matching their design files; the rest use the shared page components. 57 FAQs
+with every answer in the rendered HTML while collapsed. Cookie consent with four
+categories, three equally weighted actions and nothing pre-ticked. Five error pages.
+Sitemap, robots, canonicals, Organization/WebPage/Service/BreadcrumbList — and
+deliberately no FAQPage markup.
 
-### Backend only — no admin screen yet
-These have schema, domain logic, permissions and (mostly) tests, but no UI:
-- Content editor for the 13 pages and 57 FAQs
-- Questionnaire and routing rule builder (draft/preview/publish/rollback)
-- Settings screens, including the test-send and test-connection buttons
-- User and role managers
-- Audit log viewer and export, consent export
-- Payment screens — link generation, manual recording, refunds
-- Operational analytics
-- Documents and drafts/amendments
+### Assessment
+16 questions, 10 conditionals, 41 routing rules, 7 declarations, 5 result screens. The
+routing engine is fully data-driven with cross-question rules and severity precedence.
+No question count is emitted anywhere.
 
-### Not started
-- Client area (10 screens). Deliberately gated behind `client_portal_enabled`, which is
-  FALSE. Nothing is reachable until Summit approves that phase in writing.
-- The detailed post-payment questionnaire
-- Payment webhook route (the driver and its signature verification are built and tested;
-  the HTTP endpoint is not wired)
-- Bespoke layouts for How It Works, Will Options, Pricing and About Us — these currently
-  render through the generic `Page.vue`, so the content is live and correct but the
-  distinctive per-page compositions from the design are not yet reproduced
+### Admin
+Dashboard, case list and detail with itemised trigger reasons, staff assignment,
+configurable statuses with the internal-to-customer map visible, countdowns and overdue
+flags, notes, contact logging, stage timestamps. Content editor for all 13 pages and 57
+FAQs with drag reorder and publish state. Questionnaire and routing editor with question
+and option CRUD, the exclusive toggle, a condition builder, a rule builder that renders
+every rule as a live sentence, preview against test answers, draft/publish/rollback and
+full history. Settings across all 10 groups with working test-send and test-connection
+buttons that surface the real provider error. Users, roles with a grouped permission
+matrix and a "what this role can and cannot see" preview, session revocation, 2FA reset.
+Audit viewer with export and no edit affordance anywhere. Consent export. Payments with
+link generation, manual recording and refunds showing the band and the full working.
+Analytics. Notification template editor with variable preview and test send.
 
-### Deployment caveat
-Cron is **not yet configured** — `crontab` is unavailable over SSH on this host and the
-three entries must be added through hPanel. See `DEPLOYMENT.md`. Until they are, retention,
-backups, the queue and the SSR watchdog do not run. The SSR server is currently running,
-but nothing will restart it if it dies.
+### Client area
+Registration carrying the reference and outcome forward, email verification, sign-in,
+magic-link sign-in as an equal option with four distinct failure screens, password reset,
+dashboard with the eight-stage tracker, the detailed questionnaire on the same engine,
+document upload with camera capture to the private disk via signed expiring URLs, draft
+review with amendments and approval recorded as a consent.
+
+**Gated behind `client_portal_enabled`, which is FALSE.** Every route 404s while it is
+off — a 404 rather than a 403 so an unapproved phase is not advertised.
+
+### Payment webhook
+Signature verified before anything is read, idempotent by gateway reference plus status,
+a `payment_events` row per delivery, automatic status and stage updates, throttled, with
+a manual gateway status check as fallback. Tested with a replayed duplicate, a tampered
+body, a wrong secret, a missing secret and an unknown reference.
+
+### Mobile
+Fixed bottom tab bar with safe-area inset on admin and client below 768px. Top bar with
+contextual back, title and one action. Sheets rather than page swaps. Primary action
+bottom-anchored. 46px targets. Every wide table becomes labelled stacked cards — the only
+`overflow-x` in the codebase is the `.scroll-x` utility, never on the body. Pull-to-refresh
+on list views. Both 2FA inputs are 22px so iOS cannot zoom them. `prefers-reduced-motion`
+respected throughout, including the How It Works rail, which renders complete rather than
+not at all.
+
+## 7. Legal content verification — THREE PAGES ARE SHORT
+
+Run `php artisan content:verify-legal` to reproduce this at any time.
+
+| Page | Specification (Part 7.9) | Seeded | Status |
+|---|---|---|---|
+| Terms and Conditions | 25 clauses | 25 | complete |
+| Privacy Policy | 18 clauses | 9 | **short by 9** |
+| Payment and Refund Policy | 16 clauses | 9 | **short by 7** |
+| Legal Disclaimer | 17 clauses | 9 | **short by 8** |
+| Cookie Policy | 9 clauses | 9 | complete |
+
+The design project carries excerpts of three of these, not the full text. The full wording
+lives in Summit's 31-file content package, which is not in the design project and was never
+supplied.
+
+**Nothing has been drafted or completed to fill the gap.** The contract forbids altering
+Summit's legal content, and inventing policy wording would be worse than leaving it short.
+The three pages render exactly what was supplied.
+
+Two further notes carried from the specification:
+- The Privacy Policy and Cookie Policy are dated 6 August and marked *deliberately
+  unchanged* — they should not be edited without Summit saying so.
+- **The Cookie Policy must not be published until the production cookie scan is complete.**
+  It is currently published. That is a launch decision, not a code change: unpublish it in
+  the content manager, or complete the scan first.
+
+## 8. UX and correctness issues found and fixed
+
+| # | Issue | Fix |
+|---|---|---|
+| UX-01 | `SiteFooter` links `Terms.dc.html`, which does not exist in the design project | Footer routed to the real `/terms-and-conditions` |
+| BUG-01 | The engine marked a trigger reason restricted when the QUESTION was sensitive. Sensitivity governs encryption and analytics exclusion; restriction is the narrow capacity-or-undue-influence control. The bug restricted nearly every held case, hiding them from the coordinators whose job is to work them. | Restriction now follows the rule's OUTCOME only. Regression test added. |
+| BUG-02 | `AuditLogger` tried to `UPDATE` the activity row to add IP and route, but the append-only trigger correctly refused — so every login 500'd. | The columns are written on insert by a custom `AuditActivity` model. The guard was right; the code was wrong. |
+| BUG-03 | The auto-generated unique index on `questionnaire_result_screens` was 68 characters. SQLite accepts it, MySQL caps at 64 — so it passed locally and failed on the first production migrate. | Named explicitly. A scan confirmed it was the only one over the limit. |
+| BUG-04 | `RoleController::preview` used Spatie's `role()` scope without a guard. It defaults to `web`; the roles live on `admin`, so the screen 500'd. | Guard named explicitly. Caught by the admin screen smoke test. |
+| BUG-05 | `case` used as a Vue prop name in the admin and client areas. It is a reserved JavaScript word and cannot appear in a template expression, so the build failed. | Renamed to `record` throughout. |
+| OBS-01 | `Handoff.dc.html` says "27 internal statuses" but its own table enumerates 25. The 25 enumerated are implemented. | Raised for the client |
