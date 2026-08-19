@@ -3,6 +3,7 @@
 use App\Http\Controllers\Public\ConsentController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\SitemapController;
+use App\Http\Controllers\Webhooks\PaymentWebhookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,5 +43,16 @@ Route::post('consent/cookie', [ConsentController::class, 'cookie'])
 
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('robots.txt', [SitemapController::class, 'robots'])->name('robots');
+
+/*
+|--------------------------------------------------------------------------
+| Webhooks
+|--------------------------------------------------------------------------
+| CSRF-exempt (the gateway has no session), signature-verified inside the
+| controller, and throttled so a flood cannot be used as a denial of service.
+*/
+Route::post('webhooks/payment', PaymentWebhookController::class)
+    ->middleware('throttle:webhooks')
+    ->name('webhooks.payment');
 
 require __DIR__.'/assessment.php';
