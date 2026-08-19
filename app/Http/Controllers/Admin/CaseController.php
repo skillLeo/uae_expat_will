@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Domain\Audit\Services\AuditLogger;
+use App\Domain\Cases\Enums\CaseStage;
 use App\Domain\Cases\Enums\CaseStatus;
 use App\Domain\Cases\Enums\InternalStatus;
 use App\Http\Controllers\Controller;
 use App\Models\LegalCase;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -80,6 +82,31 @@ class CaseController extends Controller
                 'id' => $n->id, 'body' => $n->body, 'author' => $n->author?->name,
                 'is_internal' => $n->is_internal, 'at' => $n->created_at->toIso8601String(),
             ]) : [],
+            'contacts' => $readable ? $case->contacts->map(fn ($c) => [
+                'channel' => $c->channel, 'direction' => $c->direction,
+                'summary' => $c->summary, 'by' => $c->user?->name,
+                'at' => $c->occurred_at->toIso8601String(),
+            ]) : [],
+            'payments' => $case->payments->map(fn ($p) => [
+                'id' => $p->id,
+                'stage_label' => $p->stage_label,
+                'total_amount' => (float) $p->total_amount,
+                'currency' => $p->currency,
+                'status' => $p->status->value,
+                'status_label' => $p->status->label(),
+                'tone' => $p->status->tone(),
+                'link_url' => $p->link_url,
+                'paid_at' => $p->paid_at?->toIso8601String(),
+                'refundable' => $p->isRefundable(),
+            ]),
+            'stages' => collect(CaseStage::cases())->map(fn ($stage) => [
+                'value' => $stage->value,
+                'label' => $stage->label(),
+                'reached_at' => $case->stageAt($stage)?->occurred_at->toIso8601String(),
+            ])->values(),
+            'staff' => User::admins()->where('is_active', true)
+                ->orderBy('name')->get(['id', 'name'])
+                ->map(fn ($u) => ['id' => $u->id, 'name' => $u->name]),
             'internalStatuses' => collect(InternalStatus::cases())->map(fn ($s) => [
                 'value' => $s->value,
                 'label' => $s->label(),

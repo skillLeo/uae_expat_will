@@ -127,7 +127,9 @@ class RoleController extends Controller
 
         return Inertia::render('Admin/Roles/Preview', [
             'role' => ['name' => $role->name, 'description' => $role->description],
-            'users' => User::role($role->name)->pluck('name'),
+            // The guard must be named: roles live on `admin`, and Spatie's scope
+            // defaults to the `web` guard, which has no such role.
+            'users' => User::role($role->name, 'admin')->pluck('name'),
             'summary' => [
                 [
                     'area' => 'Cases',

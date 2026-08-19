@@ -6,18 +6,41 @@
  * and status only. The redaction happens server-side; this component simply
  * renders what it was given, so there is no client-side secret to leak.
  */
+import { ref, reactive } from 'vue';
+import { router, usePage } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import StatusPill from '@/Components/StatusPill.vue';
+import Sheet from '@/Components/Sheet.vue';
+import FormField from '@/Components/FormField.vue';
 
-defineProps({
+const props = defineProps({
     record: { type: Object, required: true },
     readable: { type: Boolean, default: true },
     triggerReasons: { type: Array, default: () => [] },
     answers: { type: Array, default: () => [] },
     statusHistory: { type: Array, default: () => [] },
     notes: { type: Array, default: () => [] },
+    contacts: { type: Array, default: () => [] },
+    payments: { type: Array, default: () => [] },
+    stages: { type: Array, default: () => [] },
+    staff: { type: Array, default: () => [] },
     internalStatuses: { type: Array, default: () => [] },
 });
+
+const page = usePage();
+const can = (p) => (page.props.auth?.permissions ?? []).includes(p);
+
+const sheet = ref(null);
+const money = (n) => Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const assignForm = reactive({ assigned_to: '', reason: '' });
+const statusForm = reactive({ internal_status: props.record.internal_status, reason: '' });
+const noteForm = reactive({ body: '', is_internal: true });
+const contactForm = reactive({ channel: 'phone', direction: 'outbound', summary: '' });
+const linkForm = reactive({ amount: props.record.quoted_amount ?? '', stage_label: 'Professional fee' });
+const manualForm = reactive({ amount: props.record.quoted_amount ?? '', method: 'bank_transfer', stage_label: 'Professional fee', reference: '' });
+
+const post = (url, data) => router.post(url, data, { preserveScroll: true, onSuccess: () => { sheet.value = null; } });
 </script>
 
 <template>
@@ -119,7 +142,189 @@ defineProps({
                     <div class="text-body-s font-medium text-ink">{{ record.customer?.name ?? '—' }}</div>
                     <div class="text-caption text-slate">{{ record.customer?.email }}</div>
                 </div>
+
+                <!-- Countdown -->
+                <div v-if="record.countdown_due_at" class="card p-6" :class="record.is_overdue ? 'border-critical-border bg-critical-bg' : ''">
+                    <div class="eyebrow mb-2">First contact due</div>
+                    <div class="tabular font-mono text-body" :class="record.is_overdue ? 'text-critical' : 'text-ink'">
+                        {{ new Date(record.countdown_due_at).toLocaleString('en-GB') }}
+                    </div>
+                    <p v-if="record.is_overdue" class="mt-1.5 text-caption font-medium text-critical">Overdue. Logging a contact clears this.</p>
+                </div>
+
+                <!-- Actions -->
+                <div class="card p-6">
+                    <div class="eyebrow mb-3">Actions</div>
+                    <div class="grid gap-2">
+                        <button v-if="can('cases.assign')" type="button" class="btn btn-sm btn-secondary" @click="sheet = 'assign'">Assign staff</button>
+                        <button v-if="can('cases.update')" type="button" class="btn btn-sm btn-secondary" @click="sheet = 'status'">Change status</button>
+                        <button v-if="can('notes.create')" type="button" class="btn btn-sm btn-secondary" @click="sheet = 'note'">Add note</button>
+                        <button v-if="can('contacts.log')" type="button" class="btn btn-sm btn-secondary" @click="sheet = 'contact'">Log contact</button>
+                        <button v-if="can('payments.create_link') && record.allows_payment" type="button" class="btn btn-sm btn-secondary" @click="sheet = 'link'">Generate payment link</button>
+                        <button v-if="can('payments.record_manual') && record.allows_payment" type="button" class="btn btn-sm btn-secondary" @click="sheet = 'manual'">Record manual payment</button>
+                        <button v-if="can('cases.update')" type="button" class="btn btn-sm btn-secondary" @click="post(`/admin/cases/${record.id}/magic-link`, {})">Issue questionnaire link</button>
+                    </div>
+                    <p v-if="!record.allows_payment" class="help mt-3 border-t border-rule-cool pt-3">
+                        No payment control is offered while this matter is held.
+                    </p>
+                </div>
+
+                <!-- Payments -->
+                <div v-if="payments.length" class="card p-6">
+                    <div class="eyebrow mb-3">Payments</div>
+                    <div class="grid gap-2">
+                        <div v-for="p in payments" :key="p.id" class="border-b border-rule-cool pb-2 last:border-0">
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-body-s text-ink">{{ p.stage_label }}</span>
+                                <StatusPill :tone="p.tone" :label="p.status_label" />
+                            </div>
+                            <div class="tabular font-mono text-caption text-slate">{{ p.currency }} {{ money(p.total_amount) }}</div>
+                            <a v-if="p.link_url && p.status === 'pending'" :href="p.link_url" target="_blank" rel="noopener" class="text-caption text-gold-strong underline">Open payment link</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage timestamps: what the refund band is computed from -->
+                <div class="card p-6">
+                    <div class="eyebrow mb-1">Stages reached</div>
+                    <p class="help mb-3">The refund band is computed from these, and nothing else.</p>
+                    <div class="grid gap-1.5">
+                        <div v-for="s in stages" :key="s.value" class="flex items-center justify-between gap-3 text-body-s">
+                            <span :class="s.reached_at ? 'text-ink' : 'text-slate'">{{ s.label }}</span>
+                            <button
+                                v-if="!s.reached_at && can('cases.update')" type="button"
+                                class="text-caption font-medium text-gold-strong"
+                                @click="post(`/admin/cases/${record.id}/stage`, { stage: s.value })"
+                            >record</button>
+                            <span v-else-if="s.reached_at" class="tabular font-mono text-caption text-slate">{{ new Date(s.reached_at).toLocaleDateString('en-GB') }}</span>
+                        </div>
+                    </div>
+                </div>
             </aside>
         </div>
+
+        <!-- Notes and contact history -->
+        <div v-if="readable" class="mt-6 grid grid-cols-2 gap-6 max-[1080px]:grid-cols-1">
+            <section class="card p-6">
+                <h2 class="mb-4 text-h3 font-semibold text-ink">Notes</h2>
+                <div class="grid gap-3">
+                    <article v-for="n in notes" :key="n.id" class="border-b border-rule-cool pb-3 last:border-0">
+                        <p class="mb-1 whitespace-pre-line text-body-s text-ink">{{ n.body }}</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="tabular font-mono text-caption text-slate">{{ n.author }} · {{ new Date(n.at).toLocaleString('en-GB') }}</span>
+                            <span v-if="n.is_internal" class="pill pill-neutral">internal</span>
+                        </div>
+                    </article>
+                    <p v-if="!notes.length" class="help">No notes yet.</p>
+                </div>
+            </section>
+
+            <section class="card p-6">
+                <h2 class="mb-4 text-h3 font-semibold text-ink">Contact history</h2>
+                <div class="grid gap-3">
+                    <article v-for="(c, i) in contacts" :key="i" class="border-b border-rule-cool pb-3 last:border-0">
+                        <div class="mb-1 flex flex-wrap items-center gap-2">
+                            <span class="pill pill-progress">{{ c.direction }} {{ c.channel }}</span>
+                            <span class="tabular font-mono text-caption text-slate">{{ new Date(c.at).toLocaleString('en-GB') }}</span>
+                        </div>
+                        <p v-if="c.summary" class="text-body-s text-ink">{{ c.summary }}</p>
+                    </article>
+                    <p v-if="!contacts.length" class="help">No contact logged yet.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Action sheets -->
+        <Sheet :open="sheet === 'assign'" title="Assign this case" size="sm" @close="sheet = null">
+            <FormField id="a-user" label="Assign to">
+                <select id="a-user" v-model="assignForm.assigned_to" class="field">
+                    <option value="">Unassigned</option>
+                    <option v-for="u in staff" :key="u.id" :value="u.id">{{ u.name }}</option>
+                </select>
+            </FormField>
+            <FormField id="a-reason" label="Reason" :required="!!record.assignee" help="Required when reassigning.">
+                <textarea id="a-reason" v-model="assignForm.reason" class="field min-h-[70px]"></textarea>
+            </FormField>
+            <template #actions>
+                <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/assign`, assignForm)">Save</button>
+                <button type="button" class="btn btn-tertiary" @click="sheet = null">Cancel</button>
+            </template>
+        </Sheet>
+
+        <Sheet :open="sheet === 'status'" title="Change status" @close="sheet = null">
+            <p class="help mb-4">
+                The customer only ever sees the group in brackets. The internal label is never shown to them.
+            </p>
+            <FormField id="s-status" label="Internal status" required>
+                <select id="s-status" v-model="statusForm.internal_status" class="field">
+                    <option v-for="s in internalStatuses" :key="s.value" :value="s.value">{{ s.label }} ({{ s.group }})</option>
+                </select>
+            </FormField>
+            <FormField id="s-reason" label="Reason"><textarea id="s-reason" v-model="statusForm.reason" class="field min-h-[70px]"></textarea></FormField>
+            <template #actions>
+                <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/status`, statusForm)">Change status</button>
+                <button type="button" class="btn btn-tertiary" @click="sheet = null">Cancel</button>
+            </template>
+        </Sheet>
+
+        <Sheet :open="sheet === 'note'" title="Add a note" @close="sheet = null">
+            <FormField id="n-body" label="Note" required><textarea id="n-body" v-model="noteForm.body" class="field min-h-[140px]"></textarea></FormField>
+            <label class="flex items-center gap-2.5"><input v-model="noteForm.is_internal" type="checkbox" class="tap accent-gold"><span class="text-body-s">Internal only</span></label>
+            <template #actions>
+                <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/notes`, noteForm)">Add note</button>
+                <button type="button" class="btn btn-tertiary" @click="sheet = null">Cancel</button>
+            </template>
+        </Sheet>
+
+        <Sheet :open="sheet === 'contact'" title="Log a contact" @close="sheet = null">
+            <div class="grid grid-cols-2 gap-4 max-[719px]:grid-cols-1">
+                <FormField id="c-channel" label="Channel" required>
+                    <select id="c-channel" v-model="contactForm.channel" class="field">
+                        <option value="phone">Phone</option><option value="email">Email</option>
+                        <option value="whatsapp">WhatsApp</option><option value="meeting">Meeting</option>
+                    </select>
+                </FormField>
+                <FormField id="c-dir" label="Direction" required>
+                    <select id="c-dir" v-model="contactForm.direction" class="field">
+                        <option value="outbound">Outbound</option><option value="inbound">Inbound</option>
+                    </select>
+                </FormField>
+            </div>
+            <FormField id="c-summary" label="Summary"><textarea id="c-summary" v-model="contactForm.summary" class="field min-h-[100px]"></textarea></FormField>
+            <p class="help">Logging a contact clears the countdown.</p>
+            <template #actions>
+                <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/contacts`, contactForm)">Log contact</button>
+                <button type="button" class="btn btn-tertiary" @click="sheet = null">Cancel</button>
+            </template>
+        </Sheet>
+
+        <Sheet :open="sheet === 'link'" title="Generate a payment link" size="sm" @close="sheet = null">
+            <FormField id="l-amount" label="Amount excluding VAT" required>
+                <input id="l-amount" v-model="linkForm.amount" type="number" step="0.01" class="field" inputmode="decimal">
+            </FormField>
+            <FormField id="l-stage" label="Stage" required><input id="l-stage" v-model="linkForm.stage_label" class="field"></FormField>
+            <p class="help">VAT is added automatically at the configured rate.</p>
+            <template #actions>
+                <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/payment-link`, linkForm)">Generate link</button>
+                <button type="button" class="btn btn-tertiary" @click="sheet = null">Cancel</button>
+            </template>
+        </Sheet>
+
+        <Sheet :open="sheet === 'manual'" title="Record a manual payment" size="sm" @close="sheet = null">
+            <FormField id="m-amount" label="Amount excluding VAT" required>
+                <input id="m-amount" v-model="manualForm.amount" type="number" step="0.01" class="field" inputmode="decimal">
+            </FormField>
+            <FormField id="m-method" label="Method" required>
+                <select id="m-method" v-model="manualForm.method" class="field">
+                    <option value="bank_transfer">Bank transfer</option><option value="cash">Cash</option>
+                </select>
+            </FormField>
+            <FormField id="m-stage" label="Stage" required><input id="m-stage" v-model="manualForm.stage_label" class="field"></FormField>
+            <FormField id="m-ref" label="Reference"><input id="m-ref" v-model="manualForm.reference" class="field"></FormField>
+            <template #actions>
+                <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/manual-payment`, manualForm)">Record payment</button>
+                <button type="button" class="btn btn-tertiary" @click="sheet = null">Cancel</button>
+            </template>
+        </Sheet>
     </AdminLayout>
 </template>

@@ -23,6 +23,10 @@ const form = useForm({
 const testSheet = ref(false);
 const recipient = ref('');
 
+// Built here rather than in the template: Vue's parser cannot cope with the
+// nested braces of a placeholder written inside an interpolation.
+const placeholders = computed(() => Object.keys(props.sample).map((k) => `{{ ${k} }}`));
+
 /** Substitutes the sample values live, so the variables can be checked. */
 const rendered = computed(() => {
     const substitute = (text) => Object.entries(props.sample).reduce(
@@ -79,7 +83,7 @@ const sendTest = () => router.post(`/admin/notifications/${props.template.id}/te
                 <div v-if="template.variables?.length" class="mb-4">
                     <div class="eyebrow mb-2">Available variables</div>
                     <div class="flex flex-wrap gap-1.5">
-                        <code v-for="v in Object.keys(sample)" :key="v" class="rounded-xs border border-rule-cool px-1.5 py-0.5 font-mono text-micro text-ink-70">{{ '{{ ' + v + ' }}' }}</code>
+                        <code v-for="v in placeholders" :key="v" class="rounded-xs border border-rule-cool px-1.5 py-0.5 font-mono text-micro text-ink-70">{{ v }}</code>
                     </div>
                 </div>
 
