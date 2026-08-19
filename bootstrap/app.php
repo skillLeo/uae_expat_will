@@ -31,6 +31,11 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Runs before everything else on a web request, including Authenticate.
+        $middleware->web(prepend: [
+            EnsureClientPortalEnabled::class,
+        ]);
+
         $middleware->web(append: [
             SecurityHeaders::class,
             HandleInertiaRequests::class,
