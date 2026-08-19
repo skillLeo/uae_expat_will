@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { usePullToRefresh } from '@/Composables/usePullToRefresh';
 import DataTable from '@/Components/DataTable.vue';
 import StatusPill from '@/Components/StatusPill.vue';
 import Sheet from '@/Components/Sheet.vue';
@@ -15,6 +16,7 @@ const props = defineProps({
 });
 
 const page = usePage();
+const { distance, refreshing } = usePullToRefresh();
 const can = (p) => (page.props.auth?.permissions ?? []).includes(p);
 
 const status = ref(props.filters.status ?? '');
@@ -61,6 +63,12 @@ const columns = [
 
 <template>
     <AdminLayout title="Payments">
+        <div
+            v-if="distance > 0 || refreshing"
+            class="mb-2 grid place-items-center text-caption text-slate"
+            :style="{ height: `${Math.max(distance, refreshing ? 40 : 0)}px` }"
+        >{{ refreshing ? 'Refreshing…' : 'Pull to refresh' }}</div>
+
         <div class="mb-6 grid grid-cols-3 gap-4 max-[719px]:grid-cols-1">
             <div v-for="[label, value, tone] in [['Paid', totals.paid, 'positive'], ['Pending', totals.pending, 'attention'], ['Refunded', totals.refunded, 'neutral']]" :key="label" class="card p-4">
                 <div class="eyebrow mb-2">{{ label }}</div>

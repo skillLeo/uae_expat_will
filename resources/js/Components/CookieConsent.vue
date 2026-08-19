@@ -2,12 +2,13 @@
 /**
  * Cookie consent.
  *
- * The rules here are compliance requirements, not design preferences:
- *   - Accept All, Reject Non-Essential and Manage Preferences are EQUALLY
- *     prominent. Reject is not a quiet link next to a loud button.
- *   - Nothing is pre-ticked. Strictly necessary is locked on and labelled.
+ * These are compliance requirements, not design preferences:
+ *   - Accept All, Reject Non-Essential and Manage Preferences carry EQUAL
+ *     weight. Reject is not a quiet link beside a loud button.
+ *   - Nothing is pre-ticked. Strictly necessary is locked on and labelled
+ *     "Always on" so it is clear it is not a choice being made for you.
  *   - No non-essential tag renders before consent. The analytics loader is
- *     invoked from here and nowhere else.
+ *     called from here and nowhere else.
  *   - The choice is recorded server-side with the wording version and a
  *     timestamp, so what was agreed can be evidenced later.
  */
@@ -15,21 +16,38 @@ import { ref, reactive, onMounted, onUnmounted, computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 const STORAGE_KEY = 'uew.cookie-consent';
-const WORDING_VERSION = '2026-08-19';
+const WORDING_VERSION = '2026-08-20';
+
+const CATEGORIES = [
+    {
+        id: 'essential', label: 'Strictly necessary', locked: true, count: '4 cookies',
+        body: 'Your session, security, and the assessment answers held against this device. Without these the platform cannot run, so they cannot be switched off.',
+    },
+    {
+        id: 'prefs', label: 'Preferences', locked: false, count: '2 cookies',
+        body: 'Remembers this cookie choice, and your language if you set one, so you are not asked again on every page.',
+    },
+    {
+        id: 'analytics', label: 'Analytics', locked: false, count: '3 cookies',
+        body: 'Anonymous, page-level statistics about how the site is used. It never receives your answers, your religion, your family details or any document name.',
+    },
+    {
+        id: 'marketing', label: 'Marketing', locked: false, count: '2 cookies',
+        body: 'Measures whether a campaign brought you here. Off by default and not required to use the service.',
+    },
+];
 
 const page = usePage();
 const visible = ref(false);
 const panelOpen = ref(false);
 
 // Nothing pre-ticked.
-const prefs = reactive({ analytics: false, functional: false });
+const prefs = reactive({ prefs: false, analytics: false, marketing: false });
 
-const analyticsConfigured = computed(
-    () => !!(page.props.settings?.['analytics.ga4_measurement_id'] || page.props.settings?.['analytics.gtm_container_id']),
-);
+const analyticsConfigured = computed(() => !!(
+    page.props.settings?.['analytics.ga4_measurement_id'] || page.props.settings?.['analytics.gtm_container_id']
+));
 
-// Everything touching window/localStorage lives inside onMounted, because this
-// component is also rendered on the server, where neither exists.
 function openFromFooter() {
     visible.value = true;
     panelOpen.value = true;
@@ -39,22 +57,12 @@ onMounted(() => {
     window.addEventListener('cookie-settings:open', openFromFooter);
 
     const stored = localStorage.getItem(STORAGE_KEY);
-
-    if (!stored) {
-        visible.value = true;
-        return;
-    }
+    if (!stored) { visible.value = true; return; }
 
     try {
         const saved = JSON.parse(stored);
-
-        // A stored decision against older wording is not consent to the new
-        // wording. Ask again rather than assuming.
-        if (saved.version !== WORDING_VERSION) {
-            visible.value = true;
-            return;
-        }
-
+        // A decision against older wording is not consent to the new wording.
+        if (saved.version !== WORDING_VERSION) { visible.value = true; return; }
         Object.assign(prefs, saved.prefs ?? {});
         applyTags();
     } catch {
@@ -62,14 +70,15 @@ onMounted(() => {
     }
 });
 
-function persist(choice) {
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ version: WORDING_VERSION, prefs: { ...prefs }, at: new Date().toISOString() }),
-    );
+onUnmounted(() => window.removeEventListener('cookie-settings:open', openFromFooter));
 
-    // Recorded server-side too, with IP, language and the wording version, so
-    // the consent is evidential rather than merely local.
+function persist(choice) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        version: WORDING_VERSION, prefs: { ...prefs }, at: new Date().toISOString(),
+    }));
+
+    // Recorded server-side too, with IP, language and wording version, so the
+    // consent is evidential rather than merely local.
     fetch('/consent/cookie', {
         method: 'POST',
         headers: {
@@ -84,7 +93,7 @@ function persist(choice) {
     applyTags();
 }
 
-/** Loads analytics ONLY when analytics consent is present. */
+/** Loads analytics ONLY where analytics consent is present. */
 function applyTags() {
     if (!prefs.analytics || !analyticsConfigured.value || window.__uewTags) return;
 
@@ -100,15 +109,13 @@ function applyTags() {
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag('js', new Date());
-    // Analytics must never receive questionnaire answers, religion, family or
-    // beneficiary detail, or document names. Page paths only.
+    // Page paths only. Analytics must never receive questionnaire answers,
+    // religion, family or beneficiary detail, or document names.
     window.gtag('config', id, { anonymize_ip: true, allow_google_signals: false });
 }
 
-onUnmounted(() => window.removeEventListener('cookie-settings:open', openFromFooter));
-
-const acceptAll = () => { prefs.analytics = true; prefs.functional = true; persist('accept_all'); };
-const rejectAll = () => { prefs.analytics = false; prefs.functional = false; persist('reject_non_essential'); };
+const acceptAll = () => { prefs.prefs = true; prefs.analytics = true; prefs.marketing = true; persist('accept_all'); };
+const rejectAll = () => { prefs.prefs = false; prefs.analytics = false; prefs.marketing = false; persist('reject_non_essential'); };
 const saveChoices = () => persist('manage_preferences');
 </script>
 
@@ -119,59 +126,53 @@ const saveChoices = () => persist('manage_preferences');
         role="dialog" aria-modal="false" aria-labelledby="cookie-heading"
     >
         <div class="mx-auto max-w-[1280px] px-8 py-4 max-[719px]:px-4">
+            <!-- The bar -->
             <div v-if="!panelOpen" class="flex flex-wrap items-center justify-between gap-4">
-                <div class="min-w-[240px] flex-1">
+                <div class="min-w-[260px] flex-1">
                     <h2 id="cookie-heading" class="mb-1 text-body-s font-semibold text-paper">
                         We use cookies to run this site
                     </h2>
                     <p class="max-w-[74ch] text-caption leading-[1.6] text-steel">
                         Strictly necessary cookies keep the site working and cannot be switched off.
-                        Everything else is off until you turn it on.
+                        Everything else stays off until you turn it on.
                     </p>
                 </div>
                 <!-- Three actions, equal weight. -->
-                <div class="flex flex-none flex-wrap gap-2">
-                    <button type="button" class="btn btn-sm border-steel text-paper" @click="panelOpen = true">Manage preferences</button>
-                    <button type="button" class="btn btn-sm border-steel text-paper" @click="rejectAll">Reject non-essential</button>
-                    <button type="button" class="btn btn-sm border-paper bg-paper text-ink" @click="acceptAll">Accept all</button>
+                <div class="flex flex-none flex-wrap gap-2 max-[719px]:w-full">
+                    <button type="button" class="btn btn-sm flex-1 border-steel text-paper" @click="panelOpen = true">Manage preferences</button>
+                    <button type="button" class="btn btn-sm flex-1 border-steel text-paper" @click="rejectAll">Reject non-essential</button>
+                    <button type="button" class="btn btn-sm flex-1 border-paper bg-paper text-ink" @click="acceptAll">Accept all</button>
                 </div>
             </div>
 
-            <div v-else>
-                <h2 class="mb-3 text-body font-semibold text-paper">Cookie preferences</h2>
-                <div class="grid gap-2">
-                    <div class="flex items-start justify-between gap-4 border-b border-ink-line pb-3">
-                        <div>
-                            <div class="text-body-s font-medium text-paper">Strictly necessary</div>
-                            <p class="max-w-[70ch] text-caption text-steel">
-                                Session, security and consent storage. Required for the site to function.
-                            </p>
-                        </div>
-                        <span class="pill pill-neutral flex-none">Always on</span>
+            <!-- The preferences panel -->
+            <div v-else class="max-h-[70dvh] overflow-y-auto">
+                <h2 class="mb-4 text-body font-semibold text-paper">Cookie preferences</h2>
+
+                <div class="grid gap-3">
+                    <div
+                        v-for="c in CATEGORIES" :key="c.id"
+                        class="border-b border-ink-line pb-3 last:border-0"
+                    >
+                        <label class="flex cursor-pointer items-start justify-between gap-4" :class="{ 'cursor-default': c.locked }">
+                            <div class="min-w-0">
+                                <div class="mb-1 flex flex-wrap items-center gap-2">
+                                    <span class="text-body-s font-medium text-paper">{{ c.label }}</span>
+                                    <span class="tabular font-mono text-micro text-slate">{{ c.count }}</span>
+                                </div>
+                                <p class="max-w-[74ch] text-caption leading-[1.6] text-steel">{{ c.body }}</p>
+                            </div>
+                            <span v-if="c.locked" class="pill pill-neutral flex-none">Always on</span>
+                            <input
+                                v-else v-model="prefs[c.id]" type="checkbox"
+                                class="tap mt-1 flex-none accent-gold"
+                                :aria-label="c.label"
+                            >
+                        </label>
                     </div>
-
-                    <label class="flex cursor-pointer items-start justify-between gap-4 border-b border-ink-line pb-3">
-                        <div>
-                            <div class="text-body-s font-medium text-paper">Analytics</div>
-                            <p class="max-w-[70ch] text-caption text-steel">
-                                Anonymous page-level statistics. Never receives your answers.
-                            </p>
-                        </div>
-                        <input v-model="prefs.analytics" type="checkbox" class="tap mt-1 flex-none accent-gold">
-                    </label>
-
-                    <label class="flex cursor-pointer items-start justify-between gap-4 pb-3">
-                        <div>
-                            <div class="text-body-s font-medium text-paper">Functional</div>
-                            <p class="max-w-[70ch] text-caption text-steel">
-                                Remembers preferences such as your language choice.
-                            </p>
-                        </div>
-                        <input v-model="prefs.functional" type="checkbox" class="tap mt-1 flex-none accent-gold">
-                    </label>
                 </div>
 
-                <div class="mt-4 flex flex-wrap gap-2">
+                <div class="mt-5 flex flex-wrap gap-2">
                     <button type="button" class="btn btn-sm border-paper bg-paper text-ink" @click="saveChoices">Save my choices</button>
                     <button type="button" class="btn btn-sm border-steel text-paper" @click="rejectAll">Reject non-essential</button>
                     <button type="button" class="btn btn-sm border-steel text-paper" @click="acceptAll">Accept all</button>

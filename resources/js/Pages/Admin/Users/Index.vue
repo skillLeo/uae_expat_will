@@ -2,6 +2,7 @@
 import { ref, reactive } from 'vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { usePullToRefresh } from '@/Composables/usePullToRefresh';
 import DataTable from '@/Components/DataTable.vue';
 import StatusPill from '@/Components/StatusPill.vue';
 import Sheet from '@/Components/Sheet.vue';
@@ -10,6 +11,7 @@ import FormField from '@/Components/FormField.vue';
 defineProps({ users: { type: Array, default: () => [] }, roles: { type: Array, default: () => [] } });
 
 const page = usePage();
+const { distance, refreshing } = usePullToRefresh();
 const can = (p) => (page.props.auth?.permissions ?? []).includes(p);
 
 const sheet = ref(false);
@@ -33,6 +35,12 @@ const columns = [
         <template #action>
             <button v-if="can('users.create')" type="button" class="btn btn-sm btn-primary" @click="sheet = true">Invite user</button>
         </template>
+        <div
+            v-if="distance > 0 || refreshing"
+            class="mb-2 grid place-items-center text-caption text-slate"
+            :style="{ height: `${Math.max(distance, refreshing ? 40 : 0)}px` }"
+        >{{ refreshing ? 'Refreshing…' : 'Pull to refresh' }}</div>
+
 
         <DataTable :columns="columns" :rows="users">
             <template #cell-name="{ row }">

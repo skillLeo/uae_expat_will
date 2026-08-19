@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { usePullToRefresh } from '@/Composables/usePullToRefresh';
 import DataTable from '@/Components/DataTable.vue';
 import StatusPill from '@/Components/StatusPill.vue';
 
@@ -31,10 +32,18 @@ const columns = [
     { key: 'assignee', label: 'Assigned to' },
     { key: 'created_at', label: 'Created' },
 ];
+
+const { distance, refreshing } = usePullToRefresh();
 </script>
 
 <template>
     <AdminLayout title="Cases">
+        <div
+            v-if="distance > 0 || refreshing"
+            class="mb-2 grid place-items-center text-caption text-slate"
+            :style="{ height: `${Math.max(distance, refreshing ? 40 : 0)}px` }"
+        >{{ refreshing ? 'Refreshing…' : 'Pull to refresh' }}</div>
+
         <div class="mb-4 flex flex-wrap gap-3">
             <input v-model="q" type="search" class="field max-w-xs" placeholder="Search reference, name or email" inputmode="search">
             <select v-model="status" class="field max-w-xs">

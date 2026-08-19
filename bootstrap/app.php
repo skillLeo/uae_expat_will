@@ -12,6 +12,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
@@ -63,4 +64,25 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Error pages are real pages, not Laravel's default stack trace or a
+        // bare status code. Each states what happened and what it means for the
+        // reader's matter. Admin and client areas keep the plain response —
+        // a marketing shell around an internal 403 is noise.
+        $exceptions->respond(function ($response, Throwable $exception, Request $request) {
+            $status = $response->getStatusCode();
+
+            if ($request->expectsJson()
+                || app()->environment('local', 'testing')
+                || ! in_array($status, [403, 404, 419, 500, 503], true)) {
+                return $response;
+            }
+
+            return Inertia::render('Error', [
+                'status' => $status,
+                'reference' => $status === 500
+                    ? 'ERR-'.now()->format('Y-m-d').'-'.substr(md5((string) $exception->getMessage()), 0, 4)
+                    : null,
+            ])->toResponse($request)->setStatusCode($status);
+        });
     })->create();
