@@ -28,6 +28,10 @@ class PageController extends Controller
 
         $component = match ($key) {
             'home' => 'Home',
+            'how_it_works' => 'HowItWorks',
+            'will_options' => 'WillOptions',
+            'pricing' => 'Pricing',
+            'about' => 'About',
             'faqs' => 'Faqs',
             'contact' => 'Contact',
             'terms', 'privacy', 'refund', 'disclaimer', 'cookies' => 'Legal',

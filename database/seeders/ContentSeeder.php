@@ -24,9 +24,13 @@ class ContentSeeder extends Seeder
     /** @var array<string, mixed> */
     private array $data;
 
+    /** @var array<string, mixed> */
+    private array $pageData;
+
     public function run(): void
     {
         $this->data = json_decode(file_get_contents(__DIR__.'/data/content.json'), true);
+        $this->pageData = json_decode(file_get_contents(__DIR__.'/data/pages.json'), true);
 
         DB::transaction(function () {
             $this->pages();
@@ -77,6 +81,10 @@ class ContentSeeder extends Seeder
     {
         $sections = match ($page->key) {
             'home' => $this->homeSections(),
+            'how_it_works' => $this->howItWorksSections(),
+            'will_options' => $this->willOptionsSections(),
+            'pricing' => $this->pricingSections(),
+            'about' => $this->aboutSections(),
 
             'do_you_need' => [[
                 'key' => 'profiles',
@@ -129,6 +137,398 @@ class ContentSeeder extends Seeder
                 'locale' => 'en',
             ]);
         }
+    }
+
+    /**
+     * How It Works — nine steps, each naming who acts.
+     *
+     * The actor label on every step is the point of the page: most services
+     * blur the line between what the firm does and what the authority does,
+     * and that blur is where the unkeepable promises come from.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function howItWorksSections(): array
+    {
+        return [
+            [
+                'key' => 'intro',
+                'type' => 'page_intro',
+                'heading' => 'From free assessment to registration assistance',
+                'subheading' => 'How it works',
+                'body' => "Nine steps. Each one states who acts — you, Summit's legal team, or the competent authority — because the difference matters and most services blur it.",
+            ],
+            [
+                'key' => 'steps',
+                'type' => 'journey_steps',
+                'items' => $this->pageData['HowItWorks_STEPS'],
+            ],
+            [
+                'key' => 'responsibilities',
+                'type' => 'responsibility_matrix',
+                'heading' => 'Who is responsible for what',
+                'subheading' => 'Three parties, three sets of obligations. The authority column is the one most services leave out, and it is the reason no timetable can be guaranteed.',
+                'items' => $this->pageData['HowItWorks_RESP'],
+                'settings' => [
+                    'columns' => ['Summit Legal Consultancy', 'You', 'The competent authority'],
+                ],
+            ],
+            [
+                'key' => 'timing',
+                'type' => 'note_pair',
+                'heading' => 'About timing',
+                'body' => 'For an accepted standard matter we aim to send the first draft within {first_draft_days} business days after receiving complete, usable instructions and all required documents. A matter requiring specialist analysis, further clarification or additional documents may take longer, and we will tell you if that applies.',
+                'settings' => [
+                    'second' => 'Registration timing is set by the competent authority. We cannot guarantee that any authority will accept a Will or complete registration within a particular period.',
+                    'aside' => 'Related: the five registration routes and how they differ are set out on UAE Will options, and every charge is itemised on pricing.',
+                    'links' => [
+                        ['label' => 'UAE Will options', 'href' => '/uae-will-registration-options'],
+                        ['label' => 'Pricing', 'href' => '/pricing'],
+                    ],
+                ],
+            ],
+            [
+                'key' => 'cta',
+                'type' => 'cta',
+                'heading' => 'Begin at step one',
+                'body' => 'The free assessment identifies the likely next step. No account or payment is required to complete it.',
+                'settings' => [
+                    'primary' => ['label' => 'Start the assessment', 'href' => '/assessment'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * UAE Will Options — the five routes.
+     *
+     * Deliberately NO call to action inside any route section. Nothing should
+     * pressure a decision while the reader is still working out which route
+     * they are even in; the single CTA sits at the end.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function willOptionsSections(): array
+    {
+        return [
+            [
+                'key' => 'intro',
+                'type' => 'page_intro',
+                'heading' => 'The main UAE Will pathways at a glance',
+                'subheading' => 'UAE Will options',
+                'body' => 'This comparison is a practical starting point, not a final eligibility or legal-effect decision. You do not choose the route yourself — the assessment and the legal review identify it.',
+                'settings' => [
+                    'note' => 'The assessment provides a preliminary pathway only. It does not confirm final authority eligibility, create a final Will or complete registration.',
+                ],
+            ],
+            [
+                'key' => 'routes_table',
+                'type' => 'route_table',
+                'items' => $this->pageData['WillOptions_ROUTES'],
+                'settings' => [
+                    'columns' => ['Route', 'Who it may be relevant for', 'Main features', 'How it is handled'],
+                ],
+            ],
+            [
+                'key' => 'beyond',
+                'type' => 'note_pair',
+                'heading' => 'Beyond registration',
+                'body' => 'Route selection should consider what happens after death as well as the registration appointment. The chosen framework can affect the court dealing with probate or implementation, document language, enforcement steps, asset-transfer procedures and the work required from the executor or family.',
+                'settings' => [
+                    'second_heading' => 'What the comparison does not decide',
+                    'second' => 'It does not confirm that an authority will accept a particular Will, that every asset falls within the document, that a registered Will avoids probate, or that one document will operate automatically in every country.',
+                ],
+            ],
+            [
+                'key' => 'detail',
+                'type' => 'anchored_sections',
+                'items' => [
+                    [
+                        'anchor' => 'difc',
+                        'title' => 'DIFC Courts Wills',
+                        'pill' => 'Reviewed before payment',
+                        'body' => 'A specialist route operating under the DIFC Wills and Probate Registry Rules and Dubai\'s framework for non-Muslim Wills. Because DIFC has its own eligibility rules and its own professional-registration requirement for drafting assistance, DIFC matters are not processed through the standard online checkout. Engagements are quoted individually and currently start from AED {difc_fee} plus VAT.',
+                        'columns' => [
+                            [
+                                'heading' => 'Current DIFC eligibility, per its published FAQ',
+                                'items' => [
+                                    'Not Muslim, and never having been Muslim',
+                                    'At least 18 years old',
+                                    'UAE assets, or qualifying minor children residing with the testator in the UAE',
+                                    'A UAE residence visa is not required, and virtual registration is currently permitted',
+                                ],
+                            ],
+                            [
+                                'heading' => 'Will types currently presented by DIFC',
+                                'items' => [
+                                    'Full — movable and immovable assets, with guardianship where applicable',
+                                    'Property — up to five qualifying UAE properties or shares in them',
+                                    'Business Owners — up to five qualifying UAE shareholdings',
+                                    'Financial Assets — up to ten qualifying UAE bank or brokerage accounts',
+                                    'Guardianship — appointments without asset distribution under that Will type',
+                                    'Digital Assets — a specialist option connected to the supported DIFC wallet',
+                                ],
+                            ],
+                        ],
+                        'footnote' => 'The available route, scope and portal requirements must be checked at the time of engagement.',
+                    ],
+                    [
+                        'anchor' => 'adjd',
+                        'title' => 'Abu Dhabi Civil Wills — ADJD',
+                        'body' => 'ADJD states that its Civil Wills Office is available to a person who is not a UAE citizen, and that religion does not prevent access. Its current process provides a standard bilingual template as well as special or customised registration routes.',
+                        'footnote' => 'Handled through the standard online pathway at AED {fee} plus VAT, with human legal review by Summit\'s legal team after payment to confirm the correct wording and structure.',
+                    ],
+                    [
+                        'anchor' => 'dubai',
+                        'title' => 'Dubai Courts Wills',
+                        'body' => 'Dubai Law No. 15 of 2017 establishes a Dubai Courts register for the Wills of non-Muslims and sets rules on registration, implementation and estate administration.',
+                        'footnote' => 'The current service channel, document, language and procedural requirements are confirmed for each proposed application as part of the standard service.',
+                    ],
+                    [
+                        'anchor' => 'muslim',
+                        'title' => 'Muslim Will pathway',
+                        'body' => 'For Muslim residents, investors or asset owners who wish to make a Will within the rules applicable to them. A Will may record permitted gifts and appointments under the applicable Personal Status framework, and ADJD registration may be available to a person who is not a UAE citizen. Muslim clients use the same online process as everyone else: complete the instructions, pay the professional fee, and Summit\'s legal team applies the applicable rules during review and selects the registration authority.',
+                        'footnote' => 'We do not state that any single framework applies automatically to every person. What applies depends on the individual circumstances and the authority\'s own requirements.',
+                    ],
+                    [
+                        'anchor' => 'foreign',
+                        'title' => 'Foreign Will involving UAE assets',
+                        'body' => 'A Will already made in another country may remain relevant and form part of a coordinated international estate plan. It is reviewed alongside the new document through the standard online pathway.',
+                        'footnote' => 'One document does not operate automatically in every country. Where a foreign Will exists, the review considers how the two documents sit together and whether anything needs revoking or amending.',
+                    ],
+                    [
+                        'anchor' => 'identify',
+                        'title' => 'How a route is identified',
+                        'body' => 'Nationality, religion, residency, family circumstances, asset type and location, existing Wills and international connections may all affect the analysis. The assessment produces a preliminary indication; the legal review confirms it.',
+                        'steps' => [
+                            ['n' => '01', 'body' => 'The free assessment indicates a likely pathway from your answers.'],
+                            ['n' => '02', 'body' => 'Human legal review examines the detail and confirms the recommended authority.'],
+                            ['n' => '03', 'body' => 'The authority applies its own current requirements and decides.'],
+                        ],
+                    ],
+                ],
+                'settings' => ['anchors' => $this->pageData['WillOptions_ANCHORS']],
+            ],
+            [
+                'key' => 'cta',
+                'type' => 'cta',
+                'heading' => 'You do not have to pick the route',
+                'body' => 'Answer the assessment and the legal team identifies the appropriate framework. No account or payment is required to complete it.',
+                'settings' => [
+                    'primary' => ['label' => 'Start the assessment', 'href' => '/assessment'],
+                    'secondary' => ['label' => 'See how the service works', 'href' => '/how-it-works'],
+                    'aside' => 'This is the only call to action on the page. The five route sections above carry none, so nothing pressures a decision while you are still reading.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Pricing.
+     *
+     * The DIFC figure is never rendered as a fixed purchasable price — it is
+     * always "from", always quoted individually, and never payable online.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function pricingSections(): array
+    {
+        return [
+            [
+                'key' => 'intro',
+                'type' => 'page_intro',
+                'heading' => 'Clear professional fees, with authority charges kept separate',
+                'subheading' => 'Pricing',
+                'body' => 'You should know what you are paying for before work begins. Our standard professional fee covers the preparation and legal review of one accepted standard UAE Will, its certified legal translation and assistance with submission to the competent authority.',
+                'settings' => [
+                    'second' => 'Government, court, registry, notary and other third-party charges are separate because they are set by the relevant authority or provider and may depend on the registration route confirmed after legal review.',
+                ],
+            ],
+            [
+                'key' => 'fee',
+                'type' => 'fee_block',
+                'heading' => 'Standard UAE Will · online pathway',
+                'body' => 'The professional fee for one accepted standard Will proceeding through the online pathway.',
+                'items' => [
+                    [
+                        'heading' => 'Included in the professional fee',
+                        'items' => [
+                            'The free preliminary assessment',
+                            'Secure account creation and the detailed Will questionnaire',
+                            'Review of the information and documents required for the accepted scope',
+                            'Preparation of a tailored Will draft',
+                            "Human legal review by Summit's legal team",
+                            'Certified legal translation of the new UAE Will',
+                            'The amendment allowance stated in the Service Confirmation shown before payment',
+                            'Confirmation of the recommended registration route after legal review',
+                            'Assistance preparing and submitting the application to the competent authority',
+                            'Guidance on the next authority steps and the final document after registration',
+                        ],
+                    ],
+                    [
+                        'heading' => 'Not included unless expressly stated',
+                        'items' => [
+                            'Government, court or registry fees',
+                            'Notary, certification or attestation charges',
+                            'Courier, identity-verification or other third-party charges',
+                            'Legalisation, recognition or translation of a separate foreign document',
+                            'Foreign-law, tax, accounting, investment or financial advice',
+                            'Litigation, probate, succession proceedings or estate administration after death',
+                            'Trust, foundation, company restructuring or matrimonial work',
+                            'Materially different or additional work outside the Service Confirmation',
+                        ],
+                        'footnote' => 'No additional professional fee is charged without your express approval.',
+                    ],
+                ],
+                'settings' => [
+                    'note' => 'For an accepted standard matter, we aim to send the first draft within {first_draft_days} business days after receiving complete, usable instructions and all required documents. A matter requiring specialist analysis, further clarification or additional documents may take longer.',
+                ],
+            ],
+            [
+                'key' => 'difc',
+                'type' => 'difc_block',
+                'heading' => 'DIFC Will service',
+                'items' => [
+                    'DIFC engagements are quoted individually because DIFC Wills have specific eligibility, drafting, professional and registration requirements, and the appropriate scope depends on the Will type and circumstances.',
+                    'A DIFC request is held for direct contact before checkout. Summit confirms whether it can accept the matter, explains the proposed scope and provides the quotation before any DIFC payment or work begins.',
+                    'If the standard fee has already been paid and later legal review determines that a DIFC Will is required, the matter is paused and the full standard fee already paid is credited against the agreed DIFC professional fee. If you decline, the unused balance is refunded after deducting only a reasonable, documented amount for substantive work already completed.',
+                ],
+                'settings' => [
+                    'pill' => 'Quoted individually',
+                    'note' => 'This is never shown as a fixed purchasable price, and no DIFC matter can be paid for online.',
+                    'cta' => ['label' => 'Contact our team', 'href' => '/contact'],
+                ],
+            ],
+            [
+                'key' => 'authority_fees',
+                'type' => 'authority_fee_table',
+                'heading' => 'Why court fees are shown separately',
+                'subheading' => 'The authority — not UAE Expat Wills — sets and collects its registration or notarisation fee. The amount can change and may depend on the selected service, document or registration route.',
+                'settings' => [
+                    'columns' => ['Possible route', 'Current expected authority charge', 'Important note'],
+                    'note' => 'These figures are not part of the AED {fee} professional fee and are not a promise that a particular route will apply. Before payment of our professional fee we identify the known categories and the current estimates available. After legal review confirms the recommended route, we explain the then-current authority fee before asking you to authorise or make that payment.',
+                ],
+            ],
+            [
+                'key' => 'terms',
+                'type' => 'card_grid',
+                'items' => [
+                    [
+                        'title' => 'Each person has a separate Will',
+                        'body' => 'A couple does not share one Will. Each person gives and approves their own instructions, and each Will is a separate document and authority registration. The total professional fee and any package treatment is shown in the Service Confirmation or quotation before payment. Authority fees normally apply separately to each Will unless the authority expressly provides otherwise.',
+                    ],
+                    [
+                        'title' => 'We explain any change before charging it',
+                        'body' => 'Further work may be required if the detailed information reveals a different service, a foreign-law issue, a trust or company structure, a materially changed distribution plan, undisclosed litigation, or another issue outside the accepted scope. Summit pauses the affected work, explains what has changed and provides the proposed scope and fee. You may accept or decline; refunds are handled under the Payment and Refund Policy.',
+                    ],
+                    [
+                        'title' => 'What you will see before you pay',
+                        'list' => [
+                            'The proposed service',
+                            'The professional fee and VAT',
+                            'What the fee includes',
+                            'The amendment allowance',
+                            'Known material exclusions',
+                            'Separate charge categories and available estimates',
+                            'Links to the Terms and Conditions and Payment and Refund Policy',
+                        ],
+                        'footnote' => 'Completing payment does not register the Will.',
+                    ],
+                ],
+            ],
+            [
+                'key' => 'cta',
+                'type' => 'cta',
+                'heading' => 'Start with a free assessment',
+                'body' => 'The assessment takes a few minutes and helps identify whether you can continue through the standard online pathway or should speak with the team first. No account or payment is required to complete it.',
+                'settings' => [
+                    'primary' => ['label' => 'Start the assessment', 'href' => '/assessment'],
+                    'secondary' => ['label' => 'Contact our team', 'href' => '/contact'],
+                    'aside' => 'Every accepted matter receives human legal review, you must approve the final draft, and registration or notarisation is completed only through the competent authority under its current requirements.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * About Us — the two named consultants.
+     *
+     * The headshot slots are marked 3:4 and left empty. Open item 05: real
+     * photographs are required and cannot be generated.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function aboutSections(): array
+    {
+        return [
+            [
+                'key' => 'intro',
+                'type' => 'page_intro',
+                'heading' => 'The people who will read your instructions',
+                'subheading' => 'About us',
+                'body' => 'Every Will prepared through this platform is reviewed by one of the two consultants below. They are named because you are entitled to know who is doing the work.',
+            ],
+            [
+                'key' => 'people',
+                'type' => 'people',
+                'items' => [
+                    [
+                        'name' => 'Ahmed Mohammedi',
+                        'role' => 'Managing Director and Co-Founder',
+                        'body' => [
+                            'Ahmed leads Summit Legal Consultancy UAE and is responsible for how this platform accepts, prices and delivers a matter. His view is that the difference between a document and a Will is the judgement applied before it is signed.',
+                            'He decides which matters the firm can properly accept, and which should be held for direct contact rather than pushed through an online checkout.',
+                        ],
+                        'facts' => [
+                            ['label' => 'Role', 'value' => 'Managing Director and Co-Founder, Summit Legal Consultancy UAE'],
+                            ['label' => 'Responsible for', 'value' => 'Matter acceptance, scope and fees; service delivery'],
+                            ['label' => 'Licence', 'value' => '{trade_licence}'],
+                        ],
+                        'photo' => null,
+                        'mirrored' => false,
+                    ],
+                    [
+                        'name' => 'Dr. Mohamed Raouf',
+                        'role' => 'Principal Legal Consultant and Co-Founder',
+                        'body' => [
+                            'Dr. Raouf leads the legal review that every Will passes through. He confirms the wording, checks that the instructions are internally consistent, and identifies which registration authority is appropriate before a client is asked to approve anything.',
+                            'Where a distribution is mathematically or legally unclear, the work stops until it is corrected. That is the step an online form cannot perform.',
+                        ],
+                        'facts' => [
+                            ['label' => 'Role', 'value' => 'Principal Legal Consultant and Co-Founder'],
+                            ['label' => 'Responsible for', 'value' => 'Human legal review, drafting standards and authority selection'],
+                            ['label' => 'Applies to', 'value' => 'Every Will, without exception'],
+                        ],
+                        'photo' => null,
+                        'mirrored' => true,
+                    ],
+                ],
+            ],
+            [
+                'key' => 'commitments',
+                'type' => 'commitments',
+                'heading' => 'What the firm commits to',
+                'items' => [
+                    'Human legal review on every single Will, without exception',
+                    'One clear professional fee, with authority charges named separately',
+                    'No payment requested while a matter is held for review',
+                    'Nothing submitted anywhere until you have personally approved the wording',
+                    'A named consultant accountable for the review of your document',
+                ],
+                'settings' => [
+                    'note' => 'Summit Legal Consultancy UAE is not a court, registry, notary or government authority, and registration is completed by the competent authority under its own requirements.',
+                ],
+            ],
+            [
+                'key' => 'cta',
+                'type' => 'cta',
+                'heading' => 'Start with the assessment',
+                'body' => 'The free assessment identifies the likely next step and takes a few minutes.',
+                'settings' => [
+                    'primary' => ['label' => 'Start the assessment', 'href' => '/assessment'],
+                ],
+            ],
+        ];
     }
 
     /**
