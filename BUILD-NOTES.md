@@ -99,3 +99,61 @@ Carried from `Handoff.dc.html`'s own open-questions tab; these are Summit's to a
   are held. The questionnaire's version is seeded, since it is the safer and more specific of
   the two. Switching model is a data edit in the admin rule builder, not a code change.
   Flagged for the client.
+
+## 6. Build status — what is complete, and what is not
+
+Honest inventory. "Complete" means built, wired and exercised; "backend only" means the
+domain logic, schema, permissions and tests exist but the admin screen does not.
+
+### Complete
+- Design import — all 21 files, mirrored to `design-src/`
+- Token layer — `resources/css/app.css`, transcribed from Foundations/Handoff
+- Schema — 30+ tables, all migrations run clean on both SQLite and MySQL
+- Routing engine — data-driven, cross-question rules, severity precedence, section skips
+- Assessment — 16 questions, 10 conditionals, 41 rules, 7 declarations, 5 result screens
+- Public site — 13 pages, **server-rendered via Inertia SSR**, 57 FAQs, cookie consent,
+  sitemap, robots, canonicals, Organization/WebPage/Service/BreadcrumbList schema
+- Settings — 66 settings across 10 groups, encrypted secrets, history, audit
+- RBAC — 42 permissions, 7 roles, separate `web`/`admin` guards
+- Admin auth — two-step sign-in, mandatory 2FA with QR and recovery codes, lockout with a
+  real countdown, session-length choice, disabled-account screen, enumeration resistance
+- Admin — dashboard, case list with filters and search, case detail with itemised trigger
+  reasons and per-viewer redaction
+- Restricted cases — enforced at the query layer, covered by tests
+- Audit log — append-only, guarded by a database trigger AND a model guard
+- Notifications — dispatcher, 22 templates (11 email + 11 WhatsApp), WhatsApp→email
+  fallback, runtime mailer rebuilt from settings
+- Payments — gateway interface, Telr driver, refund calculator with all four bands,
+  webhook signature verification
+- Magic links — single-use, expiring, revocable, hash-stored
+- Retention command and full schedule
+- Mobile shell — bottom tab bar, bottom-anchored action bar, tables→cards, fixed stack order
+- 122 tests, 268 assertions, all passing
+- **Deployed and verified live at https://will.skillleo.com**
+
+### Backend only — no admin screen yet
+These have schema, domain logic, permissions and (mostly) tests, but no UI:
+- Content editor for the 13 pages and 57 FAQs
+- Questionnaire and routing rule builder (draft/preview/publish/rollback)
+- Settings screens, including the test-send and test-connection buttons
+- User and role managers
+- Audit log viewer and export, consent export
+- Payment screens — link generation, manual recording, refunds
+- Operational analytics
+- Documents and drafts/amendments
+
+### Not started
+- Client area (10 screens). Deliberately gated behind `client_portal_enabled`, which is
+  FALSE. Nothing is reachable until Summit approves that phase in writing.
+- The detailed post-payment questionnaire
+- Payment webhook route (the driver and its signature verification are built and tested;
+  the HTTP endpoint is not wired)
+- Bespoke layouts for How It Works, Will Options, Pricing and About Us — these currently
+  render through the generic `Page.vue`, so the content is live and correct but the
+  distinctive per-page compositions from the design are not yet reproduced
+
+### Deployment caveat
+Cron is **not yet configured** — `crontab` is unavailable over SSH on this host and the
+three entries must be added through hPanel. See `DEPLOYMENT.md`. Until they are, retention,
+backups, the queue and the SSR watchdog do not run. The SSR server is currently running,
+but nothing will restart it if it dies.
