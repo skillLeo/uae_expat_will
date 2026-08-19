@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Libre+Caslon+Display&family=Prata&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  input, textarea, button { font: inherit; color: inherit; }
+  th, td { text-align: left; }
+</style>
+</helmet>
+
+<section style="background: #12233F; padding: 72px 48px 64px;">
+  <div style="max-width: 1120px; margin: 0 auto;">
+    <div style="display: flex; flex-wrap: wrap; gap: 64px; align-items: flex-end; justify-content: space-between;">
+      <div>
+        <dc-import name="Wordmark" direction="{{ wordmark }}" context="lockup" ground="ink" hint-size="320px,90px"></dc-import>
+      </div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #B9C2D1; font-variant-numeric: tabular-nums;">
+        <div>Deliverable 03 of 08 — Foundations</div>
+        <div>Direction 1b · Newsreader · 16 August 2026</div>
+        <div>Every ratio on this page is computed, not estimated</div>
+      </div>
+    </div>
+    <div style="height: 1px; background: #1E3252; margin: 48px 0 40px;"></div>
+    <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; color: #F6F1E7; margin: 0 0 24px; max-width: 22ch;">The foundations, in use</h1>
+    <p style="font-size: 18px; line-height: 1.65; color: #B9C2D1; max-width: 62ch; margin: 0;">Every token below is shown doing its job in real content — real fees, real question text, real case references, real declarations. Nothing on this page is a swatch for its own sake, and nothing is set in placeholder text.</p>
+  </div>
+</section>
+
+<section style="padding: 128px 48px 0;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">01</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Identity</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">The wordmark is a component, not a picture</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 48px;">Direction, context and ground are props. Switching the whole product from 1b to 1a or 1c is one value — no relayout, no asset swap, nothing else touched. Ahmed has not signed off, so nothing downstream assumes 1b.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 64px;">
+        <div style="flex: 1 1 300px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 32px 24px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 24px;">context: lockup · ground: paper</div>
+          <dc-import name="Wordmark" direction="{{ wordmark }}" context="lockup" ground="paper" hint-size="300px,90px"></dc-import>
+        </div>
+        <div style="flex: 1 1 300px; background: #0B1729; border: 1px solid #1E3252; padding: 32px 24px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #B9C2D1; margin-bottom: 24px;">context: lockup · ground: ink</div>
+          <dc-import name="Wordmark" direction="{{ wordmark }}" context="lockup" ground="ink" hint-size="300px,90px"></dc-import>
+        </div>
+      </div>
+
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 8px;">Header at full load — seven items, utility slot, primary action</div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 12px;">1280px, shown at 78% — measured in the live DOM: 1146px of content, 134px of slack</div>
+      <div style="height: 62px; overflow: hidden; margin-bottom: 24px;">
+        <div style="width: 1280px; transform: scale(0.78); transform-origin: left top; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px 32px; display: flex; align-items: center; gap: 24px;">
+          <dc-import name="Wordmark" direction="{{ wordmark }}" context="header" ground="paper" hint-size="170px,30px"></dc-import>
+          <div style="flex: 1; display: flex; justify-content: center; gap: 16px; font-size: 13px; color: #3A4A66; white-space: nowrap;">
+            <span>How It Works</span>
+            <span>Do You Need a Will?</span>
+            <span>UAE Will Options</span>
+            <span>Pricing</span>
+            <span>FAQs</span>
+            <span>About Us</span>
+            <span>Contact</span>
+          </div>
+          <div style="width: 96px; height: 24px; flex: none; border: 1px dashed #B9C2D1; display: grid; place-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #5B6472;">utility slot</div>
+          <button style="flex: none; background: #12233F; color: #F6F1E7; font-size: 14px; font-weight: 500; padding: 13px 18px; border: 1px solid #12233F; border-radius: 4px; cursor: pointer; white-space: nowrap;">Start the assessment</button>
+        </div>
+      </div>
+
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 12px;">1024px — one row needs 1146px, so below 1200 the nav drops to a second row. Nothing is removed.</div>
+      <div style="height: 116px; overflow: hidden; margin-bottom: 24px;">
+        <div style="width: 1024px; transform: scale(0.97); transform-origin: left top; background: #FFFFFF; border: 1px solid #E2E6EC;">
+          <div style="display: flex; align-items: center; gap: 24px; padding: 14px 32px;">
+            <dc-import name="Wordmark" direction="{{ wordmark }}" context="header" ground="paper" hint-size="170px,30px"></dc-import>
+            <div style="flex: 1;"></div>
+            <div style="width: 96px; height: 24px; flex: none; border: 1px dashed #B9C2D1; display: grid; place-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #5B6472;">utility slot</div>
+            <button style="flex: none; background: #12233F; color: #F6F1E7; font-size: 14px; font-weight: 500; padding: 13px 18px; border: 1px solid #12233F; border-radius: 4px; cursor: pointer; white-space: nowrap;">Start the assessment</button>
+          </div>
+          <div style="display: flex; gap: 20px; padding: 0 32px 12px; font-size: 13px; color: #3A4A66; border-top: 1px solid #F1F2F4; padding-top: 12px; white-space: nowrap;">
+            <span>How It Works</span>
+            <span>Do You Need a Will?</span>
+            <span>UAE Will Options</span>
+            <span>Pricing</span>
+            <span>FAQs</span>
+            <span>About Us</span>
+            <span>Contact</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 12px;">768px — the seven-item nav row measures 574px and fits inside 704px of content width</div>
+      <div style="width: 768px; max-width: 100%; background: #FFFFFF; border: 1px solid #E2E6EC; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 16px; padding: 12px 20px;">
+          <dc-import name="Wordmark" direction="{{ wordmark }}" context="header" ground="paper" hint-size="150px,28px"></dc-import>
+          <div style="flex: 1;"></div>
+          <div style="width: 82px; height: 24px; flex: none; border: 1px dashed #B9C2D1; display: grid; place-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #5B6472;">utility</div>
+          <button style="flex: none; background: #12233F; color: #F6F1E7; font-size: 14px; font-weight: 500; padding: 11px 14px; border: 1px solid #12233F; border-radius: 4px; cursor: pointer; white-space: nowrap;">Start the assessment</button>
+        </div>
+        <div style="display: flex; gap: 14px; padding: 10px 20px 12px; font-size: 13px; color: #3A4A66; border-top: 1px solid #F1F2F4; white-space: nowrap;">
+          <span>How It Works</span>
+          <span>Do You Need a Will?</span>
+          <span>UAE Will Options</span>
+          <span>Pricing</span>
+          <span>FAQs</span>
+          <span>About Us</span>
+          <span>Contact</span>
+        </div>
+      </div>
+      <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px; max-width: 780px; margin-bottom: 80px;">
+        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">What breaks, and where</div>
+        <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0 0 10px; max-width: 64ch;">One row holds all nine elements down to 1200px. Between 1199 and 720 the nav moves to a second row — the wordmark, utility slot and primary action stay on the first. Below 720 the nav becomes the sheet menu, which is the phone pattern anyway. No navigation item is dropped at any width, and Contact stays in the desktop header rather than living only in the mobile menu.</p>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #5B6472;">measured: wordmark 164 · nav 574 at 13px/16px gaps · slot 96 · button 176 · gaps 72 · padding 64 · total 1146</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">02</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Accessibility floor</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">The contrast ledger</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 16px;">Computed by the WCAG 2.x relative-luminance formula, not sampled by eye. Three of the palette's stated permissions do not survive the arithmetic; each is corrected below the table rather than quietly ignored.</p>
+      <p style="font-size: 15px; line-height: 1.6; color: #5B6472; max-width: 62ch; margin: 0 0 40px;">Floors: body text 4.5:1 · text at 24px or 19px semibold 3:1 · non-text UI boundaries and state indicators 3:1.</p>
+
+      <table style="width: 100%; max-width: 780px; border-collapse: collapse; margin-bottom: 40px;">
+        <thead>
+          <tr style="border-bottom: 1.5px solid #12233F;">
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 16px 10px 0;">Foreground on ground</th>
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 16px 10px 0;">Role</th>
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 16px 10px 0; text-align: right;">Ratio</th>
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 0 10px 0; text-align: right;">Floor</th>
+          </tr>
+        </thead>
+        <tbody style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums;">
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#12233F on #F6F1E7</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Body text on paper</td><td style="padding: 11px 16px 11px 0; text-align: right;">13.94</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#3A4A66 on #F6F1E7</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Secondary prose</td><td style="padding: 11px 16px 11px 0; text-align: right;">7.93</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#5B6472 on #FFFFFF</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Captions, helper text</td><td style="padding: 11px 16px 11px 0; text-align: right;">5.98</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#F6F1E7 on #12233F</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Primary button label</td><td style="padding: 11px 16px 11px 0; text-align: right;">13.94</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE; background: #F7F0DF;"><td style="padding: 11px 16px 11px 0;">#AD8A46 on #F6F1E7</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Gold on paper — <strong style="font-weight: 600;">fails</strong></td><td style="padding: 11px 16px 11px 0; text-align: right; font-weight: 500;">2.87</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">3.00</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#8A6512 on #F6F1E7</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Gold-deep — eyebrows, focus, icons</td><td style="padding: 11px 16px 11px 0; text-align: right;">4.72</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#D8C69A on #12233F</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Gold-soft on ink · stated 4.6, actual</td><td style="padding: 11px 16px 11px 0; text-align: right;">9.32</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#B9C2D1 on #12233F</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Steel on ink · stated 6.9, actual</td><td style="padding: 11px 16px 11px 0; text-align: right;">8.75</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#8C93A1 on #FFFFFF</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Input boundary</td><td style="padding: 11px 16px 11px 0; text-align: right;">3.09</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">3.00</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE; background: #F7F0DF;"><td style="padding: 11px 16px 11px 0;">#B9C2D1 on #FFFFFF</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Steel as text — <strong style="font-weight: 600;">never</strong></td><td style="padding: 11px 16px 11px 0; text-align: right; font-weight: 500;">1.79</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#2E6A4E on #EAF2ED</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Positive status label</td><td style="padding: 11px 16px 11px 0; text-align: right;">5.60</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#2A4E86 on #E9EFF8</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">In-progress status label</td><td style="padding: 11px 16px 11px 0; text-align: right;">7.17</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#8A6512 on #F7F0DF</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Attention status label</td><td style="padding: 11px 16px 11px 0; text-align: right;">4.68</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#63467F on #F0EBF6</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Held-for-review label</td><td style="padding: 11px 16px 11px 0; text-align: right;">6.60</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;"><td style="padding: 11px 16px 11px 0;">#8C2F2F on #F8ECEA</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Critical label</td><td style="padding: 11px 16px 11px 0; text-align: right;">7.09</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+          <tr><td style="padding: 11px 16px 11px 0;">#5B6472 on #F1F2F4</td><td style="padding: 11px 16px 11px 0; font-family: 'Instrument Sans', sans-serif; color: #3A4A66;">Neutral label</td><td style="padding: 11px 16px 11px 0; text-align: right;">5.34</td><td style="padding: 11px 0; text-align: right; color: #5B6472;">4.50</td></tr>
+        </tbody>
+      </table>
+
+      <div style="display: grid; gap: 1px; background: #E4DDCE; border: 1px solid #E4DDCE; max-width: 780px; margin-bottom: 80px;">
+        <div style="background: #FBF8F2; padding: 20px 24px;">
+          <div style="font-size: 17px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;">Gold no longer carries meaning on paper</div>
+          <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 64ch;">#AD8A46 reaches 2.87:1 on paper, below even the 3:1 non-text floor, so it cannot be an eyebrow label, an icon or a focus ring there. It is now decorative only — rules and hairlines. Functional gold is <strong style="font-weight: 600;">#8A6512</strong> at 4.72:1 on paper and 5.32:1 on white. On ink, functional gold is #D8C69A at 9.32:1, because #8A6512 collapses to 2.95:1 against #12233F.</p>
+        </div>
+        <div style="background: #FBF8F2; padding: 20px 24px;">
+          <div style="font-size: 17px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;">Disabled states are not signalled by fading text</div>
+          <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 64ch;">Steel #B9C2D1 as a text colour is 1.79:1 on white. Disabled labels therefore stay at #5B6472 (5.98:1) and the disabled state is carried by a steel boundary, the absence of a hover response, <code style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">aria-disabled</code> and a visible reason in helper text. A greyed-out control with no stated reason is not an accessible control.</p>
+        </div>
+        <div style="background: #FBF8F2; padding: 20px 24px;">
+          <div style="font-size: 17px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;">Status borders are decorative, so the icon and label are mandatory</div>
+          <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 64ch;">Every semantic border sits at roughly 1.3:1 against its own fill — perceptible as an edge, useless as information. That is acceptable only because no status is ever communicated by colour: each carries a line icon and a text label, and both clear 4.5:1. This is the client's written rule and the arithmetic is what enforces it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">03</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Colour</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Ink, paper, and gold used sparingly enough to mean something</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 48px;">Derived from Summit's own logo, not invented. Paper splits in two: #F7F4EE for page fills so the cream never becomes a theme, #F6F1E7 for panels that are meant to read as a sheet with edges.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: #E4DDCE; border: 1px solid #E4DDCE; margin-bottom: 16px;">
+        <div style="background: #12233F; padding: 24px 20px 20px; min-height: 132px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 14px; font-weight: 500; color: #F6F1E7;">Ink</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.6; color: #B9C2D1;">#12233F<br>text · dark surfaces</div>
+        </div>
+        <div style="background: #0B1729; padding: 24px 20px 20px; min-height: 132px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 14px; font-weight: 500; color: #F6F1E7;">Ink deep</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.6; color: #B9C2D1;">#0B1729<br>footer · deepest surface</div>
+        </div>
+        <div style="background: #F7F4EE; padding: 24px 20px 20px; min-height: 132px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 14px; font-weight: 500;">Page</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.6; color: #5B6472;">#F7F4EE<br>full-page fills</div>
+        </div>
+        <div style="background: #F6F1E7; padding: 24px 20px 20px; min-height: 132px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 14px; font-weight: 500;">Paper</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.6; color: #5B6472;">#F6F1E7<br>panels with edges</div>
+        </div>
+        <div style="background: #FFFFFF; padding: 24px 20px 20px; min-height: 132px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 14px; font-weight: 500;">Surface</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.6; color: #5B6472;">#FFFFFF<br>cards · inputs</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 64px;">
+        <div style="flex: 1 1 340px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 24px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 20px;">gold, in the only three places it is permitted</div>
+          <div style="display: grid; gap: 20px;">
+            <div>
+              <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 10px;"></div>
+              <div style="font-size: 13px; color: #3A4A66;">Decorative rule — 2px, horizontal, under a title block</div>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 12px;">
+              <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512;">Eyebrow label</div>
+              <div style="font-size: 13px; color: #3A4A66;">#8A6512, never #AD8A46</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 96px; height: 36px; border: 1px solid #8C93A1; border-radius: 2px; outline: 2px solid #8A6512; outline-offset: 2px;"></div>
+              <div style="font-size: 13px; color: #3A4A66;">Focus ring — 2px #8A6512, 2px offset</div>
+            </div>
+          </div>
+        </div>
+        <div style="flex: 1 1 340px; background: #F2EAD8; border: 1px solid #E6D5A8; padding: 24px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8A6512; margin-bottom: 16px;">gold wash #F2EAD8 — highlight blocks only</div>
+          <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0 0 12px; max-width: 60ch;">Professional fee for one accepted standard Will: <strong style="font-weight: 600; font-variant-numeric: tabular-nums;">AED 2,199 plus VAT</strong>, including preparation, human legal review, certified legal translation of the new UAE Will and submission assistance.</p>
+          <p style="font-size: 13px; line-height: 1.5; color: #3A4A66; margin: 0;">Government, court, registry and notary charges are separate. 13.11:1 for body text on this wash.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">04</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">The rule system</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">A margin rule and a divider can never be confused</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 16px;">This is the cost I named in direction 1b, solved as a rule rather than a habit. Three line types exist in the entire product. They differ on all three of orientation, colour and weight at once, so no two are ever one property apart.</p>
+      <p style="font-size: 15px; line-height: 1.6; color: #5B6472; max-width: 62ch; margin: 0 0 40px;">A fourth line — any other colour, weight or orientation — does not exist. If a screen appears to need one, it needs less content.</p>
+
+      <table style="width: 100%; max-width: 820px; border-collapse: collapse; margin-bottom: 40px;">
+        <thead>
+          <tr style="border-bottom: 1.5px solid #12233F;">
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 16px 10px 0;">Line</th>
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 16px 10px 0;">Orientation</th>
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 16px 10px 0;">Colour</th>
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 16px 10px 0;">Weight</th>
+            <th style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 0 0 10px 0;">Never</th>
+          </tr>
+        </thead>
+        <tbody style="font-size: 14px;">
+          <tr style="border-bottom: 1px solid #E4DDCE;">
+            <td style="padding: 14px 16px 14px 0; font-weight: 600;">Margin rule</td>
+            <td style="padding: 14px 16px 14px 0; color: #3A4A66;">Vertical, full height of its block</td>
+            <td style="padding: 14px 16px 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66;">#D8C69A</td>
+            <td style="padding: 14px 16px 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66;">1px</td>
+            <td style="padding: 14px 0; color: #3A4A66;">Without content in the margin beside it</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #E4DDCE;">
+            <td style="padding: 14px 16px 14px 0; font-weight: 600;">Section divider</td>
+            <td style="padding: 14px 16px 14px 0; color: #3A4A66;">Horizontal, spans the full measure</td>
+            <td style="padding: 14px 16px 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66;">#E4DDCE / #E2E6EC</td>
+            <td style="padding: 14px 16px 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66;">1px</td>
+            <td style="padding: 14px 0; color: #3A4A66;">Gold, and never vertical</td>
+          </tr>
+          <tr>
+            <td style="padding: 14px 16px 14px 0; font-weight: 600;">Title-block rule</td>
+            <td style="padding: 14px 16px 14px 0; color: #3A4A66;">Horizontal, 44px stub only</td>
+            <td style="padding: 14px 16px 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66;">#AD8A46</td>
+            <td style="padding: 14px 16px 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66;">2px</td>
+            <td style="padding: 14px 0; color: #3A4A66;">Full width, and never 1px</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 32px; margin-bottom: 12px;">
+        <div style="display: grid; grid-template-columns: 48px 1px 1fr; margin-bottom: 32px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">7.2</div>
+          <div style="background: #D8C69A;"></div>
+          <div style="padding-left: 24px;">
+            <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 12px;"></div>
+            <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">Registration is completed by the competent authority</h3>
+            <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 64ch;">Completing the online process, paying Summit's professional fee or approving a draft does not itself register a Will. Identity verification, signing, attendance and payment of authority fees remain subject to that authority's current requirements.</p>
+          </div>
+        </div>
+        <div style="height: 1px; background: #E2E6EC; margin-bottom: 32px;"></div>
+        <div style="display: grid; grid-template-columns: 48px 1px 1fr;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">7.3</div>
+          <div style="background: #D8C69A;"></div>
+          <div style="padding-left: 24px;">
+            <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 12px;"></div>
+            <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">Human legal review applies to every Will</h3>
+            <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 64ch;">No document is treated as ready for approval until a legal professional at Summit Legal Consultancy UAE has reviewed it. This applies to every client, not only to matters held for review.</p>
+          </div>
+        </div>
+      </div>
+      <p style="font-size: 13px; line-height: 1.5; color: #5B6472; margin: 0 0 80px;">All three line types on one screen: two vertical gold margin rules carrying clause numbers, one horizontal grey divider between clauses, two 44px gold title-block stubs. Nothing is ambiguous.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">05</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Typography</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Three roles, and a rule about where the serif is allowed</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 48px;">Newsreader appears only where the document speaks in its own voice: page titles, section openers, the wordmark, one pull quote per page. Every interface string — label, button, status, table header — is Instrument Sans. Figures in fee tables, case references and timestamps are tabular.</p>
+
+      <div style="display: grid; gap: 1px; background: #E4DDCE; border: 1px solid #E4DDCE; margin-bottom: 64px;">
+        <div style="background: #FFFFFF; padding: 28px 24px; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.6; color: #5B6472;">display-l<br>44 / 1.08 / -0.02em</div>
+          <div style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em;">Prepare your UAE Will with legal review</div>
+        </div>
+        <div style="background: #FFFFFF; padding: 28px 24px; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.6; color: #5B6472;">display-m<br>34 / 1.14 / -0.015em</div>
+          <div style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em;">A process matched to your circumstances</div>
+        </div>
+        <div style="background: #FFFFFF; padding: 28px 24px; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.6; color: #5B6472;">h2 · sans<br>24 / 1.3 / -0.008em</div>
+          <div style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em;">Who may care for your children</div>
+        </div>
+        <div style="background: #FFFFFF; padding: 28px 24px; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.6; color: #5B6472;">h3<br>20 / 1.35 / 0</div>
+          <div style="font-size: 20px; font-weight: 600; line-height: 1.35;">Does completing the website process register my Will?</div>
+        </div>
+        <div style="background: #FFFFFF; padding: 28px 24px; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.6; color: #5B6472;">body-l<br>18 / 1.65 / 0</div>
+          <div style="font-size: 18px; line-height: 1.65; max-width: 60ch;">Protect your family, children and assets through a guided digital process, reviewed by a legal team before you approve anything.</div>
+        </div>
+        <div style="background: #FFFFFF; padding: 28px 24px; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.6; color: #5B6472;">legal<br>15 / 1.72 / 0 · 64ch</div>
+          <div style="font-size: 15px; line-height: 1.72; color: #12233F; max-width: 64ch;">No legal or professional engagement begins until the matter is accepted by Summit Legal Consultancy UAE and the applicable engagement terms are agreed. Any assessment result or pathway indication is preliminary.</div>
+        </div>
+        <div style="background: #FFFFFF; padding: 28px 24px; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.6; color: #5B6472;">utility · tabular<br>15 / mono</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; line-height: 1.6; font-variant-numeric: tabular-nums;">SLC-2026-04417 · 14 Aug 2026, 22:41 GST · AED 2,308.95</div>
+        </div>
+        <div style="background: #FFFFFF; padding: 28px 24px; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.6; color: #5B6472;">eyebrow<br>12 / 0.14em / 600</div>
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512;">Two service pathways</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">06</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Space, radius, elevation</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Radius by function, elevation only for things that float</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 40px;">4pt scale: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128, no value outside it. Radius is assigned by what a thing is, so a data row and a modal never share a corner. Five elevations, because a shadow's tint follows its ground.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+        <div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+          <div style="height: 44px; border: 1px solid #8C93A1; border-radius: 2px; margin-bottom: 14px;"></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">2px — inputs</div>
+        </div>
+        <div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+          <div style="height: 44px; background: #12233F; border-radius: 4px; margin-bottom: 14px;"></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">4px — buttons</div>
+        </div>
+        <div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+          <div style="height: 44px; border: 1px solid #E4DDCE; background: #F6F1E7; border-radius: 8px; margin-bottom: 14px;"></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">8px — cards</div>
+        </div>
+        <div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+          <div style="height: 44px; border: 1px solid #E2E6EC; border-top: 2px solid #AD8A46; border-radius: 12px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04); margin-bottom: 14px;"></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">12px — hero card only</div>
+        </div>
+        <div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+          <div style="height: 44px; display: flex; align-items: center; margin-bottom: 14px;">
+            <div style="background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 500; color: #2E6A4E;">Completed</div>
+          </div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">999px — pills, nothing else</div>
+        </div>
+        <div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+          <div style="height: 44px; border-top: 1px solid #E2E6EC; border-bottom: 1px solid #E2E6EC; display: flex; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums; color: #12233F; margin-bottom: 14px;">AED&nbsp;&nbsp;950.00</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">0 — tables, data rows</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 96px; align-items: stretch;">
+        <div style="flex: 1 1 240px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px;">
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Static content card</div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">One hairline, no shadow. This is the default for every card that sits on the page.</p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">border 1px · shadow none</div>
+        </div>
+        <div style="flex: 1 1 240px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 12px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04); padding: 24px;">
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Raised</div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">The hero assessment card and sticky bars. Barely there, and that is the point.</p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">shadow-raised</div>
+        </div>
+        <div style="flex: 1 1 240px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 4px 12px rgba(18,35,63,.07), 0 1px 3px rgba(18,35,63,.05); padding: 24px;">
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Float</div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">Dropdowns, popovers, the country type-ahead list.</p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">shadow-float</div>
+        </div>
+        <div style="flex: 1 1 240px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 12px; box-shadow: 0 16px 40px rgba(18,35,63,.14), 0 2px 8px rgba(18,35,63,.08); padding: 24px;">
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Sheet</div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">Modals and mobile sheets — the only elements that leave the page behind.</p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">shadow-sheet</div>
+        </div>
+        <div style="flex: 1 1 240px; background: #0B1729; border: 1px solid #1E3252; border-radius: 8px; padding: 24px;">
+          <div style="background: #F6F1E7; border-top: 2px solid #AD8A46; border-radius: 12px; box-shadow: 0 16px 40px rgba(11,23,41,.42), 0 2px 8px rgba(11,23,41,.32); padding: 20px;">
+            <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Sheet on ink</div>
+            <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">The hero assessment card. Paper on the ink ground, where the light-ground sheet shadow is invisible.</p>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">shadow-sheet-ink</div>
+          </div>
+        </div>
+      </div>
+      <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px; max-width: 780px; margin-bottom: 64px;">
+        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Why there is a fifth elevation</div>
+        <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0 0 10px; max-width: 64ch;">A shadow is cast light, so its tint has to follow the ground it falls on. <code style="font-family: 'IBM Plex Mono', monospace; font-size: 14px;">--shadow-sheet</code> at 14% of #12233F is imperceptible against #0B1729 — the card would float with no evidence of floating. The ink variant keeps the same geometry and raises the alpha to 42/32 against the deeper ink.</p>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #5B6472;">--shadow-sheet-ink: 0 16px 40px rgba(11,23,41,.42), 0 2px 8px rgba(11,23,41,.32) — the hero card only</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">07</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Buttons</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Four variants, every state, one name per action</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 40px;">Labels say what happens: “Start the assessment”, never “Get started”. The same action keeps the same label through the whole flow. Minimum target 44×44; the 36px size keeps a 44px hit area through padding. Focus is 2px #8A6512 at 2px offset and is never removed.</p>
+
+      <div style="overflow-x: auto; margin-bottom: 24px;">
+        <table style="border-collapse: collapse; min-width: 860px;">
+          <thead>
+            <tr>
+              <th style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; padding: 0 20px 12px 0;">Variant</th>
+              <th style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; padding: 0 20px 12px 0;">Default</th>
+              <th style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; padding: 0 20px 12px 0;">Hover</th>
+              <th style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; padding: 0 20px 12px 0;">Focus-visible</th>
+              <th style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; padding: 0 20px 12px 0;">Active</th>
+              <th style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; padding: 0 20px 12px 0;">Disabled</th>
+              <th style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; padding: 0 0 12px 0;">Loading</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-top: 1px solid #E4DDCE;">
+              <td style="padding: 20px 20px 20px 0; font-size: 14px; font-weight: 600;">Primary</td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 140ms ease;" style-hover="background: #0B1729;">Start the assessment</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #0B1729; color: #F6F1E7; border: 1px solid #0B1729; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer;">Start the assessment</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; outline: 2px solid #8A6512; outline-offset: 2px;">Start the assessment</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #0B1729; color: #F6F1E7; border: 1px solid #0B1729; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: inset 0 2px 4px rgba(0,0,0,.35);">Start the assessment</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button aria-disabled="true" style="background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: not-allowed;">Start the assessment</button></td>
+              <td style="padding: 20px 0;"><button aria-busy="true" style="position: relative; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: progress; overflow: hidden;">Sending for review…<span style="position: absolute; left: 0; bottom: 0; height: 2px; width: 62%; background: #D8C69A;"></span></button></td>
+            </tr>
+            <tr style="border-top: 1px solid #E4DDCE;">
+              <td style="padding: 20px 20px 20px 0; font-size: 14px; font-weight: 600;">Secondary</td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 140ms ease;" style-hover="background: #FFFFFF;">See how it works</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #FFFFFF; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer;">See how it works</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; outline: 2px solid #8A6512; outline-offset: 2px;">See how it works</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #F6F1E7; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: inset 0 2px 4px rgba(18,35,63,.12);">See how it works</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button aria-disabled="true" style="background: transparent; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: not-allowed;">See how it works</button></td>
+              <td style="padding: 20px 0;"><button aria-busy="true" style="position: relative; background: transparent; color: #3A4A66; border: 1px solid #B9C2D1; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: progress; overflow: hidden;">Loading…<span style="position: absolute; left: 0; bottom: 0; height: 2px; width: 40%; background: #8A6512;"></span></button></td>
+            </tr>
+            <tr style="border-top: 1px solid #E4DDCE;">
+              <td style="padding: 20px 20px 20px 0; font-size: 14px; font-weight: 600;">Tertiary</td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: none; color: #12233F; border: none; border-bottom: 1px solid transparent; border-radius: 0; padding: 12px 2px; font-size: 14px; font-weight: 500; cursor: pointer;" style-hover="border-bottom-color: #8A6512; color: #8A6512;">View all frequently asked questions</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: none; color: #8A6512; border: none; border-bottom: 1px solid #8A6512; border-radius: 0; padding: 12px 2px; font-size: 14px; font-weight: 500; cursor: pointer;">View all frequently asked questions</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: none; color: #12233F; border: none; border-radius: 2px; padding: 12px 2px; font-size: 14px; font-weight: 500; cursor: pointer; outline: 2px solid #8A6512; outline-offset: 2px;">View all frequently asked questions</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: none; color: #0B1729; border: none; border-bottom: 1.5px solid #8A6512; border-radius: 0; padding: 12px 2px; font-size: 14px; font-weight: 500; cursor: pointer;">View all frequently asked questions</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button aria-disabled="true" style="background: none; color: #5B6472; border: none; border-bottom: 1px dotted #B9C2D1; border-radius: 0; padding: 12px 2px; font-size: 14px; font-weight: 500; cursor: not-allowed;">View all frequently asked questions</button></td>
+              <td style="padding: 20px 0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">not applicable</td>
+            </tr>
+            <tr style="border-top: 1px solid #E4DDCE;">
+              <td style="padding: 20px 20px 20px 0; font-size: 14px; font-weight: 600;">Destructive</td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #FFFFFF; color: #8C2F2F; border: 1px solid #8C2F2F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 140ms ease;" style-hover="background: #F8ECEA;">Discard this draft</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #F8ECEA; color: #8C2F2F; border: 1px solid #8C2F2F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer;">Discard this draft</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #FFFFFF; color: #8C2F2F; border: 1px solid #8C2F2F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; outline: 2px solid #8A6512; outline-offset: 2px;">Discard this draft</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button style="background: #F8ECEA; color: #8C2F2F; border: 1px solid #8C2F2F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: inset 0 2px 4px rgba(140,47,47,.18);">Discard this draft</button></td>
+              <td style="padding: 20px 20px 20px 0;"><button aria-disabled="true" style="background: #FFFFFF; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: not-allowed;">Discard this draft</button></td>
+              <td style="padding: 20px 0;"><button aria-busy="true" style="position: relative; background: #FFFFFF; color: #8C2F2F; border: 1px solid #E8C9C4; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; cursor: progress; overflow: hidden;">Discarding…<span style="position: absolute; left: 0; bottom: 0; height: 2px; width: 78%; background: #8C2F2F;"></span></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 13px; line-height: 1.6; color: #5B6472; max-width: 64ch; margin: 0 0 40px;">Loading is a 2px determinate hairline inside the button, not a spinner. Disabled keeps its label at #5B6472 (5.98:1) and always appears beside a stated reason — the greyed-out control with no explanation is the single most common accessibility failure in legal workflows.</p>
+
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 24px;">Sizes — 36 · 44 · 52</div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 12px;">
+        <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 9px 14px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Save and return later</button>
+        <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;">Continue</button>
+        <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500; min-height: 52px; cursor: pointer;">Start the assessment</button>
+      </div>
+      <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 0 0 80px;">36px is permitted only inside dense admin tables, where the row itself provides the 44px target.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">08</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Form controls</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Every field keeps a visible label, and the two hard ones work</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 48px;">No placeholder is ever a label. The type-ahead nationality field and the exclusive multi-select below are live — type in one, and click “None of these” in the other to watch it clear the rest.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 64px;">
+        <div style="flex: 1 1 300px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Full name</label>
+          <input value="Priya Raghunathan" readonly="true" style="width: 100%; background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px 14px; font-size: 16px; min-height: 44px;">
+          <div style="font-size: 13px; line-height: 1.5; color: #5B6472; margin-top: 6px;">As it appears on your passport.</div>
+        </div>
+        <div style="flex: 1 1 300px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Email address</label>
+          <input value="priya.r@" readonly="true" style="width: 100%; background: #FFFFFF; border: 1.5px solid #8C2F2F; border-radius: 2px; padding: 12px 14px; font-size: 16px; min-height: 44px;">
+          <div style="display: flex; align-items: flex-start; gap: 8px; margin-top: 8px; color: #8C2F2F;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" style="flex: none; margin-top: 2px;"><path d="M8 2.6 14.2 13.2H1.8z" stroke-linejoin="round"></path><path d="M8 6.6v3.1"></path><circle cx="8" cy="11.4" r="0.6" fill="currentColor" stroke="none"></circle></svg>
+            <div style="font-size: 13px; line-height: 1.5;">Add the part after the @ so we can send your result — for example priya.r@gmail.com.</div>
+          </div>
+        </div>
+        <div style="flex: 1 1 300px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: #5B6472;">Emirate of residence</label>
+          <input value="Not available yet" readonly="true" aria-disabled="true" style="width: 100%; background: #F1F2F4; border: 1px solid #B9C2D1; border-radius: 2px; padding: 12px 14px; font-size: 16px; min-height: 44px; color: #5B6472; cursor: not-allowed;">
+          <div style="font-size: 13px; line-height: 1.5; color: #5B6472; margin-top: 6px;">Available once you confirm that you live in the UAE.</div>
+        </div>
+        <div style="flex: 1 1 300px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Professional fee</label>
+          <div style="display: flex; align-items: stretch; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF; min-height: 44px;">
+            <div style="display: flex; align-items: center; padding: 0 12px; border-right: 1px solid #E2E6EC; background: #FBF8F2; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #3A4A66;">AED</div>
+            <input value="2,199.00" readonly="true" style="flex: 1; min-width: 0; border: none; background: transparent; padding: 12px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-variant-numeric: tabular-nums; text-align: right;">
+          </div>
+          <div style="font-size: 13px; line-height: 1.5; color: #5B6472; margin-top: 6px; font-variant-numeric: tabular-nums;">Plus VAT at 5% — AED 109.95. Total AED 2,308.95.</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 64px; align-items: flex-start;">
+        <div style="flex: 1 1 380px; max-width: 460px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 20px;">Searchable country field · live</div>
+          <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Nationality</label>
+          <div style="position: relative;">
+            <div style="display: flex; align-items: stretch; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF; min-height: 44px;">
+              <div style="display: flex; align-items: center; padding-left: 12px; color: #5B6472;">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5"></circle><path d="M11.8 11.8 15.4 15.4" stroke-linecap="round"></path></svg>
+              </div>
+              <input value="{{ countryQuery }}" onChange="{{ onCountryInput }}" onFocus="{{ onCountryFocus }}" role="combobox" aria-expanded="{{ countryOpen }}" autocomplete="off" placeholder="Start typing a country" style="flex: 1; min-width: 0; border: none; background: transparent; padding: 12px 12px; font-size: 16px;">
+            </div>
+            <sc-if value="{{ countryOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; left: 0; right: 0; top: 48px; z-index: 5; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 4px; box-shadow: 0 4px 12px rgba(18,35,63,.07), 0 1px 3px rgba(18,35,63,.05); overflow: hidden;">
+                <div style="display: flex; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid #E2E6EC; background: #FBF8F2; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; font-variant-numeric: tabular-nums;">
+                  <span>{{ matchLabel }}</span>
+                  <span>full ISO list in build</span>
+                </div>
+                <sc-for list="{{ countryResults }}" as="c" hint-placeholder-count="4">
+                  <div onClick="{{ c.onSelect }}" style="padding: 12px 14px; font-size: 15px; border-bottom: 1px solid #F1F2F4; cursor: pointer; min-height: 44px;" style-hover="background: #F6F1E7;">{{ c.name }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+          <div style="font-size: 13px; line-height: 1.5; color: #5B6472; margin-top: 8px;">Nationality does not determine the registration authority by itself. Any second nationality or legal connection with another country is collected later.</div>
+          <sc-if value="{{ countryIneligible }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; gap: 12px; margin-top: 16px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 8px; padding: 16px;">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#63467F" stroke-width="1.4" style="flex: none; margin-top: 1px;"><circle cx="9" cy="9" r="5.6"></circle><path d="M13.2 13.2 17 17" stroke-linecap="round"></path></svg>
+              <div>
+                <div style="font-size: 15px; font-weight: 600; color: #63467F; margin-bottom: 4px;">A different service applies</div>
+                <div style="font-size: 14px; line-height: 1.6; color: #12233F;">The Will services available through this platform are not intended for UAE citizens. You may contact Summit if you require a different legal service.</div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="flex: 1 1 380px; max-width: 460px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 20px;">Summary field with counter · live</div>
+          <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Short summary of your circumstances <span style="font-weight: 400; color: #5B6472;">(optional)</span></label>
+          <textarea value="{{ summary }}" onChange="{{ onSummary }}" rows="5" style="width: 100%; background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px 14px; font-size: 16px; line-height: 1.6; resize: vertical;"></textarea>
+          <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+            <div style="font-size: 13px; line-height: 1.5; color: #5B6472;">Do not include passwords, account numbers or copies of documents.</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums; flex: none; padding-left: 12px;">{{ summaryCount }}</div>
+          </div>
+
+          <div style="margin-top: 32px; display: flex; gap: 12px; align-items: flex-start; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 16px;">
+            <input type="checkbox" checked="{{ consent }}" onChange="{{ onConsent }}" style="width: 18px; height: 18px; margin: 2px 0 0; accent-color: #12233F; flex: none;">
+            <div style="font-size: 14px; line-height: 1.6;">I agree that my answers may be used for assessment and service delivery in accordance with the <a href="#privacy">Privacy Policy</a>. <span style="color: #5B6472;">Never pre-ticked.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 80px; align-items: flex-start;">
+        <div style="flex: 1 1 420px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 20px;">Single-select cards · live</div>
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 16px;">What service are you looking for today?</div>
+          <div style="display: grid; gap: 8px;">
+            <sc-for list="{{ services }}" as="s" hint-placeholder-count="5">
+              <div>
+                <sc-if value="{{ s.checked }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ s.onSelect }}" style="display: flex; gap: 12px; align-items: flex-start; background: #FFFFFF; border: 1.5px solid #12233F; border-radius: 8px; padding: 14px 16px; cursor: pointer; min-height: 44px;">
+                    <span style="width: 18px; height: 18px; flex: none; border: 1.5px solid #12233F; border-radius: 999px; display: grid; place-items: center; margin-top: 2px;"><span style="width: 8px; height: 8px; background: #12233F; border-radius: 999px;"></span></span>
+                    <span>
+                      <span style="display: block; font-size: 15px; font-weight: 600; line-height: 1.4;">{{ s.label }}</span>
+                      <span style="display: block; font-size: 13px; line-height: 1.5; color: #3A4A66; margin-top: 4px;">{{ s.note }}</span>
+                    </span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ s.unchecked }}" hint-placeholder-val="{{ true }}">
+                  <div onClick="{{ s.onSelect }}" style="display: flex; gap: 12px; align-items: flex-start; background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 8px; padding: 14px 16px; cursor: pointer; min-height: 44px;" style-hover="border-color: #12233F;">
+                    <span style="width: 18px; height: 18px; flex: none; border: 1px solid #8C93A1; border-radius: 999px; margin-top: 2px;"></span>
+                    <span style="font-size: 15px; line-height: 1.4;">{{ s.label }}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="flex: 1 1 420px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 20px;">Multi-select with an exclusive option · live</div>
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 6px;">Do any of these already exist?</div>
+          <div style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin-bottom: 16px;">Select everything that applies. Selecting “None of these” clears the others.</div>
+          <div style="display: grid; gap: 8px;">
+            <sc-for list="{{ priors }}" as="p" hint-placeholder-count="5">
+              <div>
+                <sc-if value="{{ p.checked }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ p.onToggle }}" style="display: flex; gap: 12px; align-items: center; background: #FFFFFF; border: 1.5px solid #12233F; border-radius: 8px; padding: 14px 16px; cursor: pointer; min-height: 44px;">
+                    <span style="width: 18px; height: 18px; flex: none; background: #12233F; border: 1.5px solid #12233F; border-radius: 2px; display: grid; place-items: center;">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#F6F1E7" stroke-width="1.8"><polyline points="2.4,6.4 4.8,8.8 9.6,3.4" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                    </span>
+                    <span style="font-size: 15px; font-weight: 600; line-height: 1.4;">{{ p.label }}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.unchecked }}" hint-placeholder-val="{{ true }}">
+                  <div onClick="{{ p.onToggle }}" style="display: flex; gap: 12px; align-items: center; background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 8px; padding: 14px 16px; cursor: pointer; min-height: 44px;" style-hover="border-color: #12233F;">
+                    <span style="width: 18px; height: 18px; flex: none; border: 1px solid #8C93A1; border-radius: 2px;"></span>
+                    <span style="font-size: 15px; line-height: 1.4;">{{ p.label }}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ noneCleared }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 13px; line-height: 1.5; color: #3A4A66;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.4" style="flex: none; margin-top: 2px;"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 7.2v4" stroke-linecap="round"></path><circle cx="8" cy="4.9" r="0.6" fill="#2A4E86" stroke="none"></circle></svg>
+              <div>Your other selections were cleared because “None of these” cannot be combined with them.</div>
+            </div>
+          </sc-if>
+
+          <div style="margin-top: 32px;">
+            <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px;">Emirates ID or passport copy</div>
+            <div style="border: 1px dashed #8C93A1; border-radius: 8px; background: #FBF8F2; padding: 24px; text-align: left;">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3A4A66" stroke-width="1.4"><path d="M12 16V5.5" stroke-linecap="round"></path><path d="M7.8 9.6 12 5.4l4.2 4.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4.5 15.5v3h15v-3" stroke-linecap="round"></path></svg>
+                <div style="font-size: 15px; line-height: 1.5;">Drag a file here, or choose one from your device.</div>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <button style="background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;">Choose a file</button>
+                <button style="background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;">Take a photo</button>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-top: 12px;">accept=image/*,application/pdf · capture=environment on mobile · 10 MB</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">09</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Assessment components</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Position and momentum, never “3 of 16”</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 48px;">The number of questions depends on the answers, so no counter may exist. Progress is carried by named stages and a rule that grows. Sensitive questions carry their explanation on the screen, visible, never behind a disclosure the reader has to find.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; margin-bottom: 64px;">
+        <div style="flex: 1 1 460px; max-width: 560px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-top: 2px solid #AD8A46; border-radius: 12px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04); overflow: hidden;">
+            <div style="padding: 16px 24px; border-bottom: 1px solid #E2E6EC; background: #FBF8F2;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512;">Your family</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">saved 22:41 GST</div>
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <div style="height: 3px; flex: 1; background: #8A6512;"></div>
+                <div style="height: 3px; flex: 1; background: #8A6512;"></div>
+                <div style="height: 3px; flex: 1; background: linear-gradient(to right, #8A6512 45%, #E4DDCE 45%);"></div>
+                <div style="height: 3px; flex: 1; background: #E4DDCE;"></div>
+                <div style="height: 3px; flex: 1; background: #E4DDCE;"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #5B6472;">
+                <span>About you · Family · Assets · Wishes · Declarations</span>
+              </div>
+            </div>
+            <div style="padding: 24px;">
+              <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 16px;">Which of these describes your children or dependants?</h3>
+              <div style="background: #FBF8F2; border-left: 2px solid #AD8A46; padding: 14px 16px; margin-bottom: 20px;">
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#8A6512" stroke-width="1.4" style="flex: none; margin-top: 2px;"><rect x="4" y="8" width="10" height="7" rx="1"></rect><path d="M6.4 8V6.2a2.6 2.6 0 0 1 5.2 0V8"></path></svg>
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Why we ask</div>
+                    <div style="font-size: 14px; line-height: 1.6; color: #12233F; max-width: 60ch;">Guardianship wishes can only be recorded where the selected Will route permits it. A nomination records your wishes; it does not remove the rights of the other parent or the authority of the court.</div>
+                  </div>
+                </div>
+              </div>
+              <div style="display: grid; gap: 8px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 12px; align-items: center; border: 1px solid #8C93A1; border-radius: 8px; padding: 14px 16px; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">
+                  <span style="width: 18px; height: 18px; flex: none; border: 1px solid #8C93A1; border-radius: 2px;"></span>
+                  <span style="font-size: 15px;">All children from my current marriage or relationship</span>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center; border: 1.5px solid #12233F; border-radius: 8px; padding: 14px 16px; min-height: 44px; cursor: pointer;">
+                  <span style="width: 18px; height: 18px; flex: none; background: #12233F; border: 1.5px solid #12233F; border-radius: 2px; display: grid; place-items: center;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#F6F1E7" stroke-width="1.8"><polyline points="2.4,6.4 4.8,8.8 9.6,3.4" stroke-linecap="round" stroke-linejoin="round"></polyline></svg></span>
+                  <span style="font-size: 15px; font-weight: 600;">Children from more than one marriage or relationship</span>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center; border: 1px solid #8C93A1; border-radius: 8px; padding: 14px 16px; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">
+                  <span style="width: 18px; height: 18px; flex: none; border: 1px solid #8C93A1; border-radius: 2px;"></span>
+                  <span style="font-size: 15px;">No children, and nobody is financially dependent on me</span>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; border-top: 1px solid #E2E6EC; padding-top: 20px;">
+                <button style="background: none; color: #12233F; border: none; padding: 12px 2px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer; display: flex; align-items: center; gap: 8px;" style-hover="color: #8A6512;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9.6,3.2 4.8,8 9.6,12.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  Back
+                </button>
+                <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 20px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Continue</button>
+              </div>
+            </div>
+          </div>
+          <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 12px 0 0;">The gold hairline sits on the top edge only. Back is always available and never a destructive-looking control.</p>
+        </div>
+
+        <div style="flex: 1 1 380px; max-width: 460px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 20px;">Review your answers</div>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; overflow: hidden;">
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 14px 16px; border-bottom: 1px solid #E2E6EC; align-items: center;">
+              <div><div style="font-size: 13px; color: #5B6472; margin-bottom: 2px;">Service required</div><div style="font-size: 15px; line-height: 1.4;">Prepare a new Will for myself</div></div>
+              <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 2px; cursor: pointer; min-height: 44px;">Change</button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 14px 16px; border-bottom: 1px solid #E2E6EC; align-items: center;">
+              <div><div style="font-size: 13px; color: #5B6472; margin-bottom: 2px;">Nationality</div><div style="font-size: 15px; line-height: 1.4;">India</div></div>
+              <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 2px; cursor: pointer; min-height: 44px;">Change</button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 14px 16px; border-bottom: 1px solid #E2E6EC; align-items: center;">
+              <div><div style="font-size: 13px; color: #5B6472; margin-bottom: 2px;">Location of assets</div><div style="font-size: 15px; line-height: 1.4;">In the UAE and in another country</div></div>
+              <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 2px; cursor: pointer; min-height: 44px;">Change</button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 14px 16px; align-items: center;">
+              <div><div style="font-size: 13px; color: #5B6472; margin-bottom: 2px;">Executor</div><div style="font-size: 15px; line-height: 1.4;">I have a suitable person but no substitute yet</div></div>
+              <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 2px; cursor: pointer; min-height: 44px;">Change</button>
+            </div>
+          </div>
+          <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 12px 0 0;">Square-cornered rows, one hairline each, no shadow. Change returns to the question rather than opening an editor in place.</p>
+        </div>
+      </div>
+
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 20px;">Declarations · live · seven, none pre-selected</div>
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; max-width: 760px; margin-bottom: 16px;">
+        <div style="display: grid; gap: 14px; margin-bottom: 24px;">
+          <sc-for list="{{ declarations }}" as="d" hint-placeholder-count="7">
+            <div style="display: grid; grid-template-columns: 28px 20px 1fr; gap: 12px; align-items: start;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; padding-top: 3px; font-variant-numeric: tabular-nums;">{{ d.n }}</div>
+              <input type="checkbox" checked="{{ d.checked }}" onChange="{{ d.onToggle }}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F;">
+              <div style="font-size: 15px; line-height: 1.6;">{{ d.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; border-top: 1px solid #E2E6EC; padding-top: 20px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums;">{{ declLabel }}</div>
+          <sc-if value="{{ declIncomplete }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <div style="font-size: 13px; color: #5B6472;">All seven must be confirmed to continue.</div>
+              <button aria-disabled="true" style="background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 13px 20px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: not-allowed;">See my result</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ declComplete }}" hint-placeholder-val="{{ false }}">
+            <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 20px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">See my result</button>
+          </sc-if>
+        </div>
+      </div>
+      <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 0 0 80px;">The disabled action states its condition in text beside it. Nothing is signalled by the button's colour alone.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">10</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Status and feedback</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Six states, each with an icon and a label</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 40px;">Held for legal review is the one that matters most. A held client has not been rejected, and both the colour and the words have to say so — it carries <code style="font-family: 'IBM Plex Mono', monospace; font-size: 14px;">--held</code>, never <code style="font-family: 'IBM Plex Mono', monospace; font-size: 14px;">--critical</code>, and its copy opens by saying this is not a rejection.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px;">
+        <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 7px 14px; white-space: nowrap;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 13px; font-weight: 500; color: #2E6A4E;">Completed</span></div>
+        <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #E9EFF8; border: 1px solid #C3D4EA; border-radius: 999px; padding: 7px 14px; white-space: nowrap;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"></circle><polyline points="8,4.6 8,8.2 10.6,9.6" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 13px; font-weight: 500; color: #2A4E86;">Legal review and drafting</span></div>
+        <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #F7F0DF; border: 1px solid #E6D5A8; border-radius: 999px; padding: 7px 14px; white-space: nowrap;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.5"><path d="M8 2.6 14.2 13.2H1.8z" stroke-linejoin="round"></path><path d="M8 6.6v3.1" stroke-linecap="round"></path><circle cx="8" cy="11.4" r="0.6" fill="#8A6512" stroke="none"></circle></svg><span style="font-size: 13px; font-weight: 500; color: #8A6512;">Further information required</span></div>
+        <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 7px 14px; white-space: nowrap;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.5"><circle cx="7.2" cy="7.2" r="4.6"></circle><path d="M10.6 10.6 13.8 13.8" stroke-linecap="round"></path></svg><span style="font-size: 13px; font-weight: 500; color: #63467F;">Held for legal review</span></div>
+        <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #F8ECEA; border: 1px solid #E8C9C4; border-radius: 999px; padding: 7px 14px; white-space: nowrap;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"></circle><path d="M5.8 5.8l4.4 4.4M10.2 5.8l-4.4 4.4" stroke-linecap="round"></path></svg><span style="font-size: 13px; font-weight: 500; color: #8C2F2F;">Not eligible for this service</span></div>
+        <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #F1F2F4; border: 1px solid #DCDFE4; border-radius: 999px; padding: 7px 14px; white-space: nowrap;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"></circle><path d="M5.4 8h5.2" stroke-linecap="round"></path></svg><span style="font-size: 13px; font-weight: 500; color: #5B6472;">Closed</span></div>
+      </div>
+
+      <div style="display: grid; gap: 12px; max-width: 820px; margin-bottom: 40px;">
+        <div style="display: flex; gap: 14px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 8px; padding: 20px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#63467F" stroke-width="1.4" style="flex: none; margin-top: 2px;"><circle cx="9" cy="9" r="5.6"></circle><path d="M13.2 13.2 17 17" stroke-linecap="round"></path></svg>
+          <div>
+            <div style="font-size: 17px; font-weight: 600; color: #63467F; margin-bottom: 6px;">We would like our legal team to review your circumstances first</div>
+            <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0 0 12px; max-width: 64ch;">This is not a rejection. One or more of your answers means we should look at your matter before recommending a service, a registration authority or a price. No payment is required at this stage, and nothing you have entered is lost.</p>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; font-variant-numeric: tabular-nums;">Case SLC-2026-04417 · held 14 Aug 2026, 22:41 GST</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 8px; padding: 20px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2E6A4E" stroke-width="1.4" style="flex: none; margin-top: 2px;"><circle cx="10" cy="10" r="7.6"></circle><polyline points="6.4,10.4 9,13 13.6,7" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+          <div>
+            <div style="font-size: 17px; font-weight: 600; color: #2E6A4E; margin-bottom: 6px;">You may continue through our online service</div>
+            <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0; max-width: 64ch;">Your answers indicate that your circumstances may be suitable for the standard online UAE Will service. This result is not final acceptance by any authority and does not mean that your Will has been prepared or registered.</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; background: #F7F0DF; border: 1px solid #E6D5A8; border-radius: 8px; padding: 20px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8A6512" stroke-width="1.4" style="flex: none; margin-top: 2px;"><path d="M10 3 17.6 16.4H2.4z" stroke-linejoin="round"></path><path d="M10 8.2v3.8" stroke-linecap="round"></path><circle cx="10" cy="14" r="0.7" fill="#8A6512" stroke="none"></circle></svg>
+          <div>
+            <div style="font-size: 17px; font-weight: 600; color: #8A6512; margin-bottom: 6px;">Two documents are still needed</div>
+            <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0; max-width: 64ch;">Your passport copy and your Emirates ID were not readable. Upload both again and drafting continues from where it stopped.</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; background: #E9EFF8; border: 1px solid #C3D4EA; border-radius: 8px; padding: 20px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2A4E86" stroke-width="1.4" style="flex: none; margin-top: 2px;"><circle cx="10" cy="10" r="7.6"></circle><path d="M10 9v5" stroke-linecap="round"></path><circle cx="10" cy="6.2" r="0.7" fill="#2A4E86" stroke="none"></circle></svg>
+          <div>
+            <div style="font-size: 17px; font-weight: 600; color: #2A4E86; margin-bottom: 6px;">Your draft is with the legal team</div>
+            <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0; max-width: 64ch;">We aim to send a first draft within 2 business days of receiving complete, usable instructions and all required documents. A matter needing additional specialist analysis may take longer, and we will tell you if that applies.</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; background: #F8ECEA; border: 1px solid #E8C9C4; border-radius: 8px; padding: 20px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8C2F2F" stroke-width="1.4" style="flex: none; margin-top: 2px;"><circle cx="10" cy="10" r="7.6"></circle><path d="M7.2 7.2l5.6 5.6M12.8 7.2l-5.6 5.6" stroke-linecap="round"></path></svg>
+          <div>
+            <div style="font-size: 17px; font-weight: 600; color: #8C2F2F; margin-bottom: 6px;">This service is not available for people under 18</div>
+            <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0; max-width: 64ch;">A person making a Will must be at least 18 years old, so the online Will preparation service cannot continue. Nothing has been charged.</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; background: #F1F2F4; border: 1px solid #DCDFE4; border-radius: 8px; padding: 20px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#5B6472" stroke-width="1.4" style="flex: none; margin-top: 2px;"><circle cx="10" cy="10" r="7.6"></circle><path d="M6.6 10h6.8" stroke-linecap="round"></path></svg>
+          <div>
+            <div style="font-size: 17px; font-weight: 600; color: #5B6472; margin-bottom: 6px;">This case was closed on 2 August 2026</div>
+            <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0; max-width: 64ch;">Closed cases stay available to read. Start a new assessment if your circumstances have changed.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 24px;">Stage tracker — the eight customer-facing statuses</div>
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; margin-bottom: 40px;">
+        <div style="display: grid; grid-template-columns: 20px 1fr; column-gap: 16px;">
+          <div style="grid-column: 1; display: flex; flex-direction: column; align-items: center; gap: 0;"></div>
+          <div style="grid-column: 2; display: grid; gap: 0;"></div>
+          <div style="grid-column: 1 / -1; display: grid; gap: 0;">
+            <div style="display: grid; grid-template-columns: 20px 1fr; column-gap: 16px; align-items: start;">
+              <div style="display: flex; flex-direction: column; align-items: center; height: 100%;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#2E6A4E" stroke-width="1.5"><circle cx="9" cy="9" r="7"></circle><polyline points="5.8,9.4 8,11.6 12.2,6.4" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><div style="width: 1px; flex: 1; background: #C4DCD0; min-height: 20px;"></div></div>
+              <div style="padding-bottom: 20px;"><div style="font-size: 15px; font-weight: 600;">Assessment completed</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">11 Aug 2026</div></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 20px 1fr; column-gap: 16px; align-items: start;">
+              <div style="display: flex; flex-direction: column; align-items: center; height: 100%;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#2E6A4E" stroke-width="1.5"><circle cx="9" cy="9" r="7"></circle><polyline points="5.8,9.4 8,11.6 12.2,6.4" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><div style="width: 1px; flex: 1; background: #C4DCD0; min-height: 20px;"></div></div>
+              <div style="padding-bottom: 20px;"><div style="font-size: 15px; font-weight: 600;">Accepted — terms and payment</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">12 Aug 2026 · AED 2,308.95 paid</div></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 20px 1fr; column-gap: 16px; align-items: start;">
+              <div style="display: flex; flex-direction: column; align-items: center; height: 100%;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#2E6A4E" stroke-width="1.5"><circle cx="9" cy="9" r="7"></circle><polyline points="5.8,9.4 8,11.6 12.2,6.4" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><div style="width: 1px; flex: 1; background: #C3D4EA; min-height: 20px;"></div></div>
+              <div style="padding-bottom: 20px;"><div style="font-size: 15px; font-weight: 600;">Questionnaire completed</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">13 Aug 2026</div></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 20px 1fr; column-gap: 16px; align-items: start;">
+              <div style="display: flex; flex-direction: column; align-items: center; height: 100%;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#2A4E86" stroke-width="1.5"><circle cx="9" cy="9" r="7"></circle><polyline points="9,5.2 9,9.2 11.8,10.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><div style="width: 1px; flex: 1; background: #DCDFE4; min-height: 20px;"></div></div>
+              <div style="padding-bottom: 20px;"><div style="font-size: 15px; font-weight: 600; color: #2A4E86;">Legal review and drafting</div><div style="font-size: 14px; line-height: 1.6; color: #3A4A66; max-width: 56ch;">In progress. First draft targeted within 2 business days of complete instructions — not a guarantee of any authority's timing.</div></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 20px 1fr; column-gap: 16px; align-items: start;">
+              <div style="display: flex; flex-direction: column; align-items: center; height: 100%;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#B9C2D1" stroke-width="1.5"><circle cx="9" cy="9" r="7"></circle></svg><div style="width: 1px; flex: 1; background: #DCDFE4; min-height: 20px;"></div></div>
+              <div style="padding-bottom: 20px;"><div style="font-size: 15px; color: #5B6472;">Draft review, amendments or approval</div></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 20px 1fr; column-gap: 16px; align-items: start;">
+              <div style="display: flex; flex-direction: column; align-items: center; height: 100%;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#B9C2D1" stroke-width="1.5"><circle cx="9" cy="9" r="7"></circle></svg><div style="width: 1px; flex: 1; background: #DCDFE4; min-height: 20px;"></div></div>
+              <div style="padding-bottom: 20px;"><div style="font-size: 15px; color: #5B6472;">Registration preparation or in progress</div></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 20px 1fr; column-gap: 16px; align-items: start;">
+              <div style="display: flex; flex-direction: column; align-items: center;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#B9C2D1" stroke-width="1.5"><circle cx="9" cy="9" r="7"></circle></svg></div>
+              <div><div style="font-size: 15px; color: #5B6472;">Completed</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 80px;">
+        <div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 32px 24px;">
+          <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 16px;"></div>
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">No matching question</div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px; max-width: 48ch;">Nothing in the 57 answers matches “inheritance tax”. Tax advice sits outside this service, and the team can point you to the right one.</p>
+          <button style="background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;">Ask the team a question</button>
+        </div>
+        <div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 20px;">loading skeleton — no shimmer, no pulse</div>
+          <div style="display: grid; gap: 12px;">
+            <div style="height: 12px; width: 40%; background: #F1F2F4;"></div>
+            <div style="height: 12px; width: 92%; background: #F1F2F4;"></div>
+            <div style="height: 12px; width: 78%; background: #F1F2F4;"></div>
+            <div style="height: 1px; background: #E2E6EC; margin: 8px 0;"></div>
+            <div style="height: 12px; width: 60%; background: #F1F2F4;"></div>
+          </div>
+          <div style="font-size: 13px; color: #5B6472; margin-top: 16px;">Loading your case…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">11</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Data</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Square tables, tabular figures, and the same data as cards</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 40px;">Every wide table has a card form for mobile. No horizontal scroll anywhere in the product — that is a written client rule, and it applies to the five-route comparison and the three-column responsibilities table too.</p>
+
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; margin-bottom: 16px;">
+        <div style="max-height: 260px; overflow-y: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="position: sticky; top: 0; background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px;">Authority</th>
+                <th style="position: sticky; top: 0; background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px;">Applies to</th>
+                <th style="position: sticky; top: 0; background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px; text-align: right;">Authority charge</th>
+                <th style="position: sticky; top: 0; background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px; text-align: right;">Summit fee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E6EC;">
+                <td style="padding: 14px 16px; font-size: 15px; font-weight: 500;">ADJD Civil Wills</td>
+                <td style="padding: 14px 16px; font-size: 14px; color: #3A4A66;">A person who is not a UAE citizen, subject to current requirements</td>
+                <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums;">950.00</td>
+                <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums;">2,199.00</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E6EC;">
+                <td style="padding: 14px 16px; font-size: 15px; font-weight: 500;">Dubai Courts</td>
+                <td style="padding: 14px 16px; font-size: 14px; color: #3A4A66;">Wills of non-Muslims, per the Dubai register</td>
+                <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums;">2,100.00</td>
+                <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums;">2,199.00</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E6EC;">
+                <td style="padding: 14px 16px; font-size: 15px; font-weight: 500;">DIFC Courts Wills Service</td>
+                <td style="padding: 14px 16px; font-size: 14px; color: #3A4A66;">Eligible applicants, 18 or over, who are not and have never been Muslim</td>
+                <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; color: #5B6472;">quoted</td>
+                <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums;">from 3,999.00</td>
+              </tr>
+              <tr>
+                <td style="padding: 14px 16px; font-size: 15px; font-weight: 500;">VAT</td>
+                <td style="padding: 14px 16px; font-size: 14px; color: #3A4A66;">On Summit's professional fee, at 5%</td>
+                <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; color: #5B6472;">—</td>
+                <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums;">109.95</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p style="font-size: 13px; line-height: 1.6; color: #5B6472; max-width: 64ch; margin: 0 0 40px;">Figures in AED, current authority indications only, confirmed for each application after legal review and before any authority payment. Government and court charges are separate from Summit's fee.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; margin-bottom: 80px;">
+        <div style="flex: 0 0 auto; width: 358px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 16px;">Same rows, mobile</div>
+          <div style="display: grid; gap: 8px;">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+              <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">ADJD Civil Wills</div>
+              <div style="display: grid; grid-template-columns: 128px 1fr; gap: 8px 12px; font-size: 14px;">
+                <div style="color: #5B6472;">Applies to</div><div>A person who is not a UAE citizen</div>
+                <div style="color: #5B6472;">Authority charge</div><div style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 950.00</div>
+                <div style="color: #5B6472;">Summit fee</div><div style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 2,199.00</div>
+              </div>
+            </div>
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+              <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Dubai Courts</div>
+              <div style="display: grid; grid-template-columns: 128px 1fr; gap: 8px 12px; font-size: 14px;">
+                <div style="color: #5B6472;">Applies to</div><div>Wills of non-Muslims</div>
+                <div style="color: #5B6472;">Authority charge</div><div style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 2,100.00</div>
+                <div style="color: #5B6472;">Summit fee</div><div style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 2,199.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex: 1 1 420px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 16px;">Case rows · admin density</div>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+            <div style="display: grid; grid-template-columns: 148px 1fr auto; gap: 16px; align-items: center; padding: 12px 16px; border-bottom: 1px solid #E2E6EC;" style-hover="background: #FBF8F2;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums;">SLC-2026-04417</div>
+              <div><div style="font-size: 14px; font-weight: 500;">Priya Raghunathan</div><div style="font-size: 13px; color: #5B6472;">Standard · ADJD likely</div></div>
+              <div style="display: inline-flex; align-items: center; gap: 6px; background: #E9EFF8; border: 1px solid #C3D4EA; border-radius: 999px; padding: 5px 10px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"></circle><polyline points="8,4.6 8,8.2 10.6,9.6" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 12px; font-weight: 500; color: #2A4E86;">Drafting</span></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 148px 1fr auto; gap: 16px; align-items: center; padding: 12px 16px; border-bottom: 1px solid #E2E6EC;" style-hover="background: #FBF8F2;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums;">SLC-2026-04412</div>
+              <div><div style="font-size: 14px; font-weight: 500;">Case held</div><div style="font-size: 13px; color: #5B6472;">Restricted — visible to authorised staff</div></div>
+              <div style="display: inline-flex; align-items: center; gap: 6px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 5px 10px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.5"><rect x="3.6" y="7.4" width="8.8" height="6" rx="1"></rect><path d="M5.8 7.4V5.8a2.2 2.2 0 0 1 4.4 0v1.6"></path></svg><span style="font-size: 12px; font-weight: 500; color: #63467F;">Restricted</span></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 148px 1fr auto; gap: 16px; align-items: center; padding: 12px 16px;" style-hover="background: #FBF8F2;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums;">SLC-2026-04406</div>
+              <div><div style="font-size: 14px; font-weight: 500;">Tomasz Wierzbicki</div><div style="font-size: 13px; color: #5B6472;">Standard · registered 9 Aug 2026</div></div>
+              <div style="display: inline-flex; align-items: center; gap: 6px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 5px 10px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 12px; font-weight: 500; color: #2E6A4E;">Completed</span></div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">1–3 of 47</div>
+            <div style="display: flex; gap: 4px;">
+              <button aria-disabled="true" style="min-width: 36px; min-height: 36px; background: #FFFFFF; border: 1px solid #B9C2D1; color: #5B6472; border-radius: 4px; font-size: 13px; cursor: not-allowed;">Prev</button>
+              <button style="min-width: 36px; min-height: 36px; background: #12233F; border: 1px solid #12233F; color: #F6F1E7; border-radius: 4px; font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer;">1</button>
+              <button style="min-width: 36px; min-height: 36px; background: #FFFFFF; border: 1px solid #8C93A1; color: #12233F; border-radius: 4px; font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer;" style-hover="border-color: #12233F;">2</button>
+              <button style="min-width: 36px; min-height: 36px; background: #FFFFFF; border: 1px solid #8C93A1; color: #12233F; border-radius: 4px; font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer;" style-hover="border-color: #12233F;">3</button>
+              <button style="min-width: 36px; min-height: 36px; background: #FFFFFF; border: 1px solid #8C93A1; color: #12233F; border-radius: 4px; font-size: 13px; cursor: pointer;" style-hover="border-color: #12233F;">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">12</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Navigation and content blocks</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">The furniture, including the pieces nobody designs</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 48px;">Anchor navigation, the accordion, the legal-notice block, and the profile treatment for the two named lawyers. Accordion answers exist in the page at all times and are hidden with <code style="font-family: 'IBM Plex Mono', monospace; font-size: 14px;">hidden</code>, never injected on open.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; margin-bottom: 64px;">
+        <div style="flex: 1 1 460px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 20px;">FAQ accordion · live</div>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+            <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="3">
+              <div style="border-bottom: 1px solid #E2E6EC;">
+                <button onClick="{{ f.onToggle }}" aria-expanded="{{ f.open }}" style="width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 16px; background: none; border: none; padding: 18px 20px; text-align: left; font-size: 17px; font-weight: 600; line-height: 1.4; cursor: pointer; min-height: 44px;" style-hover="background: #FBF8F2;">
+                  <span>{{ f.q }}</span>
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#8A6512" stroke-width="1.5" style="flex: none;"><polyline points="4.5,7 9,11.5 13.5,7" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                </button>
+                <div hidden="{{ f.closed }}" style="padding: 0 20px 20px;">
+                  <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0; max-width: 64ch;">{{ f.a }}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin: 40px 0 20px;">Breadcrumb and anchor navigation</div>
+          <div style="font-size: 13px; color: #5B6472; margin-bottom: 20px;">Home <span style="color: #B9C2D1;">/</span> UAE Will options <span style="color: #B9C2D1;">/</span> <span style="color: #12233F;">Dubai Courts</span></div>
+          <div style="display: grid; gap: 0; border-left: 1px solid #E4DDCE; max-width: 320px;">
+            <a href="#difc" style="padding: 10px 16px; font-size: 14px; border-bottom: none; border-left: 2px solid #AD8A46; margin-left: -1px; font-weight: 500;">DIFC Courts Wills</a>
+            <a href="#adjd" style="padding: 10px 16px; font-size: 14px; border-bottom: none; color: #3A4A66;" style-hover="color: #8A6512;">Abu Dhabi Civil Wills — ADJD</a>
+            <a href="#dubai" style="padding: 10px 16px; font-size: 14px; border-bottom: none; color: #3A4A66;" style-hover="color: #8A6512;">Dubai Courts Wills</a>
+            <a href="#muslim" style="padding: 10px 16px; font-size: 14px; border-bottom: none; color: #3A4A66;" style-hover="color: #8A6512;">Muslim Will pathway</a>
+            <a href="#foreign" style="padding: 10px 16px; font-size: 14px; border-bottom: none; color: #3A4A66;" style-hover="color: #8A6512;">Foreign-Will coordination</a>
+          </div>
+        </div>
+
+        <div style="flex: 0 0 auto; width: 390px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5B6472; padding-bottom: 10px; border-bottom: 1px solid #E4DDCE; margin-bottom: 20px;">Mobile header and sheet · live · 390px</div>
+          <div style="width: 390px; background: #F7F4EE; border: 1px solid #E4DDCE; border-radius: 12px; overflow: hidden; position: relative; height: 520px;">
+            <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+              <dc-import name="Wordmark" direction="{{ wordmark }}" context="header" ground="paper" hint-size="150px,28px"></dc-import>
+              <button onClick="{{ onSheet }}" style="width: 44px; height: 44px; background: none; border: 1px solid #8C93A1; border-radius: 4px; display: grid; place-items: center; cursor: pointer;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#12233F" stroke-width="1.5"><path d="M3.5 6h13M3.5 10h13M3.5 14h13" stroke-linecap="round"></path></svg>
+              </button>
+            </div>
+            <div style="padding: 20px 16px;">
+              <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 10px;">Your family</div>
+              <h3 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.18; letter-spacing: -0.015em; margin: 0 0 12px;">Is any child under 18?</h3>
+              <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px;">Or does anyone require a legal guardianship arrangement?</p>
+              <div style="display: grid; gap: 8px;">
+                <div style="background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 8px; padding: 14px 16px; font-size: 15px; min-height: 44px;">Yes</div>
+                <div style="background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 8px; padding: 14px 16px; font-size: 15px; min-height: 44px;">No</div>
+                <div style="background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 8px; padding: 14px 16px; font-size: 15px; min-height: 44px;">I am not sure</div>
+              </div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #FFFFFF; border-top: 1px solid #E2E6EC; padding: 12px 16px 20px; box-shadow: 0 1px 2px rgba(18,35,63,.05);">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <button style="flex: none; background: none; border: 1px solid #8C93A1; border-radius: 4px; min-width: 44px; min-height: 44px; display: grid; place-items: center; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#12233F" stroke-width="1.5"><polyline points="9.6,3.2 4.8,8 9.6,12.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg></button>
+                <button style="flex: 1; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;">Continue</button>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472; margin-top: 8px;">bottom-anchored above the keyboard · safe-area inset respected</div>
+            </div>
+            <sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; inset: 0; background: rgba(11,23,41,.42);">
+                <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #FFFFFF; border-top-left-radius: 12px; border-top-right-radius: 12px; box-shadow: 0 16px 40px rgba(18,35,63,.14), 0 2px 8px rgba(18,35,63,.08); padding: 8px 0 20px;">
+                  <div style="width: 40px; height: 4px; background: #E2E6EC; border-radius: 999px; margin: 6px auto 12px;"></div>
+                  <div style="display: grid;">
+                    <button onClick="{{ onSheet }}" style="background: none; border: none; border-bottom: 1px solid #F1F2F4; text-align: left; padding: 15px 20px; font-size: 16px; min-height: 44px; cursor: pointer;">How It Works</button>
+                    <button onClick="{{ onSheet }}" style="background: none; border: none; border-bottom: 1px solid #F1F2F4; text-align: left; padding: 15px 20px; font-size: 16px; min-height: 44px; cursor: pointer;">Do You Need a Will?</button>
+                    <button onClick="{{ onSheet }}" style="background: none; border: none; border-bottom: 1px solid #F1F2F4; text-align: left; padding: 15px 20px; font-size: 16px; min-height: 44px; cursor: pointer;">UAE Will Options</button>
+                    <button onClick="{{ onSheet }}" style="background: none; border: none; border-bottom: 1px solid #F1F2F4; text-align: left; padding: 15px 20px; font-size: 16px; min-height: 44px; cursor: pointer;">Pricing</button>
+                    <button onClick="{{ onSheet }}" style="background: none; border: none; border-bottom: 1px solid #F1F2F4; text-align: left; padding: 15px 20px; font-size: 16px; min-height: 44px; cursor: pointer;">FAQs</button>
+                    <button onClick="{{ onSheet }}" style="background: none; border: none; text-align: left; padding: 15px 20px; font-size: 16px; min-height: 44px; cursor: pointer;">Contact</button>
+                  </div>
+                  <div style="padding: 12px 20px 0;">
+                    <button onClick="{{ onSheet }}" style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;">Start the assessment</button>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 12px 0 0;">Tap the menu button. Sheet, not a page swap; the assessment's primary action stays anchored underneath it.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 40px; align-items: stretch;">
+        <div style="flex: 1 1 320px; background: #F6F1E7; border: 1px solid #E4DDCE; padding: 24px;">
+          <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px;">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#8A6512" stroke-width="1.4" style="flex: none; margin-top: 3px;"><path d="M4.5 2.5h6l3.5 3.5v9h-9.5z" stroke-linejoin="round"></path><path d="M10.5 2.5V6H14" stroke-linejoin="round"></path></svg>
+            <div style="font-size: 15px; font-weight: 600;">Legal notice block</div>
+          </div>
+          <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0 0 12px; max-width: 64ch;">UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority. The assessment provides preliminary guidance only. It does not provide a final legal opinion, create a final Will or complete registration.</p>
+          <p style="font-size: 13px; line-height: 1.5; color: #5B6472; margin: 0;">Hairline-ruled, always visible, never inside an accordion.</p>
+        </div>
+        <div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+          <blockquote style="margin: 0; font-family: Newsreader, serif; font-size: 24px; line-height: 1.4; letter-spacing: -0.01em; color: #12233F;">“An online form cannot recognise a previous marriage, a company shareholding or an existing Will abroad. A person has to read it.”</blockquote>
+          <div style="font-size: 13px; color: #5B6472; margin-top: 16px;">Pull quote — one per page, display face, never inside a card that also carries a button.</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 96px;">
+        <div style="flex: 1 1 340px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 24px; display: flex; gap: 20px;">
+          <div style="width: 96px; height: 120px; flex: none; background: repeating-linear-gradient(135deg, #F1F2F4, #F1F2F4 6px, #FBF8F2 6px, #FBF8F2 12px); border: 1px solid #E2E6EC; display: grid; place-items: center; text-align: center;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; line-height: 1.4; color: #5B6472; padding: 4px;">headshot<br>3:4</span>
+          </div>
+          <div>
+            <div style="font-size: 18px; font-weight: 600; line-height: 1.3;">Ahmed Mohammedi</div>
+            <div style="font-size: 14px; color: #3A4A66; margin-bottom: 10px;">Managing Director and Co-Founder</div>
+            <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 10px;">Reviews and approves the legal position on matters held before payment, including DIFC and capacity concerns.</p>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">Summit Legal Consultancy UAE</div>
+          </div>
+        </div>
+        <div style="flex: 1 1 340px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 24px; display: flex; gap: 20px;">
+          <div style="width: 96px; height: 120px; flex: none; background: repeating-linear-gradient(135deg, #F1F2F4, #F1F2F4 6px, #FBF8F2 6px, #FBF8F2 12px); border: 1px solid #E2E6EC; display: grid; place-items: center; text-align: center;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; line-height: 1.4; color: #5B6472; padding: 4px;">headshot<br>3:4</span>
+          </div>
+          <div>
+            <div style="font-size: 18px; font-weight: 600; line-height: 1.3;">Dr. Mohamed Raouf</div>
+            <div style="font-size: 14px; color: #3A4A66; margin-bottom: 10px;">Principal Legal Consultant and Co-Founder</div>
+            <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 10px;">Carries out the human legal review applied to every Will before it is released for client approval.</p>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472;">Summit Legal Consultancy UAE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 48px 96px;">
+  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 56px 1px 1fr;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; padding-right: 16px; text-align: right; font-variant-numeric: tabular-nums;">13</div>
+    <div style="background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Iconography and rhythm</div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">One line set, one stroke weight, never without a label</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; max-width: 62ch; margin: 0 0 32px;">16 / 20 / 24, stroke 1.4–1.5 to match text weight, optically aligned to the baseline rather than the box. No filled icons, no emoji anywhere in production.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 24px; margin-bottom: 48px;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><circle cx="12" cy="12" r="9"></circle><polyline points="7.8,12.4 10.8,15.4 16.4,8.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">complete</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><circle cx="12" cy="12" r="9"></circle><polyline points="12,7 12,12.4 15.8,14.6" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">in progress</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><path d="M12 3.6 21.4 20H2.6z" stroke-linejoin="round"></path><path d="M12 9.6v4.6" stroke-linecap="round"></path><circle cx="12" cy="16.8" r="0.8" fill="#12233F" stroke="none"></circle></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">attention</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><circle cx="10.4" cy="10.4" r="6.4"></circle><path d="M15.2 15.2 20.4 20.4" stroke-linecap="round"></path></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">under review</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><circle cx="12" cy="12" r="9"></circle><path d="M8.8 8.8l6.4 6.4M15.2 8.8l-6.4 6.4" stroke-linecap="round"></path></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">stopped</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><rect x="5" y="10.4" width="14" height="9.2" rx="1.4"></rect><path d="M8.4 10.4V8a3.6 3.6 0 0 1 7.2 0v2.4"></path></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">restricted</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><path d="M6 3.6h8l4.4 4.4V20.4H6z" stroke-linejoin="round"></path><path d="M14 3.6V8h4.4" stroke-linejoin="round"></path></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">document</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><path d="M12 16V5.4" stroke-linecap="round"></path><path d="M7.6 9.8 12 5.4l4.4 4.4" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4.6 15.6v3.8h14.8v-3.8" stroke-linecap="round"></path></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">upload</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6" stroke-linecap="round"></path><circle cx="12" cy="7.8" r="0.8" fill="#12233F" stroke="none"></circle></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">information</span></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#12233F" stroke-width="1.5"><polyline points="9.6,5.4 16.2,12 9.6,18.6" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472;">forward</span></div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+        <div style="flex: 1 1 380px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 24px;">
+          <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 14px;"></div>
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 10px;">The section rhythm, and why</div>
+          <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0 0 12px; max-width: 62ch;">128 above each chapter, 48 between a chapter's title block and its first specimen, 80 between component groups, 64 between variants of one component, 96 before the closing block. A heading sits close to what it governs and far from what precedes it, so the page reads as chapters rather than a stack of equal panels.</p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #5B6472;">128 · 48 · 80 · 64 · 96 — no value off the 4pt scale</div>
+        </div>
+        <div style="flex: 1 1 380px; background: #F6F1E7; border: 1px solid #E4DDCE; padding: 24px;">
+          <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 14px;"></div>
+          <div style="font-size: 17px; font-weight: 600; margin-bottom: 10px;">What I removed</div>
+          <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 62ch;">The spinner. Loading is a determinate 2px hairline inside the button, and the skeleton does not shimmer or pulse. A legal product that animates while a client waits for a draft looks nervous, and motion on anything a client is anxious about is the wrong instinct.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background: #0B1729; padding: 64px 48px 48px;">
+  <div style="max-width: 1120px; margin: 0 auto;">
+    <div style="display: flex; flex-wrap: wrap; gap: 64px; justify-content: space-between;">
+      <div style="flex: 0 1 380px;">
+        <dc-import name="Wordmark" direction="{{ wordmark }}" context="lockup" ground="ink" hint-size="320px,90px"></dc-import>
+        <p style="font-size: 15px; line-height: 1.65; color: #B9C2D1; margin: 24px 0 0; max-width: 46ch;">A digital legal-service platform for UAE Will assessment, preparation, human legal review and registration assistance.</p>
+      </div>
+      <div style="flex: 1 1 200px; display: grid; gap: 10px; align-content: start;">
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #D8C69A; margin-bottom: 4px;">Pages</div>
+        <a href="#how" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">How It Works</a>
+        <a href="#need" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">Do You Need a Will?</a>
+        <a href="#options" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">UAE Will Options</a>
+        <a href="#pricing" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">Pricing</a>
+        <a href="#faqs" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">FAQs</a>
+        <a href="#about" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">About Us</a>
+        <a href="#contact" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">Contact</a>
+      </div>
+      <div style="flex: 1 1 200px; display: grid; gap: 10px; align-content: start;">
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #D8C69A; margin-bottom: 4px;">Legal</div>
+        <a href="#terms" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">Terms and Conditions</a>
+        <a href="#privacy" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">Privacy Policy</a>
+        <a href="#refund" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">Payment and Refund Policy</a>
+        <a href="#disclaimer" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">Legal Disclaimer</a>
+        <a href="#cookies" style="font-size: 14px; color: #F6F1E7; border-bottom: none;" style-hover="color: #D8C69A;">Cookie Policy</a>
+      </div>
+      <div style="flex: 1 1 200px; display: grid; gap: 10px; align-content: start;">
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #D8C69A; margin-bottom: 4px;">Contact</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #F6F1E7;">info@uaeexpatwills.com</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #F6F1E7; font-variant-numeric: tabular-nums;">+971 52 466 6191</div>
+      </div>
+    </div>
+    <div style="height: 1px; background: #1E3252; margin: 40px 0 24px;"></div>
+    <div style="font-size: 14px; font-weight: 500; color: #F6F1E7; margin-bottom: 12px;">Owned and operated by Summit Legal Consultancy UAE · Trade Licence No. 4429232.01</div>
+    <p style="font-size: 13px; line-height: 1.72; color: #B9C2D1; margin: 0 0 16px; max-width: 88ch;">UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority. Any assessment result or pathway indication is preliminary. Registration is completed by the competent authority, not by the platform, and no registration, enforceability, processing time or outcome is guaranteed.</p>
+    <div style="font-size: 13px; color: #B9C2D1;">© 2026 UAE Expat Wills. A platform owned and operated by Summit Legal Consultancy UAE. All rights reserved.</div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;wordmark&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;margin&quot;,&quot;engrossment&quot;,&quot;registers&quot;],&quot;default&quot;:&quot;margin&quot;,&quot;tsType&quot;:&quot;\&quot;margin\&quot; | \&quot;engrossment\&quot; | \&quot;registers\&quot;&quot;,&quot;section&quot;:&quot;Identity&quot;},&quot;showStates&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Specimens&quot;},&quot;showMobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Specimens&quot;}}">
+const COUNTRIES = ["Australia","Bangladesh","Belgium","Brazil","Canada","China","Egypt","Ethiopia","France","Germany","Ghana","Greece","India","Indonesia","Iraq","Ireland","Italy","Japan","Jordan","Kenya","Lebanon","Malaysia","Morocco","Nepal","Netherlands","New Zealand","Nigeria","Oman","Pakistan","Philippines","Poland","Portugal","Romania","Russia","Saudi Arabia","South Africa","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Tunisia","Turkey","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uzbekistan","Yemen"];
+
+const SERVICES = [
+  { id: "new", label: "Prepare a new Will for myself", note: "Continues to the standard online pathway" },
+  { id: "two", label: "Two separate Wills for myself and my spouse or partner", note: "Each person answers separately and approves their own Will" },
+  { id: "difc", label: "I specifically want a DIFC Will", note: "Reviewed by the legal team before any payment" },
+  { id: "amend", label: "Review, amend, replace or revoke an existing Will", note: "Reviewed by the legal team before any payment" },
+  { id: "estate", label: "Someone has died and I need help with their estate", note: "A separate legal service — the team will explain the next step" },
+];
+
+const PRIORS = [
+  { id: "uae-will", label: "A Will or draft Will in the UAE" },
+  { id: "foreign-will", label: "A Will or draft Will outside the UAE" },
+  { id: "agreement", label: "A marriage, family, shareholder or partnership agreement" },
+  { id: "entity", label: "A Trust, Foundation or company owns an asset" },
+  { id: "none", label: "None of these", exclusive: true },
+];
+
+const DECLARATIONS = [
+  "I confirm that my answers are true and complete to the best of my knowledge.",
+  "I understand that the assessment result is preliminary and is not a final legal opinion or a decision by a registration authority.",
+  "I understand that completing the assessment does not create or register a Will.",
+  "I understand that the registration authority will not be confirmed until I complete the detailed questionnaire and Summit reviews my information.",
+  "I understand that paying Summit's fees or receiving a draft does not mean that the Will has been registered.",
+  "I understand that government, court, notary and third-party fees are separate, and that the legal translation of the new Will for the recommended standard route is included in Summit's professional fee.",
+  "I agree that my answers may be used for assessment and service delivery in accordance with the Privacy Policy.",
+];
+
+const FAQS = [
+  { q: "Is UAE Expat Wills a government website?", a: "No. UAE Expat Wills is an independent digital legal-service platform owned and operated by Summit Legal Consultancy UAE. It is not a court, government authority, notary or official Will registry." },
+  { q: "Does completing the website process register my Will?", a: "No. Assessment, payment, questionnaire completion or approval of a draft does not itself register a Will. Registration or notarisation is completed only through the competent authority and remains subject to its requirements and decision." },
+  { q: "Will a legal professional review my Will?", a: "Yes. Every single Will prepared through the platform receives human legal review by Summit's legal team before it is treated as ready for your approval and registration preparation — there is no exception." },
+];
+
+class Component extends DCLogic {
+  state = {
+    service: "new",
+    countryQuery: "",
+    countryOpen: false,
+    country: "",
+    priors: ["uae-will"],
+    summary: "My wife and I own an apartment in Sharjah together and I have an older Will written in the United Kingdom.",
+    decl: [true, true, true, false, false, false, false],
+    consent: false,
+    faq: 0,
+    sheet: false,
+  };
+
+  renderVals() {
+    const s = this.state;
+    const sig = JSON.stringify([s.service, s.countryQuery, s.countryOpen, s.country, s.priors, s.summary, s.decl, s.consent, s.faq, s.sheet, this.props.wordmark, this.props.showStates, this.props.showMobile]);
+    if (this._sig === sig && this._vals) return this._vals;
+    this._sig = sig;
+    this._vals = this.build();
+    return this._vals;
+  }
+
+  build() {
+    const s = this.state;
+    const q = s.countryQuery.trim().toLowerCase();
+    const matches = q ? COUNTRIES.filter(c => c.toLowerCase().includes(q)) : COUNTRIES;
+    const declCount = s.decl.filter(Boolean).length;
+
+    return {
+      wordmark: this.props.wordmark ?? "margin",
+      showStates: this.props.showStates ?? true,
+      showMobile: this.props.showMobile ?? true,
+
+      services: SERVICES.map(x => ({
+        ...x,
+        checked: s.service === x.id,
+        unchecked: s.service !== x.id,
+        onSelect: () => this.setState({ service: x.id }),
+      })),
+
+      countryQuery: s.countryQuery,
+      countryOpen: s.countryOpen,
+      countryClosed: !s.countryOpen,
+      country: s.country || "No nationality selected",
+      countryIneligible: s.country === "United Arab Emirates",
+      matchLabel: matches.length === 1 ? "1 match" : matches.length + " matches",
+      countryResults: matches.slice(0, 6).map(name => ({
+        name,
+        onSelect: () => this.setState({ country: name, countryQuery: name, countryOpen: false }),
+      })),
+      onCountryInput: e => this.setState({ countryQuery: e.target.value, countryOpen: true }),
+      onCountryFocus: () => this.setState({ countryOpen: true }),
+      onCountryToggle: () => this.setState({ countryOpen: !s.countryOpen }),
+
+      priors: PRIORS.map(p => {
+        const checked = s.priors.includes(p.id);
+        return {
+          ...p,
+          checked,
+          unchecked: !checked,
+          onToggle: () => {
+            if (p.exclusive) return this.setState({ priors: checked ? [] : ["none"] });
+            const next = s.priors.filter(x => x !== "none" && x !== p.id);
+            this.setState({ priors: checked ? next : next.concat(p.id) });
+          },
+        };
+      }),
+      noneCleared: s.priors.includes("none"),
+
+      summary: s.summary,
+      summaryCount: s.summary.length + " / 500",
+      onSummary: e => this.setState({ summary: e.target.value.slice(0, 500) }),
+
+      declarations: DECLARATIONS.map((label, i) => ({
+        label,
+        n: String(i + 1).padStart(2, "0"),
+        checked: s.decl[i],
+        onToggle: () => {
+          const next = s.decl.slice();
+          next[i] = !next[i];
+          this.setState({ decl: next });
+        },
+      })),
+      declLabel: declCount + " of 7 confirmed",
+      declIncomplete: declCount < 7,
+      declComplete: declCount === 7,
+
+      consent: s.consent,
+      onConsent: () => this.setState({ consent: !s.consent }),
+
+      faqs: FAQS.map((f, i) => ({
+        ...f,
+        open: s.faq === i,
+        closed: s.faq !== i,
+        onToggle: () => this.setState({ faq: s.faq === i ? null : i }),
+      })),
+
+      sheet: s.sheet,
+      sheetClosed: !s.sheet,
+      onSheet: () => this.setState({ sheet: !s.sheet }),
+    };
+  }
+}
+</script>
+</body>
+</html>

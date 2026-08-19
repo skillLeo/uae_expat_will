@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #0B1729; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #F6F1E7; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #F6F1E7; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #D8C69A; border-bottom-color: #D8C69A; }
+</style>
+</helmet>
+
+<section style="padding: 72px 32px 128px;">
+  <div style="max-width: 1216px; margin: 0 auto;">
+    <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 64px;">
+      <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; padding-right: 20px;">Hero headline · three options</div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 24ch;">Three headlines, set at hero size</h1>
+        <p style="font-size: 18px; line-height: 1.65; color: #B9C2D1; margin: 0 0 12px; max-width: 62ch;">Each names the reader's situation rather than the product's features. All three are shown at 64px on the ink ground, in the measure they occupy in the live hero, so the line count is real.</p>
+        <p style="font-size: 15px; line-height: 1.6; color: #B9C2D1; margin: 0; max-width: 62ch;">B is live on the homepage. Switch with the <code style="font-family: 'IBM Plex Mono', monospace;">headline</code> tweak there.</p>
+      </div>
+    </div>
+
+    <div style="display: grid; gap: 1px; background: #1E3252; border: 1px solid #1E3252;">
+      <div style="background: #0B1729; padding: 40px 32px; display: grid; grid-template-columns: minmax(0, 487px) minmax(0, 1fr); gap: 48px; align-items: start;">
+        <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 64px; line-height: 1.04; letter-spacing: -0.03em; margin: 0;">You have been meaning to sort this out since you moved here</h2>
+        <div>
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #D8C69A;">A</span>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #B9C2D1;">The avoidance</span>
+          </div>
+          <p style="font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0 0 12px; max-width: 46ch;">Names the reader's actual position — the thing they have been putting off since arriving. The bravest of the three and the one most likely to be read to the end.</p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #5B6472;">4 lines at 487px · 56 characters</div>
+        </div>
+      </div>
+
+      <div style="background: #0B1729; padding: 40px 32px; display: grid; grid-template-columns: minmax(0, 487px) minmax(0, 1fr); gap: 48px; align-items: start;">
+        <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 64px; line-height: 1.04; letter-spacing: -0.03em; margin: 0;">Without a Will, the decision is not yours</h2>
+        <div>
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #D8C69A;">B</span>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #B9C2D1;">The risk · live</span>
+          </div>
+          <p style="font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0 0 12px; max-width: 46ch;">Factual and compliant: it states the consequence of having no Will without claiming which framework applies or what any authority would decide. Shortest of the three, so it holds three lines at hero size.</p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #5B6472;">3 lines at 487px · 40 characters</div>
+        </div>
+      </div>
+
+      <div style="background: #0B1729; padding: 40px 32px; display: grid; grid-template-columns: minmax(0, 487px) minmax(0, 1fr); gap: 48px; align-items: start;">
+        <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 64px; line-height: 1.04; letter-spacing: -0.03em; margin: 0;">Who inherits, and who may care for your children</h2>
+        <div>
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #D8C69A;">C</span>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #B9C2D1;">The two decisions</span>
+          </div>
+          <p style="font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0 0 12px; max-width: 46ch;">Speaks directly to the parent, which is most of this audience, and mirrors the two reason cards below the hero. Weakest for the childless reader with UAE property.</p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #5B6472;">4 lines at 487px · 47 characters</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 48px; display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+      <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; padding-right: 20px;">Recommendation</div>
+      <div style="align-self: stretch; background: #1E3252;"></div>
+      <p style="padding-left: 32px; font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0; max-width: 62ch;">B, on line count alone. A is the better sentence and costs a fourth line plus 180px of hero height, which is what the last round was spent removing. If the client prefers A, it wants 56px rather than 64px.</p>
+    </div>
+  </div>
+</section>
+</x-dc>
+</body>
+</html>

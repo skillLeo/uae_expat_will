@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  button { font: inherit; color: inherit; }
+  @media (max-width: 1080px) { [data-two] { grid-template-columns: minmax(0, 1fr) !important; } }
+  @media (max-width: 719px) { [data-pad] { padding-left: 16px !important; padding-right: 16px !important; } }
+</style>
+</helmet>
+
+<div style="background: #0B1729; border-bottom: 1px solid #1E3252; padding: 10px 24px;">
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; flex: none;">Deliverable 10 · notifications</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="11">
+        <div>
+          <sc-if value="{{ t.on }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ t.pick }}" style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 6px 11px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ t.label }}</button>
+          </sc-if>
+          <sc-if value="{{ t.off }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ t.pick }}" style="background: transparent; color: #B9C2D1; border: 1px solid #1E3252; border-radius: 4px; padding: 6px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #AD8A46; color: #F6F1E7;">{{ t.label }}</button>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<section style="background: #F7F4EE; padding: 48px 0 32px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+    <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+      <div style="padding-right: 20px;">
+        <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">{{ eyebrow }}</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">{{ slug }}</div>
+      </div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 38px; line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 14px; max-width: 26ch;">{{ heading }}</h1>
+        <p style="font-size: 17px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px; max-width: 62ch;">{{ lede }}</p>
+        <sc-if value="{{ hasTrigger }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 62ch;"><strong style="font-weight: 600;">Sent when:</strong> {{ trigger }}</div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 0 0 96px;">
+  <div data-pad="1" data-two="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 40px; align-items: start;">
+
+    <div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 12px;">email · 600px content width</div>
+      <div style="font-size: 13px; line-height: 1.6; color: #3A4A66; margin-bottom: 12px; max-width: 74ch;">The header mounts the same swappable <code style="font-family: 'IBM Plex Mono', monospace;">Wordmark</code> component the site uses, so switching the project to direction 1a or 1c changes the emails too. For real send it is exported once per direction as inline table markup — an email client cannot run the component.</div>
+      <div style="background: #F1EDE4; border: 1px solid #E4DDCE; padding: 24px;">
+        <div style="max-width: 600px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E2E6EC;">
+
+          <div style="background: #0B1729; border-bottom: 2px solid #AD8A46; padding: 24px;">
+            <dc-import name="Wordmark" direction="{{ wordmark }}" context="lockup" ground="ink" hint-size="280px,90px"></dc-import>
+          </div>
+
+          <div style="padding: 28px 24px 8px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8A6512; margin-bottom: 14px; font-variant-numeric: tabular-nums;">{{ emailMeta }}</div>
+            <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.18; letter-spacing: -0.02em; margin: 0 0 16px;">{{ emailTitle }}</h2>
+            <sc-for list="{{ emailBody }}" as="p" hint-placeholder-count="3">
+              <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0 0 14px;">{{ p }}</p>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ hasTable }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 8px 24px 16px;">
+              <div style="border: 1px solid #E2E6EC; background: #FBF8F2;">
+                <sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="4">
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; padding: 10px 16px; border-bottom: 1px solid #E2E6EC; align-items: baseline;">
+                    <div style="font-size: 14px; line-height: 1.5; color: #3A4A66;">{{ r.k }}</div>
+                    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ r.v }}</div>
+                  </div>
+                </sc-for>
+                <div style="padding: 10px 16px; background: #F2EAD8; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: baseline;">
+                  <div style="font-size: 14px; font-weight: 600;">{{ tableTotalK }}</div>
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ tableTotalV }}</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasCta }}" hint-placeholder-val="{{ true }}">
+            <div style="padding: 8px 24px 24px;">
+              <a href="#" style="border-bottom: none; display: inline-block; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 22px; font-size: 15px; font-weight: 500;">{{ ctaLabel }}</a>
+              <sc-if value="{{ hasCtaNote }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size: 13px; line-height: 1.6; color: #5B6472; margin-top: 10px;">{{ ctaNote }}</div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasCaveat }}" hint-placeholder-val="{{ true }}">
+            <div style="margin: 0 24px 24px; background: #F6F1E7; border-left: 2px solid #AD8A46; padding: 14px 16px;">
+              <div style="font-size: 14px; line-height: 1.65; color: #12233F;">{{ caveat }}</div>
+            </div>
+          </sc-if>
+
+          <div style="border-top: 1px solid #E2E6EC; padding: 20px 24px; background: #FBF8F2;">
+            <div style="font-size: 12px; line-height: 1.65; color: #12233F; margin-bottom: 8px;">Owned and operated by Summit Legal Consultancy UAE · Trade Licence No. 4429232.01</div>
+            <div style="font-size: 12px; line-height: 1.65; color: #3A4A66; margin-bottom: 8px;">UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority.</div>
+            <div style="font-size: 12px; line-height: 1.65; color: #5B6472;">Sent from noreply@uaeexpatwills.com to {{ recipient }}. Replies go to info@uaeexpatwills.com. This message relates to a legal matter — please do not forward it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; gap: 24px; align-content: start;">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 12px;">whatsapp · meta template structure</div>
+        <div style="background: #F1EDE4; border: 1px solid #E4DDCE; padding: 20px;">
+          <div style="max-width: 340px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; overflow: hidden;">
+            <div style="background: #FBF8F2; border-bottom: 1px solid #E2E6EC; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+              <div style="font-size: 13px; font-weight: 600;">UAE Expat Wills</div>
+              <span style="display: inline-flex; align-items: center; gap: 5px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 2px 7px; white-space: nowrap;">
+                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.9"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                <span style="font-size: 10px; font-weight: 500; color: #2E6A4E;">Business</span>
+              </span>
+            </div>
+            <div style="padding: 14px;">
+              <div style="font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 8px;">{{ waHeader }}</div>
+              <sc-for list="{{ waBody }}" as="p" hint-placeholder-count="2">
+                <p style="font-size: 14px; line-height: 1.6; margin: 0 0 10px;">{{ p }}</p>
+              </sc-for>
+              <div style="font-size: 12px; line-height: 1.5; color: #5B6472; border-top: 1px solid #F1F2F4; padding-top: 10px; margin-top: 4px;">{{ waFooter }}</div>
+            </div>
+            <sc-for list="{{ waButtons }}" as="b" hint-placeholder-count="2">
+              <div style="border-top: 1px solid #E2E6EC; padding: 11px 14px; text-align: center; font-size: 14px; font-weight: 500; color: #2A4E86;">{{ b }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Template metadata</div>
+        <div style="display: grid; gap: 9px; font-size: 13px;">
+          <div style="display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px;"><div style="color: #5B6472;">Name</div><div style="font-family: 'IBM Plex Mono', monospace;">{{ slug }}</div></div>
+          <div style="display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px;"><div style="color: #5B6472;">Category</div><div>{{ waCategory }}</div></div>
+          <div style="display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px;"><div style="color: #5B6472;">Channels</div><div>{{ channels }}</div></div>
+          <div style="display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px;"><div style="color: #5B6472;">Variables</div><div style="font-family: 'IBM Plex Mono', monospace; line-height: 1.6;">{{ variables }}</div></div>
+        </div>
+      </div>
+
+      <div style="background: #F0EBF6; border: 1px solid #D6C9E5; padding: 20px;">
+        <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px;">
+          <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.6" style="flex: none; margin-top: 2px;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+          <div style="font-size: 14px; font-weight: 600; color: #12233F;">What no template may contain</div>
+        </div>
+        <div style="display: grid; gap: 8px; font-size: 13px; line-height: 1.6; color: #12233F;">
+          <div>The capacity or influence flag, or any hint that one exists.</div>
+          <div>Any statement that a Will is registered, or that an authority will accept it.</div>
+          <div>A guaranteed registration date or processing period.</div>
+          <div>Instructions, beneficiary names or asset detail — those stay inside the account.</div>
+          <div>A request for a password, card number or seed phrase.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;wordmark&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;margin&quot;,&quot;engrossment&quot;,&quot;registers&quot;],&quot;default&quot;:&quot;margin&quot;,&quot;tsType&quot;:&quot;\&quot;margin\&quot; | \&quot;engrossment\&quot; | \&quot;registers\&quot;&quot;,&quot;section&quot;:&quot;Identity&quot;}}">
+const T = [
+  {
+    id: "result-continue", slug: "assessment_result_continue", label: "Result · continue",
+    eyebrow: "To the customer", heading: "Assessment result — you may continue online",
+    lede: "The first message most clients receive. It confirms the result without promising acceptance, and carries the fee so there is no surprise at checkout.",
+    trigger: "the assessment resolves to the continue-online outcome.",
+    emailMeta: "Reference SLC-2026-04418 · 19 Aug 2026",
+    emailTitle: "You may continue through our online service",
+    emailBody: [
+      "Thank you for completing the free assessment. Your answers indicate that your circumstances may be suitable for the standard online UAE Will service.",
+      "The next step is to create your account, read the engagement terms and pay the professional fee. Nothing is charged until you have read what is included.",
+    ],
+    table: [
+      { k: "Professional fee", v: "2,199.00" },
+      { k: "VAT at 5%", v: "109.95" },
+    ],
+    totalK: "Payable at checkout", totalV: "AED 2,308.95",
+    cta: "Open my matter", ctaNote: "This link is personal to you. It does not expire.",
+    caveat: "This is not final acceptance by any authority, and your Will has not yet been prepared or registered. Government, court, registry and notary charges are separate from the fee above.",
+    waHeader: "Your assessment result",
+    waBody: [
+      "Hello {{1}}, thank you for completing the UAE Expat Wills assessment. You may continue through our online service.",
+      "Reference {{2}}. The professional fee is AED 2,199 plus VAT for one accepted standard Will. Government and court charges are separate.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01. Not a court or government authority.",
+    waButtons: ["Open my matter", "Talk to the team"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} case reference",
+    recipient: "j.whitfield@example.com",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "result-held", slug: "assessment_result_held", label: "Result · held",
+    eyebrow: "To the customer", heading: "Assessment result — held for legal review",
+    lede: "The most delicate message in the set. It must not read as a rejection, must not name which answer caused the hold, and must not mention payment.",
+    trigger: "the assessment resolves to the held outcome, for any of the review triggers.",
+    emailMeta: "Reference SLC-2026-04418 · 19 Aug 2026",
+    emailTitle: "We would like our legal team to review your circumstances first",
+    emailBody: [
+      "Thank you for completing the free assessment. This is not a rejection.",
+      "One or more of your answers means we should look at your matter before recommending a service, a registration authority or a price. A member of the legal team will contact you using the details you gave us.",
+      "There is nothing to pay at this stage, and nothing you entered has been lost.",
+    ],
+    cta: "Give us a time that suits you", ctaNote: "",
+    caveat: "No payment is requested while a matter is held for review. We will explain the proposed service and any fee before anything is charged.",
+    waHeader: "About your assessment",
+    waBody: [
+      "Hello {{1}}, thank you for completing the UAE Expat Wills assessment. Our legal team would like to review your circumstances before recommending a service. This is not a rejection.",
+      "Reference {{2}}. There is nothing to pay at this stage. We will contact you within one business day.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01. Not a court or government authority.",
+    waButtons: ["Suggest a time", "Call me instead"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} case reference",
+    recipient: "p.raghunathan@example.ae",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "receipt", slug: "payment_receipt_vat", label: "Payment receipt",
+    eyebrow: "To the customer", heading: "Payment receipt with VAT",
+    lede: "A tax document, so the figures are tabular and the separate-charge line is not buried. It states plainly that paying does not register anything.",
+    trigger: "a payment is captured, whether by card, bank transfer or cash recorded by an administrator.",
+    emailMeta: "Invoice SLC-2026-04417 · paid 19 Aug 2026",
+    emailTitle: "Receipt for your professional fee",
+    emailBody: [
+      "Thank you. We have received your payment and your matter is now open with the legal team.",
+      "Your next step is the detailed questionnaire. We will email a secure link to it shortly.",
+    ],
+    table: [
+      { k: "One standard UAE Will — professional fee", v: "2,199.00" },
+      { k: "VAT at 5%", v: "109.95" },
+      { k: "Paid by card ending 4471", v: "19 Aug 2026" },
+    ],
+    totalK: "Total paid", totalV: "AED 2,308.95",
+    cta: "Download this receipt", ctaNote: "Also available any time in your account.",
+    caveat: "This payment covers the professional work described in your Service Confirmation. It does not register a Will. Government, court, registry, notary, certification, attestation, courier and identity-verification charges are separate.",
+    waHeader: "Payment received",
+    waBody: [
+      "Hello {{1}}, we have received your payment of AED {{2}} for reference {{3}}. Your matter is now open with our legal team.",
+      "Your receipt is in your account. Paying does not itself register a Will — government and court charges are separate.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01.",
+    waButtons: ["View my receipt"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} total paid · {{3}} case reference",
+    recipient: "j.whitfield@example.com",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "questionnaire", slug: "questionnaire_released", label: "Questionnaire released",
+    eyebrow: "To the customer", heading: "Detailed questionnaire released",
+    lede: "Carries the time-limited magic link. The expiry is stated twice — once in the body and once beside the button — because an expired link is the most common support message.",
+    trigger: "payment is confirmed and the questionnaire is released to the account.",
+    emailMeta: "Reference SLC-2026-04417 · 19 Aug 2026",
+    emailTitle: "Your detailed questionnaire is ready",
+    emailBody: [
+      "This is where you give us your instructions: beneficiaries, executors, guardianship wishes where your route permits, and your assets.",
+      "It saves as you go, so you can leave and return. Most people take about thirty minutes over it, and there is no advantage in rushing.",
+    ],
+    cta: "Open my questionnaire", ctaNote: "This link is valid for 24 hours and works once. Request a new one any time from your account.",
+    caveat: "Please do not send instructions, identity documents or asset details by email or message. Everything is exchanged inside your secure account.",
+    waHeader: "Your questionnaire is ready",
+    waBody: [
+      "Hello {{1}}, your detailed Will questionnaire is now open for reference {{2}}.",
+      "We have emailed a secure link to {{3}}. It is valid for 24 hours and works once.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01.",
+    waButtons: ["Send me a new link"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} case reference · {{3}} masked email",
+    recipient: "j.whitfield@example.com",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "moreinfo", slug: "further_information_required", label: "Further information",
+    eyebrow: "To the customer", heading: "Further information required",
+    lede: "Attention, never critical. It names the question and says the matter is not at risk, because a request for information reads as a problem unless you say otherwise.",
+    trigger: "a consultant raises a clarification on an open case.",
+    emailMeta: "Reference SLC-2026-04417 · 19 Aug 2026",
+    emailTitle: "One clarification before we continue drafting",
+    emailBody: [
+      "Dr. Mohamed Raouf has a question about the property listed in section 8 of your questionnaire. The title deed names two parties, but the property is recorded as solely owned.",
+      "Your matter is not at risk and nothing further is payable. Drafting continues as soon as this is answered — usually the same working day.",
+    ],
+    cta: "Answer this question", ctaNote: "",
+    caveat: "Please answer inside your account rather than by reply. Email is not a secure channel for matter detail.",
+    waHeader: "A question about your Will",
+    waBody: [
+      "Hello {{1}}, our legal team has one question about your matter, reference {{2}}. Nothing further is payable and your matter is not at risk.",
+      "Please open your account to answer. Drafting continues as soon as we have your reply.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01.",
+    waButtons: ["Open my account"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} case reference",
+    recipient: "j.whitfield@example.com",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "draft", slug: "draft_ready", label: "Draft ready",
+    eyebrow: "To the customer", heading: "Draft ready for review",
+    lede: "The moment the product earns its fee. It says the draft has had human legal review, and that it must not be treated as ready for signing until we say so.",
+    trigger: "legal review completes and a draft is released to the client.",
+    emailMeta: "Reference SLC-2026-04417 · draft 1 · 19 Aug 2026",
+    emailTitle: "Your draft Will is ready to read",
+    emailBody: [
+      "Dr. Mohamed Raouf has completed the legal review of your instructions and prepared your first draft.",
+      "Read it in full, including the schedules. Your service includes two rounds of amendments, and nothing is submitted anywhere until you personally approve the final wording.",
+    ],
+    cta: "Read my draft", ctaNote: "Two amendment rounds are included in your service.",
+    caveat: "A draft must not be treated as ready for signing or registration until Summit confirms the relevant next step. Approving the wording does not register the Will.",
+    waHeader: "Your draft Will is ready",
+    waBody: [
+      "Hello {{1}}, your draft Will for reference {{2}} has completed legal review and is ready to read in your account.",
+      "Nothing is submitted anywhere until you approve the final wording.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01.",
+    waButtons: ["Read my draft"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} case reference",
+    recipient: "j.whitfield@example.com",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "approved", slug: "draft_approved", label: "Draft approved",
+    eyebrow: "To the customer", heading: "Draft approved",
+    lede: "A confirmation that must resist the obvious overclaim. Approval is the client's act; registration is the authority's.",
+    trigger: "the client records their approval of the final wording.",
+    emailMeta: "Reference SLC-2026-04417 · approved 19 Aug 2026",
+    emailTitle: "You have approved your final wording",
+    emailBody: [
+      "Thank you. We have recorded your approval of the final wording, timestamped 19 August 2026 at 16:22 Gulf Standard Time.",
+      "We now prepare the certified translation and the submission pack, and we will confirm the expected authority charge before you authorise it.",
+    ],
+    cta: "See my registration progress", ctaNote: "",
+    caveat: "Approving the wording does not register the Will and does not commit any authority. Registration is completed by the competent authority under its own current requirements.",
+    waHeader: "Approval recorded",
+    waBody: [
+      "Hello {{1}}, we have recorded your approval of the final wording for reference {{2}}.",
+      "We now prepare the translation and submission pack, and will confirm the authority charge before you authorise it.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01. Registration is completed by the authority.",
+    waButtons: ["View progress"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} case reference",
+    recipient: "j.whitfield@example.com",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "appointment", slug: "registration_appointment", label: "Appointment",
+    eyebrow: "To the customer", heading: "Registration appointment",
+    lede: "Passes on the authority's own offer without dressing it as a promise. What to bring is a list, because that is what gets forgotten.",
+    trigger: "the authority offers appointment times for identity check and signing.",
+    emailMeta: "Reference SLC-2026-04417 · ADJD Civil Wills",
+    emailTitle: "The authority has offered appointment times",
+    emailBody: [
+      "The Civil Wills Office has offered the following times for your identity check and signing. Reply in your account with the one that suits you and we will confirm it.",
+      "Bring the original passport and Emirates ID you gave us. A copy is not accepted at the appointment.",
+    ],
+    table: [
+      { k: "Option 1", v: "26 Aug · 10:30" },
+      { k: "Option 2", v: "27 Aug · 12:00" },
+      { k: "Option 3", v: "31 Aug · 09:15" },
+    ],
+    totalK: "Reply by", totalV: "22 Aug 2026",
+    cta: "Choose my appointment", ctaNote: "",
+    caveat: "Appointment availability and requirements are set by the authority and can change. Attendance and identity verification remain personal steps we cannot complete for you.",
+    waHeader: "Appointment times offered",
+    waBody: [
+      "Hello {{1}}, the authority has offered appointment times for reference {{2}}. Please choose one in your account by {{3}}.",
+      "Bring your original passport and Emirates ID. Copies are not accepted.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01.",
+    waButtons: ["Choose a time", "None of these suit"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} case reference · {{3}} reply-by date",
+    recipient: "j.whitfield@example.com",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "completion", slug: "matter_completed", label: "Completion",
+    eyebrow: "To the customer", heading: "Completion",
+    lede: "The last message, and the one people keep. It says where the documents are and what would make the Will need revisiting.",
+    trigger: "the authority records the registration and the final documents are delivered.",
+    emailMeta: "Reference SLC-2026-04417 · completed 02 Sep 2026",
+    emailTitle: "Your Will is registered",
+    emailBody: [
+      "The authority accepted the application on 2 September 2026 and issued its receipt. Your registered Will, its certified translation and the receipt are in your account.",
+      "Tell your executor where the registered Will is kept. A Will should be reviewed after any significant change — marriage, divorce or separation, a birth or adoption, the death of someone you named, or acquiring or disposing of a significant asset.",
+    ],
+    cta: "Download my documents", ctaNote: "They stay available in your account. Ask us any time for further copies.",
+    caveat: "Registration is an authority process. It does not guarantee future validity, enforcement or any particular outcome after death.",
+    waHeader: "Your Will is registered",
+    waBody: [
+      "Hello {{1}}, the authority has registered your Will for reference {{2}} and issued its receipt.",
+      "Your documents are in your account. Please tell your executor where the registered Will is kept.",
+    ],
+    waFooter: "Summit Legal Consultancy UAE · Trade Licence 4429232.01.",
+    waButtons: ["Download my documents"],
+    waCategory: "Utility",
+    variables: "{{1}} first name · {{2}} case reference",
+    recipient: "j.whitfield@example.com",
+    channels: "Email · WhatsApp",
+  },
+  {
+    id: "internal-lead", slug: "internal_new_lead", label: "◆ Internal · new lead",
+    eyebrow: "To Summit, internally", heading: "New lead alert",
+    lede: "Goes to both administrator numbers. It carries the reference and the outcome bucket and nothing else — enough to act, not enough to leak.",
+    trigger: "any assessment completes, on both administrator numbers and the shared inbox.",
+    emailMeta: "Internal · 19 Aug 2026 · 09:05 GST",
+    emailTitle: "New assessment completed — SLC-2026-04418",
+    emailBody: [
+      "An assessment completed and resolved to: held for legal review. Owner assigned to Dr. M. Raouf by routing rule R-07.",
+      "First-contact target is 4 working hours. Two trigger reasons are readable in the case; one further trigger is restricted and readable only by authorised legal staff inside the case record.",
+    ],
+    table: [
+      { k: "Reference", v: "SLC-2026-04418" },
+      { k: "Outcome", v: "Held for review" },
+      { k: "Triggers recorded", v: "3" },
+      { k: "Assigned to", v: "Dr. M. Raouf" },
+    ],
+    totalK: "First contact due", totalV: "19 Aug · 13:05",
+    cta: "Open the case", ctaNote: "",
+    caveat: "This alert deliberately omits the restricted trigger content. It names no question, no answer and no reason — those are readable only inside the case, by authorised legal staff.",
+    waHeader: "New assessment — action needed",
+    waBody: [
+      "Reference {{1}} completed at {{2}} and resolved to: {{3}}.",
+      "Assigned to {{4}}. First contact due {{5}}. Open the admin case for detail.",
+    ],
+    waFooter: "Internal alert. Do not forward. Case detail is not included in this message.",
+    waButtons: ["Open the case"],
+    waCategory: "Utility",
+    variables: "{{1}} reference · {{2}} time · {{3}} outcome bucket · {{4}} owner · {{5}} due time",
+    recipient: "two administrator numbers",
+    channels: "WhatsApp ×2 · email",
+  },
+  {
+    id: "internal-overdue", slug: "internal_countdown_overdue", label: "◆ Internal · overdue",
+    eyebrow: "To Summit, internally", heading: "Countdown overdue escalation",
+    lede: "Escalation, so it is allowed to be critical. It states which countdown breached and by how long, and nothing about the client's circumstances.",
+    trigger: "a countdown passes its threshold during working hours; repeats every 2 hours until acknowledged.",
+    emailMeta: "Internal · escalation · 19 Aug 2026 · 13:12 GST",
+    emailTitle: "Overdue — first contact on SLC-2026-04418",
+    emailBody: [
+      "The first-contact countdown on this case breached 4 hours ago and has not been acknowledged. One outbound call was attempted at 14:02 with no answer, and a WhatsApp message was sent at 14:20.",
+      "This is the second escalation. It repeats every 2 hours during working hours until someone records contact or reassigns the case.",
+    ],
+    table: [
+      { k: "Reference", v: "SLC-2026-04418" },
+      { k: "Countdown", v: "First contact" },
+      { k: "Breached by", v: "4h 07m" },
+      { k: "Owner", v: "Dr. M. Raouf" },
+    ],
+    totalK: "Escalation", totalV: "2 of 3",
+    cta: "Acknowledge or reassign", ctaNote: "",
+    caveat: "Escalations name the countdown and the case reference only. No client circumstance, answer or restricted flag appears in an escalation.",
+    waHeader: "Overdue — first contact",
+    waBody: [
+      "Reference {{1}}: the {{2}} countdown is overdue by {{3}}. Owner {{4}}.",
+      "Escalation {{5}}. Acknowledge or reassign in the admin tool.",
+    ],
+    waFooter: "Internal alert. Do not forward. Case detail is not included in this message.",
+    waButtons: ["Acknowledge", "Reassign"],
+    waCategory: "Utility",
+    variables: "{{1}} reference · {{2}} countdown name · {{3}} overdue by · {{4}} owner · {{5}} escalation count",
+    recipient: "two administrator numbers",
+    channels: "WhatsApp ×2 · email",
+  },
+];
+
+class Component extends DCLogic {
+  state = { id: "result-continue" };
+
+  renderVals() {
+    const t = T.find(x => x.id === this.state.id) || T[0];
+    return {
+      tabs: T.map(x => ({
+        label: x.label, on: x.id === this.state.id, off: x.id !== this.state.id,
+        pick: () => { this.setState({ id: x.id }); window.scrollTo(0, 0); },
+      })),
+      wordmark: this.props.wordmark ?? "margin",
+      eyebrow: t.eyebrow, slug: t.slug, heading: t.heading, lede: t.lede,
+      trigger: t.trigger, hasTrigger: !!t.trigger,
+      emailMeta: t.emailMeta, emailTitle: t.emailTitle, emailBody: t.emailBody,
+      hasTable: !!t.table, tableRows: t.table || [], tableTotalK: t.totalK || "", tableTotalV: t.totalV || "",
+      hasCta: !!t.cta, ctaLabel: t.cta || "", ctaNote: t.ctaNote || "", hasCtaNote: !!t.ctaNote,
+      hasCaveat: !!t.caveat, caveat: t.caveat || "",
+      recipient: t.recipient,
+      waHeader: t.waHeader, waBody: t.waBody, waFooter: t.waFooter, waButtons: t.waButtons,
+      waCategory: t.waCategory, variables: t.variables, channels: t.channels,
+    };
+  }
+}
+</script>
+</body>
+</html>

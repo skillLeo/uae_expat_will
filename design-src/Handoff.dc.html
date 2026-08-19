@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  button { font: inherit; color: inherit; }
+  th, td { text-align: left; vertical-align: top; }
+  @media (max-width: 1080px) {
+    [data-two] { grid-template-columns: minmax(0, 1fr) !important; }
+    [data-margincol] { grid-template-columns: 120px 1px minmax(0, 1fr) !important; }
+  }
+  @media (max-width: 719px) {
+    [data-pad] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-margincol] { grid-template-columns: 1px minmax(0, 1fr) !important; }
+    [data-margincol] > [data-annot] { display: none !important; }
+  }
+</style>
+</helmet>
+
+<div style="background: #0B1729; border-bottom: 1px solid #1E3252; padding: 10px 24px;">
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; flex: none;">Deliverable 11 · developer handoff</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+        <div>
+          <sc-if value="{{ t.on }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ t.pick }}" style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 6px 11px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ t.label }}</button>
+          </sc-if>
+          <sc-if value="{{ t.off }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ t.pick }}" style="background: transparent; color: #B9C2D1; border: 1px solid #1E3252; border-radius: 4px; padding: 6px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #AD8A46; color: #F6F1E7;">{{ t.label }}</button>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<section style="background: #F7F4EE; padding: 56px 0 36px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+    <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+      <div data-annot="1" style="padding-right: 20px;">
+        <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">{{ eyebrow }}</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">19 Aug 2026</div>
+      </div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 38px; line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 14px; max-width: 26ch;">{{ heading }}</h1>
+        <p style="font-size: 17px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 64ch;">{{ lede }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 0 0 96px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+
+    <sc-if value="{{ hasTable }}" hint-placeholder-val="{{ true }}">
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; margin-bottom: 24px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <sc-for list="{{ cols }}" as="c" hint-placeholder-count="4">
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 16px; text-align: {{ c.align }};">{{ c.label }}</th>
+              </sc-for>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="14">
+              <tr style="border-bottom: 1px solid #E2E6EC;">
+                <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
+                  <td style="padding: 10px 16px; font-size: {{ c.size }}; font-weight: {{ c.weight }}; line-height: 1.55; text-align: {{ c.align }}; white-space: {{ c.wrap }}; font-family: {{ c.font }}; color: {{ c.colour }}; font-variant-numeric: tabular-nums;">
+                    <sc-if value="{{ c.hasSwatch }}" hint-placeholder-val="{{ false }}">
+                      <span style="display: inline-flex; align-items: center; gap: 9px;">
+                        <span style="width: 18px; height: 18px; flex: none; border: 1px solid #DCDFE4; background: {{ c.swatch }};"></span>
+                        <span>{{ c.text }}</span>
+                      </span>
+                    </sc-if>
+                    <sc-if value="{{ c.hasPill }}" hint-placeholder-val="{{ false }}">
+                      <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; white-space: nowrap; background: {{ c.bg }}; border: 1px solid {{ c.border }};">
+                        <span style="width: 12px; height: 12px; display: grid; place-items: center; color: {{ c.fg }};">
+                          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                        </span>
+                        <span style="font-size: 12px; font-weight: 500; color: {{ c.fg }};">{{ c.text }}</span>
+                      </span>
+                    </sc-if>
+                    <sc-if value="{{ c.plain }}" hint-placeholder-val="{{ true }}">
+                      <span>{{ c.text }}</span>
+                    </sc-if>
+                  </td>
+                </sc-for>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+        <sc-if value="{{ hasTableNote }}" hint-placeholder-val="{{ true }}">
+          <div style="border-top: 1px solid #E2E6EC; padding: 18px 20px; background: #FBF8F2;">
+            <sc-for list="{{ tableNotes }}" as="n" hint-placeholder-count="2">
+              <div style="font-size: 14px; line-height: 1.65; max-width: 78ch; margin-bottom: 8px;">{{ n }}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRules }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; gap: 16px;">
+        <sc-for list="{{ ruleGroups }}" as="g" hint-placeholder-count="6">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+            <div style="border-bottom: 1px solid #E2E6EC; padding: 14px 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline;">
+              <div style="font-size: 15px; font-weight: 600;">{{ g.group }}</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">{{ g.source }}</div>
+            </div>
+            <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="5">
+              <div style="border-bottom: 1px solid #F1F2F4; padding: 11px 20px; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; align-items: start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.6" style="margin-top: 3px;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                <div style="font-size: 14px; line-height: 1.65;">{{ i }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isOpen }}" hint-placeholder-val="{{ false }}">
+      <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px;">
+        <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 24px;">
+          <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Ahmed needs to supply</div>
+          <div style="display: grid; gap: 10px; font-size: 14px; line-height: 1.65;">
+            <div>Two headshots for About Us — the slots are marked and sized 3:4.</div>
+            <div>Written approval for the client-area phase, which is the same message as the Category 3 change request.</div>
+            <div>A decision on Client Login in the header, whose slot is reserved and empty.</div>
+            <div>Sign-off on the wording of the fourth religion option and its result-screen reason line.</div>
+          </div>
+        </div>
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 24px;">
+          <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">The seventeen files</div>
+          <div style="display: grid; gap: 8px; font-size: 13px; line-height: 1.6;">
+            <sc-for list="{{ files }}" as="f" hint-placeholder-count="12">
+              <div><code style="font-family: 'IBM Plex Mono', monospace; font-size: 12px;">{{ f.name }}</code> — {{ f.what }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const P = { positive: { fg: "#2E6A4E", bg: "#EAF2ED", border: "#C4DCD0" }, progress: { fg: "#2A4E86", bg: "#E9EFF8", border: "#C3D4EA" }, attention: { fg: "#8A6512", bg: "#F7F0DF", border: "#E6D5A8" }, held: { fg: "#63467F", bg: "#F0EBF6", border: "#D6C9E5" }, critical: { fg: "#8C2F2F", bg: "#F8ECEA", border: "#E8C9C4" }, neutral: { fg: "#5B6472", bg: "#F1F2F4", border: "#DCDFE4" } };
+
+const MONO = "'IBM Plex Mono', monospace";
+
+const COLOURS = [
+  ["--ink", "#12233F", "#F7F4EE", "13.90", "Body text, primary buttons, ink sections"],
+  ["--ink-deep", "#0B1729", "#F7F4EE", "16.71", "Hero ground, footer, admin rail"],
+  ["--ink-70", "#3A4A66", "#F7F4EE", "8.19", "Secondary prose on paper"],
+  ["--slate", "#5B6472", "#F7F4EE", "5.13", "Captions, helper text, metadata"],
+  ["--steel", "#B9C2D1", "#0B1729", "8.80", "Secondary text on ink only — fails on paper"],
+  ["--gold", "#AD8A46", "#F7F4EE", "2.91", "Rules, active indicators, 2px focus ring. Never body text"],
+  ["--gold-strong", "#8A6512", "#F7F4EE", "4.62", "Eyebrow labels ≥12px 600 on paper. The gold that is legible"],
+  ["--gold-soft", "#D8C69A", "#0B1729", "10.66", "Margin rule and eyebrows on ink"],
+  ["--paper", "#F6F1E7", "#12233F", "13.53", "Cards, wells, the hero assessment card"],
+  ["--page", "#F7F4EE", "#12233F", "13.90", "Page fill — split from paper so paper reads as an object"],
+  ["--positive", "#2E6A4E", "#EAF2ED", "5.13", "Completed, paid, approved"],
+  ["--progress", "#2A4E86", "#E9EFF8", "6.28", "In progress, drafting"],
+  ["--attention", "#8A6512", "#F7F0DF", "4.55", "Action needed, overdue, information requested"],
+  ["--held", "#63467F", "#F0EBF6", "6.51", "Held for legal review — never critical"],
+  ["--critical", "#8C2F2F", "#F8ECEA", "6.29", "Stopped, failed, ineligible"],
+  ["--neutral", "#5B6472", "#F1F2F4", "4.92", "Closed, cancelled, archived"],
+  ["--rule-warm", "#E4DDCE", "#F7F4EE", "1.14", "Hairline on paper — non-text, decorative"],
+  ["--input-border", "#8C93A1", "#FFFFFF", "3.02", "Input borders — raised from #B9C2D1 to clear 3:1"],
+];
+
+const TYPE = [
+  ["display-xl", "72 / 1.02 / -0.03em", "Homepage hero only · 40 mobile"],
+  ["display-l", "44 / 1.08 / -0.02em", "Page titles · 32 mobile"],
+  ["display-m", "34 / 1.14 / -0.015em", "Section openers · 26 mobile"],
+  ["h1", "30 / 1.2 / -0.01em", "In-app titles"],
+  ["h2", "24 / 1.3 / -0.008em", "Subsections"],
+  ["h3", "20 / 1.35 / 0", "Card titles, FAQ questions"],
+  ["h4", "17 / 1.4 / 0", "Small headings"],
+  ["body-l", "18 / 1.65 / 0", "Intro paragraphs"],
+  ["body", "16 / 1.65 / 0", "Default"],
+  ["body-s", "14 / 1.6 / 0", "Secondary, helper text"],
+  ["legal", "15 / 1.72 / 0", "The five legal pages · 64ch"],
+  ["caption", "13 / 1.5 / 0.005em", "Metadata, footnotes"],
+  ["eyebrow", "12 / 1.4 / 0.14em", "Section labels, uppercase 600"],
+];
+
+const GEO = [
+  ["--r-xs", "2px", "Inputs, checkboxes"],
+  ["--r-sm", "4px", "Buttons, chips, tags"],
+  ["--r-md", "8px", "Cards, panels"],
+  ["--r-lg", "12px", "Hero assessment card, modals only"],
+  ["--r-pill", "999px", "Status pills and nothing else"],
+  ["--r-0", "0", "Tables, data rows, dividers"],
+  ["space", "4·8·12·16·24·32·48·64·96·128", "No value outside the scale"],
+  ["rhythm", "128 / 48 / 80 / 64 / 96", "Homepage section padding, deliberately uneven"],
+  ["--shadow-raised", "0 1px 2px rgba(18,35,63,.05)", "Sticky bars, the hero card on paper"],
+  ["--shadow-float", "0 4px 12px rgba(18,35,63,.07)", "Dropdowns, popovers"],
+  ["--shadow-sheet", "0 16px 40px rgba(18,35,63,.14)", "Modals, mobile sheets"],
+  ["--shadow-sheet-ink", "0 16px 40px rgba(11,23,41,.42)", "The hero card on ink — alpha raised because a shadow's tint follows its ground"],
+  ["focus", "2px #8A6512 at 2px offset", "Always visible, never removed"],
+  ["target", "44px minimum, 46px in practice", "Every interactive element"],
+];
+
+const COMPONENTS = [
+  ["Button — primary, secondary, tertiary, destructive", "default hover focus-visible active disabled loading", "sm 36 / md 44 / lg 52. Disabled states state the condition beside them rather than greying out silently."],
+  ["Text input, textarea, currency field", "default focus filled error disabled loading autofilled", "Label always above and persistent. Helper space is reserved so an error does not shift layout. Errors on blur, never per keystroke."],
+  ["Searchable country dropdown", "empty typing matches no-match selected", "Full country list, type-ahead filter, match count in tabular figures. inputmode=search, autocomplete=country-name."],
+  ["Multi-select with exclusive option", "none some all exclusive-clears", "Selecting “None of these” clears the rest and says so in an inline note. The reverse also clears the exclusive."],
+  ["Radio-style selectable rows", "default hover selected disabled", "Full-width rows, 1px hairline, selected is a 3px gold inset left edge plus a ground shift. No circles, no ticks — the row is the control."],
+  ["Consent checkbox", "unchecked checked", "Never pre-ticked. Seven-item declaration block gates its continue button and shows a count."],
+  ["Status pill", "6 semantic states", "Icon plus text label plus colour. Never legible by colour alone. white-space: nowrap so it cannot wrap."],
+  ["Stage tracker", "8 customer-facing statuses", "Done, current and future carry distinct icons as well as colour."],
+  ["Progress indicator", "5 named stages", "Shows position and momentum. Never a count — the number of questions depends on the answers."],
+  ["Inline alert", "6 semantic states", "Held uses --held and opens “This is not a rejection”. Never --critical for a held matter."],
+  ["Data table", "sticky header, square rows", "Tabular figures in every number column. Becomes labelled stacked cards below 900px, never a horizontal scroll."],
+  ["FAQ accordion", "collapsed expanded copied", "aria-expanded, answers present in the DOM when collapsed, copy-link button with a visible text label."],
+  ["Cookie banner + preferences panel", "bar panel saved", "Three equal actions. Nothing pre-ticked. Strictly necessary is locked with an “Always on” pill."],
+  ["Rule builder row", "collapsed expanded restricted redacted", "Reads as a sentence. Branch rows for rules that depend on an earlier stored answer."],
+  ["Restricted record", "visible redacted", "Present and countable, never invisible. Shows “Restricted — authorised legal staff only”."],
+  ["2FA code field", "empty partial complete error", "One input, not six boxes. Paste distributes correctly, 22px+ so iOS cannot zoom, hairline per digit position."],
+  ["Error page", "404 500 expired revoked", "Names what happened, what it means for the matter, one primary action, a real contact route."],
+];
+
+const PAGES = [
+  ["Homepage", "Homepage.dc.html", "hero 1–7 / card 8–12 · S2 4 cards ×3 · S3 steps 1–9 · S5 7/5 · S7 3/9", "ink-deep → page → page → ink → page → page → page → ink → footer · 128/48/80/64/96"],
+  ["How It Works", "HowItWorks.dc.html", "9 steps 1–9, rule-draw on the margin · table 1–12 → 3 cards", "page, one ink CTA · 96/64/96"],
+  ["Do You Need a Will", "PublicPages.dc.html", "8 profiles on 6/6, 4/4/4, 6/6 — deliberately not a 3-up grid", "page → ink CTA · 96/64"],
+  ["UAE Will Options", "WillOptions.dc.html", "5-route table 1–12 → 5 cards · anchor nav 1–3 / body 4–12", "page → ink CTA · 72/80/96 · no CTA inside a route section"],
+  ["Pricing", "Pricing.dc.html", "fee block 1–7 · authority table 1–12 · exclusions 1–6 / 7–12", "page → ink CTA · 96/64/128"],
+  ["FAQs", "PublicPages.dc.html", "jump nav 1–3 sticky / 57 answers 4–12", "page · 72/48/96"],
+  ["About Us", "PublicPages.dc.html", "portrait 1–4 / bio 5–12, then mirrored 1–7 / 9–12", "ink → page → ink CTA · 72/96/64"],
+  ["Contact", "PublicPages.dc.html", "warning 1–7 / channels 9–12 · no form", "page · 72/96"],
+  ["Legal ×5", "PublicPages.dc.html", "clause nav 1–3 sticky / clauses 5–11 at 64ch", "page · 72/96 · clause numbers in the margin column"],
+  ["Assessment", "Assessment.dc.html", "390 card + question map · sticky context header, bottom-anchored action", "ink header → page · mobile-first"],
+  ["Auth", "Auth.dc.html", "manifest 1–5 on ink / form 6–12 on paper, gold seam between", "ink | page · card vertically centred"],
+  ["Admin", "Admin.dc.html", "232px rail + fluid main · detail 1fr/360px", "surface-sunk ground, tighter spacing, no marketing aesthetic"],
+  ["Client area", "ClientArea.dc.html", "dashboard 1fr/340px · checkout 1fr/380px", "page, phase-two banner on every screen"],
+  ["Notifications", "Notifications.dc.html", "600px email column + 340px WhatsApp", "page · email header mounts the Wordmark component"],
+];
+
+const RULES = [
+  ["R-01", "Q1 = someone has died", "A different service", "Yes — exits at Q1"],
+  ["R-02", "Q2 = No (under 18)", "Cannot continue", "Yes — exits at Q2"],
+  ["R-03", "Q3 = United Arab Emirates", "A different route", "Yes — exits at Q3"],
+  ["R-04", "Q15B ≠ Yes (capacity or influence)", "Urgent review · restricted", "No — highest precedence, resolved at the end"],
+  ["R-05", "Q1 = DIFC Will requested", "Held for review", "No"],
+  ["R-06", "Q1 = review, amend, replace or revoke", "Held for review", "No"],
+  ["R-07", "Q5 = previously Muslim, or prefer not to say", "Held for review", "No — the fourth option is pending wording approval"],
+  ["R-08", "Q6 = previous marriage, divorce, separation or agreement", "Held for review", "No"],
+  ["R-09", "Q10 or Q11 = company, Trust or Foundation ownership", "Held for review", "No"],
+  ["R-10", "Q12 = any existing Will, prior law election or structure", "Held for review", "No"],
+  ["R-11", "Q6A or Q13A wish outside immediate family AND Q5 = Muslim", "Held for review", "No — depends on an earlier stored answer"],
+  ["R-12", "Q15A = dispute, guarantee or insolvency concern", "Held for review", "No"],
+  ["R-13", "No other rule matched", "Continue online", "No — the default"],
+];
+
+const CONDITIONALS = [
+  ["Q4A Emirate", "Q4 = In the United Arab Emirates"],
+  ["Q6A Unmarried partner", "Q6 = Living with a partner or engaged, not married"],
+  ["Q6B Late spouse", "Q6 = Widowed, no unfinished estate"],
+  ["Q8A Minor children", "Q7 includes any child option"],
+  ["Q8B Where children live", "Q8A = Yes"],
+  ["Q8C Parental responsibility", "Q8A = Yes"],
+  ["Q8D Nominating a guardian", "Q8A = Yes"],
+  ["Q10 Types of UAE assets", "Q9 ≠ No UAE assets"],
+  ["Q10A Registered beneficiary", "Q10 includes an account with a nomination"],
+  ["Q10B Digital assets", "Q10 includes cryptocurrency or digital assets"],
+  ["Q13B Beneficiaries needing protection", "Q13A includes a charity or named shares"],
+];
+
+const STATUS = [
+  ["01", "Assessment Completed", ["Assessment submitted", "Awaiting triage"]],
+  ["02", "Under Review or Further Information Required", ["Held — DIFC route", "Held — sensitive matter", "Held — capacity or influence (restricted)", "Further information requested", "Awaiting client reply"]],
+  ["03", "Accepted, Terms and Payment Required", ["Accepted — terms issued", "Payment link sent", "Payment failed — retry"]],
+  ["04", "Questionnaire In Progress", ["Questionnaire released", "Questionnaire partially complete"]],
+  ["05", "Legal Review and Drafting", ["In legal review", "Drafting", "Internal QA"]],
+  ["06", "Draft Review, Amendments or Approval", ["Draft sent", "Amendment round 1", "Amendment round 2", "Approved by client"]],
+  ["07", "Registration Preparation or In Progress", ["Translation in progress", "Submission prepared", "Lodged with authority"]],
+  ["08", "Completed", ["Registered and delivered", "Closed — cancelled", "Closed — declined"]],
+];
+
+const PERMS = [
+  ["View case list and case detail", 1, 1, 1],
+  ["View restricted capacity or influence flag", 1, 0, 0],
+  ["Assign and reassign staff", 1, 1, 0],
+  ["Change case status", 1, 1, 0],
+  ["Generate a payment link", 1, 1, 0],
+  ["Record a manual payment", 1, 0, 0],
+  ["Issue a refund", 1, 0, 0],
+  ["Edit questionnaire and routing rules", 1, 0, 0],
+  ["Publish a questionnaire version", 1, 0, 0],
+  ["Edit page content", 1, 1, 0],
+  ["Create users and change permissions", 1, 0, 0],
+  ["View the audit log", 1, 0, 0],
+  ["Export case data", 1, 0, 0],
+];
+
+const NON_NEG = [
+  { group: "Never claim", source: "compliance rules · Part 7", items: [
+    "That a Will is registered because a questionnaire was completed or a payment made.",
+    "That any authority will accept a Will.",
+    "That registration completes within a guaranteed period.",
+    "That a Sharia framework applies automatically to every expatriate.",
+    "That a court must appoint the nominated guardian.",
+    "That court fees are included in the professional fee.",
+  ]},
+  { group: "Always render exactly", source: "brand and compliance", items: [
+    "“Owned and operated by Summit Legal Consultancy UAE · Trade Licence No. 4429232.01” — on every page.",
+    "“UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority.”",
+    "The short brand line is “A Summit Legal Consultancy UAE Platform.”",
+    "The phrase “Supported by Summit” must never appear anywhere.",
+    "AED 2,199 plus VAT standard. DIFC from AED 3,999 plus VAT, quoted individually — never a fixed purchasable price.",
+  ]},
+  { group: "The restricted flag", source: "Part 9 · access control", items: [
+    "Visible only to authorised legal staff, as a separate permission that is off by default.",
+    "Never in a notification body, an email subject, an SMS or a WhatsApp message.",
+    "Never in an ordinary case list or an export a coordinator can run.",
+    "Enforced at the query layer — the response must not contain the field at all.",
+    "The client-facing outcome screen names no reason, so it is safe to be read over the client's shoulder.",
+  ]},
+  { group: "Colour and accessibility", source: "brief Part D", items: [
+    "No legal meaning may be communicated by colour alone. Every status carries an icon and a text label.",
+    "Body text ≥ 4.5:1, large text ≥ 3:1, non-text UI ≥ 3:1.",
+    "Gold #AD8A46 is never body text and never a link in running prose. Use #8A6512 where gold must be read.",
+    "Focus ring 2px #8A6512 at 2px offset, always visible, never removed.",
+  ]},
+  { group: "Content placement", source: "brief Part F", items: [
+    "Legal information is live text, never inside an image.",
+    "Legal caveats stay visible, never inside a collapsed accordion.",
+    "One primary action per screen.",
+    "No address is displayed anywhere on the site.",
+    "No “Last legally reviewed” stamp unless Summit explicitly supplies one.",
+    "No contact form on the Contact page. Email and WhatsApp as live text links only.",
+  ]},
+  { group: "Flow rules", source: "Final Qualifying Questionnaire", items: [
+    "One question per screen. Conditional questions shown only when relevant.",
+    "Back always available and never destructive.",
+    "Never promise a fixed number of questions — no “3 of 16” anywhere.",
+    "Never present the result as a final legal decision.",
+    "Never request payment on a held case. The payment control must not exist on that screen.",
+  ]},
+];
+
+const OPEN = [
+  ["01", "The fourth religion option and its reason line", "“I would prefer not to say” routes to manual review, and the result screen reads “You chose not to share this, so our legal team will confirm the right route with you directly. No payment is taken while we do.” Both need Summit's wording sign-off.", "Blocks Q5", "attention"],
+  ["02", "Hero headline size", "Ships at 72px in three lines. The brief asked for 76px, which sets four lines in the 483px measure and breaks the 820px height cap. Three options are rendered in Headlines.dc.html.", "Cosmetic", "neutral"],
+  ["03", "Client Login in the header", "Omitted per instruction. The utility slot is reserved at 96×24 so the link drops in without relayout. Needs a commercial decision.", "Blocks nothing", "neutral"],
+  ["04", "Client-area phase approval", "Ten screens designed and gated behind the phase-two banner. Needs written approval — the same message as the Category 3 change request.", "Blocks ClientArea", "held"],
+  ["05", "Two lawyer headshots", "Slots are marked at 3:4 on About Us. Cannot be generated — real photographs required.", "Blocks About Us", "attention"],
+  ["06", "Authority fee figures", "ADJD AED 950.00, Dubai Courts approximately AED 2,100.00, DIFC varies by Will type. Each needs re-checking against the authority's current schedule before launch.", "Blocks Pricing", "attention"],
+  ["07", "Amendment allowance", "Shown as two rounds after the first draft. The specification says “as stated in your Service Confirmation” without fixing a number.", "Blocks checkout copy", "attention"],
+  ["08", "Retention periods", "Incomplete questionnaire 30 days per the specification. The other four periods — abandoned assessment, declined matter, completed matter, audit log — are proposed, not specified.", "Blocks settings", "attention"],
+  ["09", "First-draft target", "Two business days after complete, usable instructions. Confirm this is a target Summit will stand behind, since it appears in client-facing copy.", "Blocks How It Works", "attention"],
+  ["10", "WhatsApp template approval", "All eleven templates need submitting to Meta for approval as Utility category before launch. Approval takes days, not hours.", "Blocks launch", "critical"],
+];
+
+const FILES = [
+  ["Wordmark.dc.html", "the swappable identity component every page imports — one prop switches the whole product to 1a or 1c"],
+  ["Wordmarks.dc.html", "the three directions rendered for comparison, from that component"],
+  ["SiteHeader / SiteFooter", "shared furniture, seven nav items plus the reserved utility slot"],
+  ["Foundations.dc.html", "every token and component state, in real content"],
+  ["Homepage.dc.html", "the page, opening with the header and closing with the footer"],
+  ["Headlines.dc.html", "three hero headlines at size, for the 72/76px decision"],
+  ["Mobile.dc.html", "the homepage at 390px, including the stacking order"],
+  ["Pricing / HowItWorks / WillOptions", "three public pages on the template system"],
+  ["PublicPages.dc.html", "the remaining nine public pages, the cookie banner and four error pages"],
+  ["Assessment.dc.html", "sixteen questions, ten conditionals, six outcomes, mobile-first"],
+  ["Auth.dc.html", "nine admin screens in scope, five client screens gated"],
+  ["Admin.dc.html", "fourteen internal screens including the rule builder"],
+  ["ClientArea.dc.html", "ten screens — withhold this file to withhold the phase"],
+  ["Notifications.dc.html", "eleven templates, email and WhatsApp"],
+  ["Handoff.dc.html", "this file"],
+];
+
+const cell = (text, o) => Object.assign({
+  text: text, size: "14px", weight: "400", align: "left", wrap: "normal",
+  font: "inherit", colour: "#12233F", plain: true, hasSwatch: false, hasPill: false,
+  swatch: "", bg: "", border: "", fg: "",
+}, o || {});
+
+const mono = (t, o) => cell(t, Object.assign({ font: MONO, size: "13px", wrap: "nowrap" }, o || {}));
+
+const TABS = [
+  { id: "tokens", label: "Tokens", eyebrow: "Token reference", heading: "Every token, with its computed contrast ratio", lede: "Ratios are computed, not estimated. Two tokens exist only because the audit found the originals failing: --gold-strong for gold that must be read, and --input-border raised to clear 3:1 against white." },
+  { id: "type", label: "Type and geometry", eyebrow: "Scale", heading: "Type scale, radius, space and elevation", lede: "8pt vertical rhythm on a 16px base. Radius is assigned by what a thing is, so a data row and a modal never share a corner. Five elevations, because a shadow's tint follows its ground." },
+  { id: "components", label: "Components", eyebrow: "Inventory", heading: "Seventeen components, and every state to build", lede: "Each row names the states that exist in Foundations. Where a state carries a rule from the client's compliance documents, the rule is in the note rather than left to inference." },
+  { id: "pages", label: "Page specs", eyebrow: "Layout", heading: "Column spans and ground rhythm, screen by screen", lede: "12 columns, 1280 maximum, 32px gutters. Every left edge sits on column 1 — measured at 86px on a 1388px viewport." },
+  { id: "routing", label: "Routing", eyebrow: "Decision table", heading: "The assessment logic, implementable as written", lede: "Thirteen rules and eleven conditionals. R-11 is the one that reads an earlier stored answer, so the engine needs the whole answer set in scope rather than the current question alone." },
+  { id: "status", label: "Statuses", eyebrow: "Mapping", heading: "27 internal statuses, 8 the client sees", lede: "An internal status is never rendered to a client. The API should expose the group, not the internal label — an endpoint returning “Held — capacity or influence” is a data breach, not a bug." },
+  { id: "perms", label: "Permissions", eyebrow: "Access control", heading: "The permission matrix", lede: "Enforce at the query layer, not the view layer. A coordinator's case request must not return the restricted fields at all — hiding them in the response is how they end up in a dev-tools screenshot." },
+  { id: "rules", label: "Non-negotiable", eyebrow: "Compliance", heading: "Rules that come from the client's own documents", lede: "None of these is a design preference. Each traces to the signed scope, the compliance rules or the questionnaire, and changing one needs Summit's written agreement rather than a developer's judgement." },
+  { id: "open", label: "Open questions", eyebrow: "Before build", heading: "Ten items needing Summit's confirmation", lede: "Each says what is assumed, why, and what it blocks. Nothing here stops a developer starting — but shipping any of them unconfirmed would put wording or figures in front of a client that Summit has not agreed." },
+];
+
+class Component extends DCLogic {
+  state = { id: "tokens" };
+
+  renderVals() {
+    const id = this.state.id;
+    const tab = TABS.find(t => t.id === id) || TABS[0];
+    let cols = [], rows = [], notes = [];
+
+    if (id === "tokens") {
+      cols = [{ label: "Token", align: "left" }, { label: "Hex", align: "left" }, { label: "On", align: "left" }, { label: "Ratio", align: "right" }, { label: "Permitted for", align: "left" }];
+      rows = COLOURS.map(c => ({ cells: [
+        mono(c[0]), cell(c[1], { hasSwatch: true, plain: false, swatch: c[1], font: MONO, size: "13px" }),
+        mono(c[2], { colour: "#3A4A66", size: "12px" }),
+        mono(c[3], { align: "right", colour: Number(c[3]) < 3 ? "#8A6512" : "#2E6A4E" }),
+        cell(c[4], { size: "13px" }),
+      ] }));
+      notes = ["Gold #AD8A46 reaches only 2.91:1 on paper, so it is confined to rules, active-state indicators and the focus ring. Where gold has to be read as text, use #8A6512 at 4.62:1.", "Ratios were recomputed after the first pass understated two of them. Every figure above is calculated, not recalled."];
+    } else if (id === "type") {
+      cols = [{ label: "Token", align: "left" }, { label: "Value", align: "left" }, { label: "Use", align: "left" }];
+      rows = TYPE.map(t => ({ cells: [mono(t[0]), mono(t[1], { colour: "#3A4A66", size: "12px" }), cell(t[2], { size: "13px" })] }))
+        .concat(GEO.map(g => ({ cells: [mono(g[0]), mono(g[1], { colour: "#3A4A66", size: "12px", wrap: "normal" }), cell(g[2], { size: "13px" })] })));
+      notes = ["Three type roles: Newsreader for display only and never below 20px, Instrument Sans for every interface string, IBM Plex Mono for references, timestamps and fee tables with tabular-nums always on.", "Measure is capped at 68ch for running prose and 64ch on the legal pages. Body copy is left-aligned, never centred."];
+    } else if (id === "components") {
+      cols = [{ label: "Component", align: "left" }, { label: "States", align: "left" }, { label: "Notes for the build", align: "left" }];
+      rows = COMPONENTS.map(c => ({ cells: [cell(c[0], { weight: "500" }), mono(c[1], { colour: "#3A4A66", size: "12px", wrap: "normal" }), cell(c[2], { size: "13px" })] }));
+      notes = ["Static content cards get a 1px hairline and no shadow. Elevation is only for things genuinely floating above the page."];
+    } else if (id === "pages") {
+      cols = [{ label: "Screen", align: "left" }, { label: "File", align: "left" }, { label: "Column spans", align: "left" }, { label: "Ground · rhythm", align: "left" }];
+      rows = PAGES.map(p => ({ cells: [cell(p[0], { weight: "500" }), mono(p[1], { colour: "#3A4A66", size: "12px" }), mono(p[2], { colour: "#3A4A66", size: "12px", wrap: "normal" }), cell(p[3], { size: "13px" })] }));
+      notes = ["Below 1080px every span collapses to 1 / -1. Below 719px the margin column collapses and its annotation is hidden rather than wrapped.", "Section padding varies deliberately down each page. Identical padding on every section is one of the tells the client asked to avoid."];
+    } else if (id === "routing") {
+      cols = [{ label: "Rule", align: "left" }, { label: "Condition", align: "left" }, { label: "Outcome", align: "left" }, { label: "Terminal", align: "left" }];
+      const tone = o => o.indexOf("Continue") === 0 ? "positive" : (o.indexOf("Held") === 0 ? "held" : (o.indexOf("Urgent") === 0 ? "critical" : "neutral"));
+      rows = RULES.map(r => {
+        const p = P[tone(r[2])];
+        return { cells: [
+          mono(r[0]), cell(r[1], { size: "13px" }),
+          cell(r[2], { hasPill: true, plain: false, bg: p.bg, border: p.border, fg: p.fg }),
+          cell(r[3], { size: "13px" }),
+        ] };
+      }).concat(CONDITIONALS.map(c => ({ cells: [
+        mono(c[0], { wrap: "normal" }), cell("shown when: " + c[1], { size: "13px" }),
+        cell("Conditional", { hasPill: true, plain: false, bg: P.progress.bg, border: P.progress.border, fg: P.progress.fg }),
+        cell("—", { size: "13px" }),
+      ] })));
+      notes = ["Precedence: urgent beats held, held beats continue. A non-terminal rule does not stop evaluation — collect every match, then take the most severe outcome.", "Terminal rows exit immediately and skip the remaining questions and the declarations. R-11 depends on an earlier stored answer, so it cannot be evaluated question-by-question."];
+    } else if (id === "status") {
+      cols = [{ label: "#", align: "left" }, { label: "Customer-facing group", align: "left" }, { label: "Internal statuses", align: "left" }];
+      rows = STATUS.map(s => ({ cells: [
+        mono(s[0], { colour: "#8A6512" }),
+        cell(s[1], { weight: "500" }),
+        cell(s[2].join(" · "), { size: "13px" }),
+      ] }));
+      notes = ["“Held — capacity or influence” is restricted: it is an internal status that must never reach a client response, a notification or an export a coordinator can run.", "Publishing a new questionnaire version applies to new assessments only. A case already in progress keeps the version it started on."];
+    } else if (id === "perms") {
+      cols = [{ label: "Capability", align: "left" }, { label: "Full admin", align: "center" }, { label: "Coordinator", align: "center" }, { label: "Read only", align: "center" }];
+      const yn = v => mono(v ? "allowed" : "no", { align: "center", colour: v ? "#2E6A4E" : "#5B6472", size: "12px" });
+      rows = PERMS.map(p => ({ cells: [cell(p[0]), yn(p[1]), yn(p[2]), yn(p[3])] }));
+      notes = ["Two full administrators. Restricted access to the capacity or influence flag is a separate permission and is off by default, including for a coordinator who can otherwise progress the case."];
+    } else if (id === "open") {
+      cols = [{ label: "#", align: "left" }, { label: "Item", align: "left" }, { label: "Assumption and why", align: "left" }, { label: "Blocks", align: "left" }];
+      rows = OPEN.map(o => {
+        const p = P[o[4]];
+        return { cells: [
+          mono(o[0], { colour: "#8A6512" }), cell(o[1], { weight: "600" }), cell(o[2], { size: "13px" }),
+          cell(o[3], { hasPill: true, plain: false, bg: p.bg, border: p.border, fg: p.fg }),
+        ] };
+      });
+      notes = [];
+    }
+
+    return {
+      tabs: TABS.map(t => ({
+        label: t.label, on: t.id === id, off: t.id !== id,
+        pick: () => { this.setState({ id: t.id }); window.scrollTo(0, 0); },
+      })),
+      eyebrow: tab.eyebrow, heading: tab.heading, lede: tab.lede,
+      hasTable: id !== "rules",
+      cols: cols, rows: rows,
+      tableNotes: notes, hasTableNote: notes.length > 0,
+      isRules: id === "rules",
+      isOpen: id === "open",
+      ruleGroups: NON_NEG,
+      files: FILES.map(f => ({ name: f[0], what: f[1] })),
+    };
+  }
+}
+</script>
+</body>
+</html>

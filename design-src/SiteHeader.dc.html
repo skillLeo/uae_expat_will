@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [data-hdr] a { text-decoration: none; border-bottom: none; }
+  @media (max-width: 1199px) {
+    [data-hdr-row] { flex-wrap: wrap; }
+    [data-hdr-nav] { order: 3; flex: 0 0 100% !important; justify-content: flex-start !important; padding-top: 12px; border-top: 1px solid #1E3252; }
+    [data-hdr-util] { margin-left: auto; }
+  }
+  @media (max-width: 719px) {
+    [data-hdr-nav] { display: none !important; }
+    [data-hdr-menu] { display: grid !important; }
+  }
+</style>
+</helmet>
+
+<header data-hdr="1" style="position: sticky; top: 0; z-index: 30; background: #0B1729; border-bottom: 1px solid #1E3252; font-family: 'Instrument Sans', system-ui, sans-serif;">
+  <div data-hdr-row="1" style="max-width: 1280px; margin: 0 auto; padding: 18px 32px; display: flex; align-items: center; gap: 24px;">
+    <a href="Homepage.dc.html" style="flex: none;"><dc-import name="Wordmark" direction="margin" context="header" ground="ink" hint-size="170px,30px"></dc-import></a>
+    <nav data-hdr-nav="1" style="flex: 1; display: flex; justify-content: center; gap: 16px; font-size: 13px; white-space: nowrap;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+        <div>
+          <sc-if value="{{ n.on }}" hint-placeholder-val="{{ false }}">
+            <a href="{{ n.href }}" style="color: #F6F1E7; font-weight: 500; padding-bottom: 3px; border-bottom: 1px solid #AD8A46;">{{ n.label }}</a>
+          </sc-if>
+          <sc-if value="{{ n.off }}" hint-placeholder-val="{{ true }}">
+            <a href="{{ n.href }}" style="color: #B9C2D1;" style-hover="color: #D8C69A;">{{ n.label }}</a>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <button data-hdr-menu="1" style="display: none; width: 44px; height: 44px; flex: none; background: none; border: 1px solid #5B6472; border-radius: 4px; place-items: center; cursor: pointer; margin-left: auto;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#F6F1E7" stroke-width="1.5"><path d="M3.5 6h13M3.5 10h13M3.5 14h13" stroke-linecap="round"></path></svg>
+    </button>
+    <div data-hdr-util="1" style="width: 96px; height: 24px; flex: none; border: 1px dashed #5B6472; display: grid; place-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #B9C2D1;">utility slot</div>
+    <a href="Assessment.dc.html" style="flex: none; background: #F6F1E7; color: #12233F; font-size: 14px; font-weight: 500; padding: 13px 18px; border: 1px solid #F6F1E7; border-radius: 4px; white-space: nowrap; transition: background 140ms ease;" style-hover="background: #FFFFFF;">Start the assessment</a>
+  </div>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;how&quot;,&quot;need&quot;,&quot;options&quot;,&quot;pricing&quot;,&quot;faqs&quot;,&quot;about&quot;,&quot;contact&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Header&quot;}}">
+const NAV = [
+  { id: "how", label: "How It Works", href: "HowItWorks.dc.html" },
+  { id: "need", label: "Do You Need a Will?", href: "#do-you-need" },
+  { id: "options", label: "UAE Will Options", href: "WillOptions.dc.html" },
+  { id: "pricing", label: "Pricing", href: "Pricing.dc.html" },
+  { id: "faqs", label: "FAQs", href: "#faqs" },
+  { id: "about", label: "About Us", href: "#about" },
+  { id: "contact", label: "Contact", href: "#contact" },
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? "";
+    return {
+      nav: NAV.map(n => ({ label: n.label, href: n.href, on: n.id === active, off: n.id !== active })),
+    };
+  }
+}
+</script>
+</body>
+</html>

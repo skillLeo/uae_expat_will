@@ -1,0 +1,47 @@
+# Dependencies
+/vendor
+/node_modules
+
+# Build artefacts
+/public/build
+/public/hot
+/public/storage
+/bootstrap/ssr
+/bootstrap/cache/*.php
+
+# Environment and secrets — never commit these
+.env
+.env.*
+!.env.example
+/auth.json
+/storage/*.key
+/storage/oauth-*.key
+
+# Local database and storage
+/database/*.sqlite
+/database/*.sqlite-journal
+/storage/app/private/*
+!/storage/app/private/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/pail
+
+# Tooling
+/.idea
+/.vscode
+/.zed
+/.nova
+/.phpunit.cache
+.phpunit.result.cache
+.phpactor.json
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+
+# OS
+.DS_Store
+Thumbs.db
+*.log

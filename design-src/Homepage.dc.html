@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  button { font: inherit; }
+  @keyframes ruleDraw { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes settle { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  [data-stub] { transform: scaleX(0); transition: transform 320ms cubic-bezier(.16,1,.3,1); }
+  [data-stub][data-on="true"] { transform: scaleX(1); }
+  [data-chip] { border: 1px solid #1E3252; transition: border-color 320ms ease; }
+  [data-chip] [data-chip-label] { color: #B9C2D1; transition: color 320ms ease; }
+  [data-chip][data-on="true"] { border-color: #AD8A46; }
+  [data-chip][data-on="true"] [data-chip-label] { color: #F6F1E7; }
+  @media (prefers-reduced-motion: reduce) {
+    [data-stub], [data-chip], [data-chip] [data-chip-label] { transition: none; }
+    [data-anim] { animation: none !important; opacity: 1 !important; transform: none !important; }
+    [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+  @media (max-width: 1199px) {
+    [data-nav] { display: none !important; }
+    [data-menu] { display: grid !important; }
+  }
+  @media (max-width: 1080px) {
+    [data-span] { grid-column: 1 / -1 !important; }
+    [data-grid] { gap: 32px 32px !important; }
+    [data-margincol] { grid-template-columns: 120px 1px minmax(0, 1fr) !important; }
+  }
+  @media (max-width: 719px) {
+    [data-pad] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-margincol] { grid-template-columns: 1px minmax(0, 1fr) !important; }
+    [data-margincol] > [data-annot] { display: none !important; }
+    [data-h1] { font-size: 40px !important; }
+  }
+</style>
+</helmet>
+
+<dc-import name="SiteHeader" hint-size="100%,80px"></dc-import>
+
+<section id="top" data-hero="5" style="background: #0B1729;">
+  <div data-pad="1" data-grid="1" style="max-width: 1280px; margin: 0 auto; padding: 32px 32px 24px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: start;">
+
+    <div data-span="1" style="grid-column: 1 / span 7; padding-right: 64px;">
+      <div data-margincol="1" style="display: grid; grid-template-columns: 116px 1px minmax(0, 1fr); align-items: start;">
+        <div data-annot="1" data-anim="1" style="padding-right: 20px; animation: fadeUp 200ms cubic-bezier(.16,1,.3,1) 60ms both;">
+          <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A;">Owned and operated by Summit Legal Consultancy UAE · Trade Licence No. 4429232.01</div>
+        </div>
+        <div data-anim="1" style="align-self: stretch; background: #D8C69A; transform-origin: top; animation: ruleDraw 280ms cubic-bezier(.16,1,.3,1) both;"></div>
+        <div style="padding-left: 32px;">
+          <sc-if value="{{ hlRisk }}" hint-placeholder-val="{{ true }}">
+            <h1 data-h1="1" data-anim="1" style="font-family: Newsreader, serif; font-weight: 400; font-size: 72px; line-height: 1.02; letter-spacing: -0.03em; color: #F6F1E7; margin: 0 0 24px; animation: fadeUp 220ms cubic-bezier(.16,1,.3,1) 120ms both;">Without a Will, the decision is not yours</h1>
+          </sc-if>
+          <sc-if value="{{ hlAvoid }}" hint-placeholder-val="{{ false }}">
+            <h1 data-h1="1" data-anim="1" style="font-family: Newsreader, serif; font-weight: 400; font-size: 72px; line-height: 1.02; letter-spacing: -0.03em; color: #F6F1E7; margin: 0 0 24px; animation: fadeUp 220ms cubic-bezier(.16,1,.3,1) 120ms both;">You have been meaning to sort this out since you moved here</h1>
+          </sc-if>
+          <sc-if value="{{ hlDecide }}" hint-placeholder-val="{{ false }}">
+            <h1 data-h1="1" data-anim="1" style="font-family: Newsreader, serif; font-weight: 400; font-size: 72px; line-height: 1.02; letter-spacing: -0.03em; color: #F6F1E7; margin: 0 0 24px; animation: fadeUp 220ms cubic-bezier(.16,1,.3,1) 120ms both;">Who inherits, and who may care for your children</h1>
+          </sc-if>
+          <p data-anim="1" style="font-size: 18px; line-height: 1.65; color: #B9C2D1; margin: 0; animation: fadeUp 220ms cubic-bezier(.16,1,.3,1) 200ms both;">Protect your family, children and assets through a guided digital process. Our legal team reviews your instructions, drafts your Will and confirms the correct registration authority before you approve anything.</p>
+        </div>
+      </div>
+
+      <div data-margincol="1" data-anim="1" style="display: grid; grid-template-columns: 132px 1px minmax(0, 1fr); align-items: start; margin-top: 32px; animation: fadeUp 220ms cubic-bezier(.16,1,.3,1) 200ms both;">
+        <div data-annot="1" style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; padding-right: 20px;">Professional fee</div>
+        <div style="align-self: stretch; background: #1E3252;"></div>
+        <div style="padding-left: 32px;">
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 30px; font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; color: #F6F1E7; font-variant-numeric: tabular-nums;">AED 2,199</div>
+            <div style="font-size: 15px; color: #B9C2D1;">plus VAT · one accepted standard Will</div>
+          </div>
+          <a href="#pricing" style="display: inline-block; font-size: 15px; color: #F6F1E7; margin-top: 8px;">See what is included</a>
+        </div>
+      </div>
+
+      <div data-margincol="1" data-anim="1" style="display: grid; grid-template-columns: 132px 1px minmax(0, 1fr); align-items: start; margin-top: 32px; animation: fadeUp 220ms cubic-bezier(.16,1,.3,1) 200ms both;">
+        <div data-annot="1" style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; padding-right: 20px;">Reviewed by</div>
+        <div style="align-self: stretch; background: #1E3252;"></div>
+        <div style="padding-left: 32px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 16px 48px; align-items: flex-start;">
+            <div>
+              <div style="font-size: 18px; font-weight: 600; line-height: 1.35; color: #F6F1E7;">Ahmed Mohammedi</div>
+              <div style="font-size: 14px; line-height: 1.5; color: #B9C2D1;">Managing Director and Co-Founder</div>
+            </div>
+            <div>
+              <div style="font-size: 18px; font-weight: 600; line-height: 1.35; color: #F6F1E7;">Dr. Mohamed Raouf</div>
+              <div style="font-size: 14px; line-height: 1.5; color: #B9C2D1;">Principal Legal Consultant and Co-Founder</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin-top: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="7.2" cy="7.2" r="4.6"></circle><path d="M10.6 10.6 13.8 13.8" stroke-linecap="round"></path></svg>
+              <span style="font-size: 13px; color: #B9C2D1;">Human legal review on every Will</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="6.2"></circle><path d="M5.6 8h4.8" stroke-linecap="round"></path></svg>
+              <span style="font-size: 13px; color: #B9C2D1;">One clear professional fee</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+              <span style="font-size: 13px; color: #B9C2D1;">Registration assistance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-span="1" data-anim="1" style="grid-column: 8 / span 5; animation: settle 200ms cubic-bezier(.16,1,.3,1) 280ms both;">
+      <div style="background: #F6F1E7; border-top: 2px solid #AD8A46; border-radius: 12px; box-shadow: 0 16px 40px rgba(11,23,41,.42), 0 2px 8px rgba(11,23,41,.32); padding: 20px; color: #12233F;">
+        <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 16px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">The assessment starts here</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; flex: none;">question one</div>
+            </div>
+            <h2 style="font-size: 21px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">What service are you looking for today?</h2>
+            <div style="display: grid; gap: 6px; margin-bottom: 16px;">
+              <sc-for list="{{ services }}" as="s" hint-placeholder-count="5">
+                <div>
+                  <sc-if value="{{ s.checked }}" hint-placeholder-val="{{ false }}">
+                    <div onClick="{{ s.onSelect }}" style="background: #FFFFFF; border: 1px solid #8A6512; border-radius: 4px; box-shadow: inset 3px 0 0 #AD8A46; padding: 12px 14px 12px 17px; font-size: 15px; font-weight: 600; line-height: 1.4; cursor: pointer; min-height: 44px;">{{ s.label }}</div>
+                  </sc-if>
+                  <sc-if value="{{ s.unchecked }}" hint-placeholder-val="{{ true }}">
+                    <div onClick="{{ s.onSelect }}" style="background: transparent; border: 1px solid #E4DDCE; border-radius: 4px; padding: 12px 14px; font-size: 15px; line-height: 1.4; cursor: pointer; min-height: 44px; transition: border-color 140ms ease;" style-hover="border-color: #8A6512;">{{ s.label }}</div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ canContinue }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ onContinue }}" style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer; transition: background 140ms ease;" style-hover="background: #0B1729;">Continue</button>
+            </sc-if>
+            <sc-if value="{{ cannotContinue }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <button aria-disabled="true" style="width: 100%; background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: not-allowed;">Continue</button>
+                <div style="font-size: 13px; color: #5B6472; margin-top: 8px; text-align: center;">Choose one option to continue.</div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isQ2 }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 16px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">About you</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; flex: none;">question two</div>
+            </div>
+            <h2 style="font-size: 21px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 8px;">Are you 18 years old or above?</h2>
+            <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">The person making the Will must be at least 18 years old.</p>
+            <div style="display: grid; gap: 6px; margin-bottom: 20px;">
+              <div onClick="{{ onAgeYes }}" style="border: 1px solid #E4DDCE; border-radius: 4px; padding: 13px 14px; font-size: 15px; cursor: pointer; min-height: 44px;" style-hover="border-color: #8A6512;">Yes</div>
+              <div onClick="{{ onAgeNo }}" style="border: 1px solid #E4DDCE; border-radius: 4px; padding: 13px 14px; font-size: 15px; cursor: pointer; min-height: 44px;" style-hover="border-color: #8A6512;">No</div>
+            </div>
+            <button onClick="{{ onBack }}" style="background: none; border: none; color: #12233F; font-size: 14px; font-weight: 500; padding: 10px 2px; min-height: 44px; cursor: pointer; display: flex; align-items: center; gap: 8px;" style-hover="color: #8A6512;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9.6,3.2 4.8,8 9.6,12.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+              Back
+            </button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isEstate }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#63467F" stroke-width="1.4"><circle cx="9" cy="9" r="5.6"></circle><path d="M13.2 13.2 17 17" stroke-linecap="round"></path></svg>
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #63467F;">A different service applies</div>
+            </div>
+            <h2 style="font-size: 21px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">Our team will review this as a separate matter</h2>
+            <p style="font-size: 15px; line-height: 1.72; margin: 0 0 20px;">This relates to the administration of an estate after death rather than the preparation of a new Will. No payment is requested.</p>
+            <a href="#contact" style="display: inline-block; border-bottom: none; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500;">Contact our team</a>
+            <div style="margin-top: 16px;">
+              <button onClick="{{ onBack }}" style="background: none; border: none; color: #12233F; font-size: 14px; font-weight: 500; padding: 10px 2px; min-height: 44px; cursor: pointer;" style-hover="color: #8A6512;">Back to the first question</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isInside }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">About you</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; flex: none;">saved automatically</div>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 18px;">
+              <div style="height: 3px; flex: 1; background: #8A6512;"></div>
+              <div style="height: 3px; flex: 1; background: #E4DDCE;"></div>
+              <div style="height: 3px; flex: 1; background: #E4DDCE;"></div>
+              <div style="height: 3px; flex: 1; background: #E4DDCE;"></div>
+              <div style="height: 3px; flex: 1; background: #E4DDCE;"></div>
+            </div>
+            <h2 style="font-size: 21px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">You are inside the assessment</h2>
+            <p style="font-size: 15px; line-height: 1.72; margin: 0 0 8px;">Next we ask about your nationality, where you live and your family. The number of questions depends on your answers, so we do not promise a count.</p>
+            <p style="font-size: 14px; line-height: 1.6; color: #5B6472; margin: 0 0 16px;">You can leave and return — your answers are kept against this device until you create an account.</p>
+            <button onClick="{{ onBack }}" style="background: none; border: none; color: #12233F; font-size: 14px; font-weight: 500; padding: 10px 2px; min-height: 44px; cursor: pointer;" style-hover="color: #8A6512;">Back</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isUnder18 }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #5B6472; margin-bottom: 14px;">This service cannot continue</div>
+            <h2 style="font-size: 21px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">The person making a Will must be at least 18</h2>
+            <p style="font-size: 15px; line-height: 1.72; margin: 0 0 16px;">You cannot continue through the online Will preparation service because the person making the Will must be at least 18 years old. Nothing has been charged.</p>
+            <button onClick="{{ onBack }}" style="background: none; border: none; color: #12233F; font-size: 14px; font-weight: 500; padding: 10px 2px; min-height: 44px; cursor: pointer;" style-hover="color: #8A6512;">Back</button>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 14px;">
+        <div style="display: flex; align-items: center; gap: 7px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+          <span style="font-size: 13px; color: #B9C2D1;">Free</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 7px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="5.6" r="2.6"></circle><path d="M3.4 13.2c0-2.3 2.1-3.6 4.6-3.6s4.6 1.3 4.6 3.6" stroke-linecap="round"></path></svg>
+          <span style="font-size: 13px; color: #B9C2D1;">No account needed</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 7px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="6.2"></circle><polyline points="8,4.6 8,8.2 10.6,9.6" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+          <span style="font-size: 13px; color: #B9C2D1;">About five minutes</span>
+        </div>
+      </div>
+
+      <div data-routing="1" style="margin-top: 20px;">
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; margin-bottom: 12px;">Where your answer goes</div>
+        <div style="width: 1px; height: 12px; background: #D8C69A; margin-left: 11px;"></div>
+        <div style="display: grid; gap: 6px; border-left: 1px solid #D8C69A; margin-left: 11px;">
+          <sc-for list="{{ outcomes }}" as="o" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: center;">
+              <div data-stub="1" data-on="{{ o.on }}" style="height: 1px; background: #AD8A46; transform-origin: left;"></div>
+              <div data-chip="1" data-on="{{ o.on }}" style="border-radius: 4px; padding: 10px 14px;">
+                <div data-chip-label="1" style="font-size: 14px; font-weight: 500; line-height: 1.4;">{{ o.label }}</div>
+                <sc-if value="{{ o.on }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size: 13px; line-height: 1.5; color: #B9C2D1; margin-top: 4px;">{{ o.detail }}</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="do-you-need" style="background: #F7F4EE; padding: 96px 0 64px;">
+  <div data-pad="1" data-grid="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 7;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Make Your Wishes Clear for the People and Assets That Matter</h2>
+      <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0;">If you live, work, invest or own assets in the UAE, the rules that apply after your death may not produce the result you expect. A properly prepared Will can record your wishes and provide a clearer basis for the administration of your estate, subject to the applicable law and authority process.</p>
+    </div>
+
+    <div data-reveal="1" style="grid-column: 1 / -1; margin-top: 24px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; border-top: 1px solid #E4DDCE; padding-top: 28px;">
+      <div data-span="1" style="grid-column: 1 / span 3;">
+        <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">Who Receives Your Eligible Assets</h3>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0;">State how you want eligible property, financial assets, business interests and personal belongings to be distributed.</p>
+      </div>
+      <div data-span="1" style="grid-column: 4 / span 3; border-left: 1px solid #E4DDCE; padding-left: 32px;">
+        <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">Who Administers Your Estate</h3>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0;">Appoint an executor and an alternative to take the necessary estate-administration steps after your death.</p>
+      </div>
+      <div data-span="1" style="grid-column: 7 / span 3; border-left: 1px solid #E4DDCE; padding-left: 32px;">
+        <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">Who May Care for Your Children</h3>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0;">Record guardianship wishes for minor children where the selected Will route permits, subject to applicable law and the competent court's decision.</p>
+      </div>
+      <div data-span="1" style="grid-column: 10 / span 3; border-left: 1px solid #E4DDCE; padding-left: 32px;">
+        <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">What Happens if a First Choice Cannot Act</h3>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0;">Name alternative beneficiaries, executors or guardians in case your first choice dies, declines or is unable to act.</p>
+      </div>
+    </div>
+
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 3; margin-top: 64px;">
+      <h3 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">Who should consider making or reviewing a UAE Will?</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px;">Not every person needs the same Will or registration route. The assessment identifies the likely next step without asking you to choose the legal pathway yourself.</p>
+      <a href="#do-you-need-guide" style="font-size: 15px; font-weight: 500;">Read the full guide →</a>
+    </div>
+    <div data-reveal="1" data-span="1" style="grid-column: 4 / span 9; margin-top: 64px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px;">
+      <div style="font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #E4DDCE;">A parent of minor children</div>
+      <div style="font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #E4DDCE;">Part of a blended family or previous marriage</div>
+      <div style="font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #E4DDCE;">A UAE property owner, account holder or investor</div>
+      <div style="font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #E4DDCE;">Supporting an unmarried partner, stepchild, relative or charity</div>
+      <div style="font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #E4DDCE;">A business owner or shareholder</div>
+      <div style="font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #E4DDCE;">Holding assets or an existing Will in more than one country</div>
+      <div style="font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #E4DDCE; border-bottom: 1px solid #E4DDCE;">A married couple preparing coordinated but separate Wills</div>
+      <div style="font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #E4DDCE; border-bottom: 1px solid #E4DDCE;">A non-resident who owns UAE assets</div>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works" style="background: #F7F4EE; padding: 64px 0 96px;">
+  <div data-pad="1" data-grid="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 7;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0;">From Free Assessment to Registration Assistance</h2>
+    </div>
+    <p data-reveal="1" data-span="1" style="grid-column: 8 / span 5; font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; align-self: end;">The full process runs to nine steps, grouped here into four stages. Each stage tells you who acts: you, Summit's legal team, or the competent authority.</p>
+
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 9; margin-top: 40px;">
+      <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr);">
+        <div data-annot="1" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #8A6512; padding: 2px 20px 0 0; font-variant-numeric: tabular-nums;">01</div>
+        <div style="background: #D8C69A;"></div>
+        <div style="padding: 0 0 36px 32px;">
+          <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 8px;">Complete the free assessment</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Answer a short set of questions about your UAE connection, family and the general nature of your assets. You do not need an account and no payment is required.</p>
+        </div>
+        <div data-annot="1" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #8A6512; padding: 2px 20px 0 0; font-variant-numeric: tabular-nums;">02</div>
+        <div style="background: #D8C69A;"></div>
+        <div style="padding: 0 0 36px 32px;">
+          <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 8px;">Pay and provide your instructions</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Most clients — including Muslim clients, blended families, business owners and people with international connections — go straight to account creation, engagement terms and payment, then complete the detailed Will questionnaire. If your matter involves a DIFC Will, a capacity or influence concern, or an active legal dispute, we contact you directly before any payment is requested.</p>
+        </div>
+        <div data-annot="1" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #8A6512; padding: 2px 20px 0 0; font-variant-numeric: tabular-nums;">03</div>
+        <div style="background: #D8C69A;"></div>
+        <div style="padding: 0 0 36px 32px;">
+          <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 8px;">Receive full legal review and drafting</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Every Will receives human legal review by Summit's legal team, who confirm the appropriate wording and registration authority and prepare your draft. For an accepted standard matter, we aim to send the first draft within <strong style="font-weight: 600;">2 business days</strong> after receiving complete, usable instructions and all required documents.</p>
+        </div>
+        <div data-annot="1" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #8A6512; padding: 2px 20px 0 0; font-variant-numeric: tabular-nums;">04</div>
+        <div style="background: #D8C69A;"></div>
+        <div style="padding: 0 0 0 32px;">
+          <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 8px;">Approve your Will and prepare for registration</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">You review the draft, request the amendments included in your service and personally approve the final wording. We then assist with the applicable registration preparation and steps.</p>
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 9; margin-top: 32px; background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px;">
+      <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 64ch;">Registration is completed by the competent authority. Identity verification, signing, attendance, payment of authority fees and other personal steps remain subject to that authority's current requirements.</p>
+      <a href="#how-it-works-full" style="font-size: 15px; font-weight: 500;">See all nine steps →</a>
+    </div>
+  </div>
+</section>
+
+<section id="why-us" style="background: #12233F; padding: 96px 0;">
+  <div data-pad="1" data-grid="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 5;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; color: #F6F1E7; margin: 0;">A Digital Process With a Legal Team Behind It</h2>
+    </div>
+    <p data-reveal="1" data-span="1" style="grid-column: 7 / span 6; font-size: 18px; line-height: 1.65; color: #B9C2D1; margin: 0;">An online form on its own cannot recognise a previous marriage, children from different relationships, a company shareholding, jointly held property, an asset abroad or an existing Will. Our process is built to identify those issues and to put a legal professional in front of your document before you approve it.</p>
+
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 6; margin-top: 48px;">
+      <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; color: #F6F1E7; margin: 0 0 10px;">A licensed consultancy, not a document generator</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0 0 32px; max-width: 54ch;">UAE Expat Wills is owned and operated by Summit Legal Consultancy UAE, Trade Licence No. 4429232.01. The platform delivers the digital process, while the legal services and human review are provided by Summit Legal Consultancy UAE.</p>
+      <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; color: #F6F1E7; margin: 0 0 10px;">Human legal review on every single Will</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0; max-width: 54ch;">No document is treated as ready for your approval and registration until a legal professional has reviewed it — this applies to every client, not only complex cases.</p>
+    </div>
+    <div data-reveal="1" data-span="1" style="grid-column: 7 / span 6; margin-top: 48px;">
+      <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; color: #F6F1E7; margin: 0 0 10px;">One clear professional fee</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0 0 12px; max-width: 54ch;">AED 2,199 plus VAT covers one accepted standard Will: preparation, human legal review, certified legal translation of the new UAE Will and assistance submitting the application to the competent authority. Government, court, registry, notary, certification, attestation, courier and identity-verification charges are separate unless expressly included.</p>
+      <p style="font-size: 15px; line-height: 1.72; color: #B9C2D1; margin: 0 0 32px; max-width: 54ch;">Before payment we explain the known fee categories and any available current estimates. After legal review confirms the appropriate authority, we confirm the expected authority charge before you authorise submission or payment.</p>
+      <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; color: #F6F1E7; margin: 0 0 10px;">Support that continues to registration and beyond</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0; max-width: 54ch;">We assist with the applicable registration steps rather than handing you a file, and we provide a route for future updates when your family, assets or wishes change.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pathways" style="background: #F7F4EE; padding: 128px 0 48px;">
+  <div data-pad="1" data-grid="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 7;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">A Process Matched to Your Circumstances</h2>
+      <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0;">Almost every matter runs through the standard online pathway. Three narrow categories are held for direct contact before any payment is taken.</p>
+    </div>
+
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 7; margin-top: 40px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 32px;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+        <div style="width: 44px; height: 2px; background: #AD8A46;"></div>
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512;">Applies to almost everyone</div>
+      </div>
+      <h3 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">Standard Online Pathway</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 58ch;">Including Muslim clients, blended families, business owners and shareholders, people with existing Wills, and clients with assets or family connections in more than one country.</p>
+      <div style="display: grid; border-top: 1px solid #E2E6EC; margin-bottom: 20px;">
+        <div style="font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid #E2E6EC; font-variant-numeric: tabular-nums;">Complete the assessment, create your account and pay the professional fee — AED 2,199 plus VAT</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid #E2E6EC;">Secure detailed questionnaire</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid #E2E6EC;">Full human legal review, drafting and authority selection by Summit's legal team</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid #E2E6EC;">Client amendments and approval</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid #E2E6EC;">Registration assistance within the selected service</div>
+      </div>
+      <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 62ch;">The standard fee covers the scope shown before payment. If the detailed review identifies additional specialist work, a materially different service or a DIFC Will, we pause the matter, explain the reason and obtain your approval before any additional professional fee is charged.</p>
+    </div>
+
+    <div data-reveal="1" data-span="1" style="grid-column: 8 / span 5; margin-top: 40px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 32px;">
+      <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 7px 14px; margin-bottom: 16px; white-space: nowrap;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.5"><circle cx="7.2" cy="7.2" r="4.6"></circle><path d="M10.6 10.6 13.8 13.8" stroke-linecap="round"></path></svg>
+        <span style="font-size: 13px; font-weight: 500; color: #63467F;">Reviewed before payment</span>
+      </div>
+      <h3 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">DIFC and Sensitive-Matter Pathway</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px;">Applies where:</p>
+      <div style="display: grid; border-top: 1px solid #E2E6EC; margin-bottom: 20px;">
+        <div style="font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid #E2E6EC;">You specifically want a DIFC Will, or your circumstances indicate DIFC is the likely route</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid #E2E6EC;">There is a concern about legal capacity or about pressure or influence from another person</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid #E2E6EC;">There is an active legal dispute connected to the family, custody or estate</div>
+      </div>
+      <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0 0 12px;">Summit contacts you directly to review the matter before confirming the service, route and price. DIFC engagements are quoted individually and currently start from <strong style="font-weight: 600; font-variant-numeric: tabular-nums;">AED 3,999 plus VAT</strong>.</p>
+      <p style="font-size: 15px; line-height: 1.72; font-weight: 600; margin: 0;">No payment is taken while a matter is held for this review.</p>
+    </div>
+
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 7; margin-top: 32px; border-top: 1px solid #E4DDCE; padding-top: 32px;">
+      <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0 0 8px;">If the standard platform service is unsuitable — for example, the request concerns administering an existing estate rather than preparing a new Will — the result explains this neutrally and may offer a contact route where appropriate. It does not promise that Summit can accept the matter.</p>
+      <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 0;">You do not choose between these. Both begin with the same assessment.</p>
+    </div>
+    <div data-reveal="1" data-span="1" style="grid-column: 9 / span 4; margin-top: 32px; border-top: 1px solid #E4DDCE; padding-top: 32px;">
+      <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500; min-height: 52px; cursor: pointer; transition: background 140ms ease;" style-hover="background: #0B1729;">Start the assessment</button>
+    </div>
+  </div>
+</section>
+
+<section id="options" style="background: #F7F4EE; padding: 80px 0;">
+  <div data-pad="1" data-grid="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 6;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0;">The Appropriate Route Depends on Your Circumstances</h2>
+    </div>
+    <p data-reveal="1" data-span="1" style="grid-column: 7 / span 6; font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; align-self: end;">The UAE has more than one Will framework and registration process. A possible route may involve the DIFC Courts Wills Service, Abu Dhabi Judicial Department Civil Wills, Dubai Courts or another legally appropriate process.</p>
+
+    <div data-reveal="1" style="grid-column: 1 / -1; margin-top: 40px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 32px; border-top: 1px solid #E4DDCE;">
+      <h3 data-span="1" style="grid-column: 1 / span 3; font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0; padding: 24px 0;">DIFC Courts Wills</h3>
+      <p data-span="1" style="grid-column: 4 / span 9; font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; padding: 24px 0; border-bottom: 1px solid #E4DDCE;">A specialist route for eligible people who are at least 18 years old, are not Muslim and have never been Muslim, and meet the relevant asset or minor-child requirements. The DIFC Courts website currently presents six Will options — Full, Property, Business Owners, Financial Assets, Guardianship and Digital Assets — each with its own scope and limits. DIFC engagements are handled through direct contact with our team rather than the standard online checkout, and start from AED 3,999 plus VAT.</p>
+      <h3 data-span="1" style="grid-column: 1 / span 3; font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0; padding: 24px 0; border-top: 1px solid #E4DDCE;">Abu Dhabi Civil Wills — ADJD</h3>
+      <p data-span="1" style="grid-column: 4 / span 9; font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; padding: 24px 0; border-top: 1px solid #E4DDCE; border-bottom: 1px solid #E4DDCE;">ADJD states that its Civil Wills Office is available to a person who is not a UAE citizen, regardless of religion, subject to its current requirements. Every case — Muslim or non-Muslim — receives full legal review from Summit's team as part of the standard AED 2,199-plus-VAT service, after payment, to confirm the correct wording and structure.</p>
+      <h3 data-span="1" style="grid-column: 1 / span 3; font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0; padding: 24px 0; border-top: 1px solid #E4DDCE;">Dubai Courts Wills</h3>
+      <p data-span="1" style="grid-column: 4 / span 9; font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; padding: 24px 0; border-top: 1px solid #E4DDCE; border-bottom: 1px solid #E4DDCE;">Dubai law establishes a Dubai Courts register for the Wills of non-Muslims. The current service channel, document, language and procedural requirements are confirmed for each proposed application as part of the standard service.</p>
+    </div>
+
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 7; margin-top: 32px; background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px;">
+      <p style="font-size: 15px; line-height: 1.72; margin: 0;">Nationality, religion, residency, family circumstances, asset type and location, existing Wills and international connections may all affect the analysis. A preliminary route is not final until it has been reviewed, and official registration remains subject to the competent authority.</p>
+    </div>
+    <div data-reveal="1" data-span="1" style="grid-column: 9 / span 4; margin-top: 32px;">
+      <a href="#options-full" style="font-size: 15px; font-weight: 500;">Compare UAE Will options →</a>
+    </div>
+  </div>
+</section>
+
+<section id="faqs" style="background: #F7F4EE; padding: 64px 0 96px;">
+  <div data-pad="1" data-grid="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-reveal="1" data-span="1" style="grid-column: 1 / span 3;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 20px;">Questions Before You Start</h2>
+      <a href="#faqs-all" style="font-size: 15px; font-weight: 500;">View all frequently asked questions →</a>
+    </div>
+    <div data-reveal="1" data-span="1" style="grid-column: 4 / span 9; border-top: 1px solid #E4DDCE;">
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+        <div style="border-bottom: 1px solid #E4DDCE;">
+          <button onClick="{{ f.onToggle }}" aria-expanded="{{ f.open }}" style="width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 24px; background: none; border: none; padding: 20px 0; text-align: left; font-size: 20px; font-weight: 600; line-height: 1.35; cursor: pointer; min-height: 44px; color: #12233F;" style-hover="color: #8A6512;">
+            <span>{{ f.q }}</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8A6512" stroke-width="1.5" style="flex: none;"><polyline points="5,8 10,13 15,8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+          </button>
+          <div hidden="{{ f.closed }}" style="padding: 0 0 24px;">
+            <p style="font-size: 16px; line-height: 1.72; color: #12233F; margin: 0; max-width: 68ch;">{{ f.a }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="start" style="background: #12233F; padding: 128px 0;">
+  <div data-pad="1" data-grid="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" style="grid-column: 1 / span 7;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 24px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; color: #F6F1E7; margin: 0 0 20px; max-width: 20ch;">Start With Your Circumstances</h2>
+      <p style="font-size: 18px; line-height: 1.65; color: #B9C2D1; margin: 0 0 32px; max-width: 58ch;">You do not need to know which Will type or registration authority is appropriate before you begin. Complete the free initial assessment to identify the likely next step.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center;">
+        <button style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500; min-height: 52px; cursor: pointer; transition: background 140ms ease;" style-hover="background: #FFFFFF;">Start the assessment</button>
+        <a href="#contact" style="font-size: 15px; font-weight: 500; color: #F6F1E7;">Contact our team →</a>
+      </div>
+    </div>
+    <p data-span="1" style="grid-column: 9 / span 4; font-size: 15px; line-height: 1.72; color: #B9C2D1; margin: 0;">No account or payment is required to complete the initial assessment. Your result is preliminary and remains subject to the applicable acceptance and legal-review process.</p>
+  </div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;headline&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;risk&quot;,&quot;avoidance&quot;,&quot;decisions&quot;],&quot;default&quot;:&quot;risk&quot;,&quot;tsType&quot;:&quot;\&quot;risk\&quot; | \&quot;avoidance\&quot; | \&quot;decisions\&quot;&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;wordmark&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;margin&quot;,&quot;engrossment&quot;,&quot;registers&quot;],&quot;default&quot;:&quot;margin&quot;,&quot;tsType&quot;:&quot;\&quot;margin\&quot; | \&quot;engrossment\&quot; | \&quot;registers\&quot;&quot;,&quot;section&quot;:&quot;Identity&quot;}}">
+const SERVICES = [
+  { id: "new", label: "Prepare a new Will for myself" },
+  { id: "two", label: "Two separate Wills for myself and my spouse or partner" },
+  { id: "difc", label: "I specifically want a DIFC Will" },
+  { id: "amend", label: "Review, amend, replace or revoke an existing Will" },
+  { id: "estate", label: "Someone has died and I need help with their estate" },
+];
+
+const ROUTES = {
+  new: { key: "continue", detail: "Straight to account, engagement terms and payment — AED 2,199 plus VAT." },
+  two: { key: "continue", detail: "Each person answers separately and approves their own Will." },
+  difc: { key: "review", detail: "Reviewed before any payment. DIFC engagements are quoted individually." },
+  amend: { key: "review", detail: "Reviewed before any payment, because an existing Will may need revoking." },
+  estate: { key: "other", detail: "A separate legal service. Our team will explain the next step." },
+};
+
+const OUTCOMES = [
+  { key: "continue", label: "You can continue online" },
+  { key: "review", label: "We need to review your circumstances" },
+  { key: "other", label: "The standard online pathway is not available" },
+];
+
+const FAQS = [
+  { q: "Is UAE Expat Wills a government website?", a: "No. UAE Expat Wills is an independent digital legal-service platform owned and operated by Summit Legal Consultancy UAE. It is not a court, government authority, notary or official Will registry." },
+  { q: "Does completing the website process register my Will?", a: "No. Assessment, payment, questionnaire completion or approval of a draft does not itself register a Will. Registration or notarisation is completed only through the competent authority and remains subject to its requirements and decision." },
+  { q: "Will a legal professional review my Will?", a: "Yes. Every single Will prepared through the platform receives human legal review by Summit's legal team before it is treated as ready for your approval and registration preparation — there is no exception." },
+  { q: "Can Muslims use UAE Expat Wills?", a: "Yes. Muslim clients complete the same online process as everyone else: fill in your instructions, pay the professional fee, and Summit's legal team reviews your case, confirms the correct wording under the applicable rules, and selects the right registration authority before you approve anything." },
+  { q: "How much does it cost, and are government fees included?", a: "The professional fee for one accepted standard Will is AED 2,199 plus VAT. It includes Will preparation, human legal review, certified legal translation of the new UAE Will and submission assistance. Government, court, registry, notary and other third-party charges are separate. Known fee categories are shown before payment; the expected route-specific authority charge is confirmed after legal review and before authority submission or payment." },
+];
+
+class Component extends DCLogic {
+  state = { svc: null, step: 1, age: null, faq: 0 };
+
+  componentDidMount() {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const nodes = Array.from(document.querySelectorAll("[data-reveal]"));
+    if (!nodes.length) return;
+    const show = n => { n.style.opacity = "1"; n.style.transform = "none"; };
+    nodes.forEach(n => {
+      n.style.opacity = "0";
+      n.style.transform = "translateY(14px)";
+      n.style.transition = "opacity 400ms cubic-bezier(.16,1,.3,1), transform 400ms cubic-bezier(.16,1,.3,1)";
+    });
+    const tick = () => {
+      const vh = window.innerHeight || 800;
+      nodes.forEach(n => {
+        const r = n.getBoundingClientRect();
+        if (r.top < vh * 0.92 && r.bottom > -80) show(n);
+      });
+    };
+    tick();
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => { this._raf = 0; tick(); });
+    };
+    window.addEventListener("scroll", this._onScroll, { passive: true });
+    window.addEventListener("resize", this._onScroll);
+    this._failsafe = setTimeout(() => nodes.forEach(show), 2500);
+  }
+
+  componentWillUnmount() {
+    if (this._onScroll) {
+      window.removeEventListener("scroll", this._onScroll);
+      window.removeEventListener("resize", this._onScroll);
+    }
+    if (this._failsafe) clearTimeout(this._failsafe);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const h = this.props.headline ?? "risk";
+    const sig = ["r2", s.svc, s.step, s.age, s.faq, h, this.props.wordmark].join("|");
+    if (this._sig === sig && this._vals) return this._vals;
+    this._sig = sig;
+    this._vals = {
+      wordmark: this.props.wordmark ?? "margin",
+      hlRisk: h === "risk",
+      hlAvoid: h === "avoidance",
+      hlDecide: h === "decisions",
+      services: SERVICES.map(x => ({
+        label: x.label,
+        checked: s.svc === x.id,
+        unchecked: s.svc !== x.id,
+        onSelect: () => this.setState({ svc: x.id }),
+      })),
+      canContinue: !!s.svc,
+      cannotContinue: !s.svc,
+      outcomes: OUTCOMES.map(o => {
+        const route = s.svc ? ROUTES[s.svc] : null;
+        const on = !!route && route.key === o.key;
+        return { label: o.label, on: on, detail: on ? route.detail : "" };
+      }),
+      onContinue: () => this.setState({ step: 2 }),
+      onBack: () => this.setState(st => ({ step: st.step === 3 ? 2 : 1, age: null })),
+      onAgeYes: () => this.setState({ age: "yes", step: 3 }),
+      onAgeNo: () => this.setState({ age: "no", step: 3 }),
+      isStep1: s.step === 1,
+      isQ2: s.step === 2 && s.svc !== "estate",
+      isEstate: s.step === 2 && s.svc === "estate",
+      isInside: s.step === 3 && s.age === "yes",
+      isUnder18: s.step === 3 && s.age === "no",
+      faqs: FAQS.map((f, i) => ({
+        q: f.q,
+        a: f.a,
+        open: s.faq === i,
+        closed: s.faq !== i,
+        onToggle: () => this.setState({ faq: s.faq === i ? null : i }),
+      })),
+    };
+    return this._vals;
+  }
+}
+</script>
+</body>
+</html>

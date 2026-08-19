@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+</style>
+</helmet>
+
+<section style="padding: 72px 32px 128px;">
+  <div style="max-width: 1216px; margin: 0 auto;">
+    <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 48px;">
+      <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; padding-right: 20px;">Homepage at 390px</div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 24ch;">The same page on a phone at midnight</h1>
+        <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 62ch;">Three states at 390px, checked at 320px. The margin rule holds against the left edge as its own grid track, the headline drops to 40px, the routing rail stacks under the card with the same 20px stubs, and the primary action is bottom-anchored rather than scrolled to.</p>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start;">
+      <div style="width: 390px; flex: none;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 12px;">hero — ink ground, card below the fee</div>
+        <div style="width: 390px; background: #0B1729; overflow: hidden;">
+          <div style="border-bottom: 1px solid #1E3252; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <dc-import name="Wordmark" direction="{{ wordmark }}" context="header" ground="ink" hint-size="150px,28px"></dc-import>
+            <button style="width: 44px; height: 44px; flex: none; background: none; border: 1px solid #5B6472; border-radius: 4px; display: grid; place-items: center; cursor: pointer;">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#F6F1E7" stroke-width="1.5"><path d="M3.5 6h13M3.5 10h13M3.5 14h13" stroke-linecap="round"></path></svg>
+            </button>
+          </div>
+          <div style="padding: 28px 16px 28px 0; display: grid; grid-template-columns: 16px 1px minmax(0, 1fr);">
+            <div></div>
+            <div style="align-self: stretch; background: #D8C69A;"></div>
+            <div style="padding-left: 16px;">
+              <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; margin-bottom: 20px;">Owned and operated by Summit Legal Consultancy UAE · Trade Licence No. 4429232.01</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 40px; line-height: 1.06; letter-spacing: -0.03em; color: #F6F1E7; margin: 0 0 20px;">Without a Will, the decision is not yours</h2>
+              <p style="font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0 0 24px;">Protect your family, children and assets through a guided digital process, reviewed by our legal team before you approve anything.</p>
+              <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 24px;">
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 500; line-height: 1.1; color: #F6F1E7; font-variant-numeric: tabular-nums;">AED 2,199</div>
+                <div style="font-size: 14px; color: #B9C2D1;">plus VAT · one standard Will</div>
+              </div>
+              <div style="background: #F6F1E7; border-top: 2px solid #AD8A46; border-radius: 12px; box-shadow: 0 16px 40px rgba(11,23,41,.42), 0 2px 8px rgba(11,23,41,.32); padding: 20px 16px;">
+                <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">The assessment starts here</div>
+                <div style="font-size: 19px; font-weight: 600; line-height: 1.3; margin-bottom: 16px;">What service are you looking for today?</div>
+                <div style="display: grid; gap: 6px;">
+                  <div style="background: #FFFFFF; border: 1px solid #8A6512; border-radius: 4px; box-shadow: inset 3px 0 0 #AD8A46; padding: 13px 14px 13px 17px; font-size: 15px; font-weight: 600; line-height: 1.4; min-height: 44px;">Prepare a new Will for myself</div>
+                  <div style="border: 1px solid #E4DDCE; border-radius: 4px; padding: 13px 14px; font-size: 15px; line-height: 1.4; min-height: 44px;">Two separate Wills for myself and my spouse or partner</div>
+                  <div style="border: 1px solid #E4DDCE; border-radius: 4px; padding: 13px 14px; font-size: 15px; line-height: 1.4; min-height: 44px;">I specifically want a DIFC Will</div>
+                  <div style="border: 1px solid #E4DDCE; border-radius: 4px; padding: 13px 14px; font-size: 15px; line-height: 1.4; min-height: 44px;">Review, amend, replace or revoke an existing Will</div>
+                  <div style="border: 1px solid #E4DDCE; border-radius: 4px; padding: 13px 14px; font-size: 15px; line-height: 1.4; min-height: 44px;">Someone has died and I need help with their estate</div>
+                </div>
+                <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer; margin-top: 20px;">Continue</button>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <span style="font-size: 13px; color: #B9C2D1;">Free</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="5.6" r="2.6"></circle><path d="M3.4 13.2c0-2.3 2.1-3.6 4.6-3.6s4.6 1.3 4.6 3.6" stroke-linecap="round"></path></svg>
+                  <span style="font-size: 13px; color: #B9C2D1;">No account needed</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="6.2"></circle><polyline points="8,4.6 8,8.2 10.6,9.6" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <span style="font-size: 13px; color: #B9C2D1;">About five minutes</span>
+                </div>
+              </div>
+              <div style="margin-top: 20px;">
+                <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; margin-bottom: 10px;">Where your answer goes</div>
+                <div style="width: 1px; height: 12px; background: #D8C69A; margin-left: 11px;"></div>
+                <div style="display: grid; gap: 6px; border-left: 1px solid #D8C69A; margin-left: 11px;">
+                  <div style="display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: center;">
+                    <div style="height: 1px; background: #AD8A46;"></div>
+                    <div style="border: 1px solid #AD8A46; border-radius: 4px; padding: 10px 14px;">
+                      <div style="font-size: 14px; font-weight: 500; line-height: 1.4; color: #F6F1E7;">You can continue online</div>
+                      <div style="font-size: 13px; line-height: 1.5; color: #B9C2D1; margin-top: 4px;">Straight to account, engagement terms and payment — AED 2,199 plus VAT.</div>
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: center;">
+                    <div style="height: 1px; background: #AD8A46; transform: scaleX(0); transform-origin: left;"></div>
+                    <div style="border: 1px solid #1E3252; border-radius: 4px; padding: 10px 14px;">
+                      <div style="font-size: 14px; font-weight: 500; line-height: 1.4; color: #B9C2D1;">We need to review your circumstances</div>
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: center;">
+                    <div style="height: 1px; background: #AD8A46; transform: scaleX(0); transform-origin: left;"></div>
+                    <div style="border: 1px solid #1E3252; border-radius: 4px; padding: 10px 14px;">
+                      <div style="font-size: 14px; font-weight: 500; line-height: 1.4; color: #B9C2D1;">The standard online pathway is not available</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="width: 390px; flex: none;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 12px;">pathways — cards stack, required note stays visible</div>
+        <div style="width: 390px; background: #F7F4EE; border: 1px solid #E4DDCE; padding: 24px 16px;">
+          <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 16px;"></div>
+          <h3 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.18; letter-spacing: -0.015em; margin: 0 0 20px;">A Process Matched to Your Circumstances</h3>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 20px 16px; margin-bottom: 12px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 10px;">Applies to almost everyone</div>
+            <div style="font-size: 19px; font-weight: 600; line-height: 1.3; margin-bottom: 10px;">Standard Online Pathway</div>
+            <div style="font-size: 15px; line-height: 1.6; color: #3A4A66; font-variant-numeric: tabular-nums;">Assessment, account and professional fee — AED 2,199 plus VAT. Full human legal review before you approve anything.</div>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 20px 16px; margin-bottom: 16px;">
+            <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 6px 12px; margin-bottom: 10px; white-space: nowrap;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.5"><circle cx="7.2" cy="7.2" r="4.6"></circle><path d="M10.6 10.6 13.8 13.8" stroke-linecap="round"></path></svg>
+              <span style="font-size: 12px; font-weight: 500; color: #63467F;">Reviewed before payment</span>
+            </div>
+            <div style="font-size: 19px; font-weight: 600; line-height: 1.3; margin-bottom: 10px;">DIFC and Sensitive-Matter Pathway</div>
+            <div style="font-size: 15px; line-height: 1.6; color: #3A4A66; font-variant-numeric: tabular-nums;">Quoted individually from AED 3,999 plus VAT. No payment is taken while a matter is held for this review.</div>
+          </div>
+          <div style="font-size: 13px; line-height: 1.6; color: #5B6472;">You do not choose between these. Both begin with the same assessment.</div>
+        </div>
+      </div>
+
+      <div style="width: 390px; flex: none;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 12px;">stacking order — nothing overlaps</div>
+        <div style="width: 390px; height: 420px; position: relative; background: #F7F4EE; border: 1px solid #E4DDCE; overflow: hidden;">
+          <div style="padding: 24px 16px;">
+            <h3 style="font-size: 22px; font-weight: 600; line-height: 1.3; margin: 0 0 12px;">Questions Before You Start</h3>
+            <div style="border-top: 1px solid #E4DDCE;">
+              <div style="padding: 14px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; font-weight: 600; line-height: 1.4;">Is UAE Expat Wills a government website?</div>
+              <div style="padding: 14px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; font-weight: 600; line-height: 1.4;">Does completing the website process register my Will?</div>
+              <div style="padding: 14px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; font-weight: 600; line-height: 1.4;">Will a legal professional review my Will?</div>
+            </div>
+          </div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 56px; background: #FFFFFF; border-top: 1px solid #E2E6EC; padding: 12px 16px; box-shadow: 0 1px 2px rgba(18,35,63,.05);">
+            <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;">Start the assessment</button>
+          </div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #12233F; padding: 12px 16px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <div style="font-size: 12px; line-height: 1.4; color: #B9C2D1;">We use cookies to run this site.</div>
+            <div style="display: flex; gap: 8px; flex: none;">
+              <button style="background: none; color: #F6F1E7; border: 1px solid #B9C2D1; border-radius: 4px; padding: 8px 10px; font-size: 12px; min-height: 36px; cursor: pointer;">Settings</button>
+              <button style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 8px 10px; font-size: 12px; min-height: 36px; cursor: pointer;">Accept</button>
+            </div>
+          </div>
+        </div>
+        <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 12px 0 0;">Cookie bar at the safe-area edge, assessment bar above it, WhatsApp control suppressed while either is visible.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;wordmark&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;margin&quot;,&quot;engrossment&quot;,&quot;registers&quot;],&quot;default&quot;:&quot;margin&quot;,&quot;tsType&quot;:&quot;\&quot;margin\&quot; | \&quot;engrossment\&quot; | \&quot;registers\&quot;&quot;,&quot;section&quot;:&quot;Identity&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return { wordmark: this.props.wordmark ?? "margin" };
+  }
+}
+</script>
+</body>
+</html>

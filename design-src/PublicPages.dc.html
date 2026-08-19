@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  button, input { font: inherit; color: inherit; }
+  @media (max-width: 1080px) {
+    [data-span] { grid-column: 1 / -1 !important; }
+    [data-margincol] { grid-template-columns: 120px 1px minmax(0, 1fr) !important; }
+    [data-sticky] { position: static !important; }
+    [data-portrait] { max-width: 360px !important; }
+  }
+  @media (max-width: 719px) {
+    [data-pad] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-margincol] { grid-template-columns: 1px minmax(0, 1fr) !important; }
+    [data-margincol] > [data-annot] { display: none !important; }
+    [data-two] { grid-template-columns: minmax(0, 1fr) !important; }
+  }
+</style>
+</helmet>
+
+<div style="background: #0B1729; border-bottom: 1px solid #1E3252; padding: 12px 32px;">
+  <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; flex: none;">Deliverable 06 · page templates</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="9">
+        <div>
+          <sc-if value="{{ t.on }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ t.pick }}" style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 7px 12px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ t.label }}</button>
+          </sc-if>
+          <sc-if value="{{ t.off }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ t.pick }}" style="background: transparent; color: #B9C2D1; border: 1px solid #1E3252; border-radius: 4px; padding: 7px 12px; font-size: 13px; cursor: pointer; white-space: nowrap; transition: border-color 140ms ease, color 140ms ease;" style-hover="border-color: #AD8A46; color: #F6F1E7;">{{ t.label }}</button>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<dc-import name="SiteHeader" active="{{ activeNav }}" hint-size="100%,80px"></dc-import>
+
+<sc-if value="{{ isNeed }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <section style="background: #F7F4EE; padding: 72px 0 56px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+        <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+          <div data-annot="1" style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Do you need a UAE Will</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">Home → Do You Need a Will?</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">Eight situations where a UAE Will usually matters</h1>
+            <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 62ch;">If one of these describes you, the absence of a Will is the thing making the decision. None of these profiles is a legal opinion about your own position.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #F7F4EE; padding: 0 0 96px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+        <sc-for list="{{ profiles }}" as="p" hint-placeholder-count="8">
+          <div data-span="1" style="grid-column: {{ p.span }}; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; margin-bottom: 12px; font-variant-numeric: tabular-nums;">{{ p.n }}</div>
+            <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">{{ p.title }}</h2>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px;">{{ p.body }}</p>
+            <div style="border-top: 1px solid #E2E6EC; padding-top: 12px; font-size: 15px; line-height: 1.6;">{{ p.consider }}</div>
+          </div>
+        </sc-for>
+
+        <div data-span="1" style="grid-column: 1 / span 7; margin-top: 32px; background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px;">
+          <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">These profiles are general information, not advice about your circumstances. Whether a Will is appropriate, and which registration route applies, depends on facts that the assessment and the legal review examine.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #12233F; padding: 96px 0;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+        <div data-span="1" style="grid-column: 1 / span 7;">
+          <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 24px;"></div>
+          <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; color: #F6F1E7; margin: 0 0 20px; max-width: 22ch;">Find out which of these applies to you</h2>
+          <a href="Assessment.dc.html" style="display: inline-block; border-bottom: none; background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500;">Start the assessment</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background: #F7F4EE; padding: 72px 0 56px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+        <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+          <div data-annot="1" style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Contact</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">Home → Contact</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">Contact Summit Legal Consultancy</h1>
+            <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 62ch;">Reach the team directly by email or WhatsApp. There is no contact form on this page, by design — a form invites people to type things that should not be typed into a web page.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #F7F4EE; padding: 0 0 96px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+
+        <div data-span="1" style="grid-column: 1 / span 7; background: #F7F0DF; border: 1px solid #E6D5A8; padding: 24px;">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8A6512" stroke-width="1.5" style="flex: none; margin-top: 2px;"><path d="M11 3.4 20 18H2z" stroke-linejoin="round"></path><path d="M11 8.8v4.2" stroke-linecap="round"></path><circle cx="11" cy="15.4" r="0.8" fill="#8A6512" stroke="none"></circle></svg>
+            <div>
+              <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 8px; color: #12233F;">Please do not send sensitive information</h2>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 10px; color: #12233F; max-width: 62ch;">Do not send passwords, bank card numbers, full account numbers, copies of identity documents, or detailed instructions about your estate in a first message. Email and messaging carry confidentiality and delivery risks.</p>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0; color: #12233F; max-width: 62ch;">Tell us your name and what you need. Once a matter is accepted, documents are exchanged through your secure account instead.</p>
+            </div>
+          </div>
+        </div>
+
+        <div data-span="1" style="grid-column: 9 / span 4;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Direct channels</div>
+          <div style="display: grid; gap: 16px;">
+            <div>
+              <div style="font-size: 13px; color: #5B6472; margin-bottom: 4px;">Email</div>
+              <a href="mailto:info@uaeexpatwills.com" style="font-family: 'IBM Plex Mono', monospace; font-size: 16px;">info@uaeexpatwills.com</a>
+            </div>
+            <div>
+              <div style="font-size: 13px; color: #5B6472; margin-bottom: 4px;">WhatsApp</div>
+              <a href="https://wa.me/971524666191" style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-variant-numeric: tabular-nums;">+971 52 466 6191</a>
+            </div>
+            <div>
+              <div style="font-size: 13px; color: #5B6472; margin-bottom: 4px;">Hours</div>
+              <div style="font-size: 15px; line-height: 1.6;">Sunday to Thursday, UAE business hours. Messages outside those hours are answered on the next business day.</div>
+            </div>
+          </div>
+        </div>
+
+        <div data-span="1" style="grid-column: 1 / span 7; margin-top: 48px;">
+          <h2 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 16px;">Before you write</h2>
+          <div style="display: grid; border-top: 1px solid #E4DDCE;">
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 14px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 15px; font-weight: 600;">Starting a Will</div>
+              <div style="font-size: 15px; line-height: 1.6; color: #3A4A66;">The free assessment answers most first questions faster than an email. <a href="Assessment.dc.html">Start the assessment</a>.</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 14px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 15px; font-weight: 600;">Fees</div>
+              <div style="font-size: 15px; line-height: 1.6; color: #3A4A66;">Every charge is itemised on <a href="Pricing.dc.html">pricing</a>, including which authority charges sit outside our fee.</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 14px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 15px; font-weight: 600;">An existing matter</div>
+              <div style="font-size: 15px; line-height: 1.6; color: #3A4A66;">Quote your case reference. It appears at the top of every message we send you.</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 14px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 15px; font-weight: 600;">A complaint</div>
+              <div style="font-size: 15px; line-height: 1.6; color: #3A4A66;">Email info@uaeexpatwills.com with your name, matter reference, the issue and the outcome you are requesting.</div>
+            </div>
+          </div>
+          <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 20px 0 0; max-width: 64ch;">Contacting us does not create a professional engagement. No engagement begins until Summit accepts the matter and the applicable terms are agreed.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isFaqs }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background: #F7F4EE; padding: 72px 0 48px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+        <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+          <div data-annot="1" style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Frequently asked questions</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">Home → FAQs</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">Questions people ask before they start</h1>
+            <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 62ch;">Every answer is in the page whether or not it is expanded, so you can search the whole set or read it straight through.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; max-width: 520px;">
+              <div style="flex: 1 1 280px; display: flex; align-items: stretch; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF; min-height: 44px;">
+                <div style="display: flex; align-items: center; padding-left: 12px; color: #5B6472;">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5"></circle><path d="M11.8 11.8 15.4 15.4" stroke-linecap="round"></path></svg>
+                </div>
+                <input value="{{ faqQuery }}" onChange="{{ onFaqQuery }}" inputmode="search" placeholder="Filter these questions" style="flex: 1; min-width: 0; border: none; background: transparent; padding: 11px 12px; font-size: 16px;">
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; font-variant-numeric: tabular-nums;">{{ faqTotal }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #F7F4EE; padding: 0 0 96px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: start;">
+        <div data-span="1" data-sticky="1" style="grid-column: 1 / span 3; position: sticky; top: 112px;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Categories</div>
+          <div style="display: grid; border-left: 1px solid #E4DDCE;">
+            <sc-for list="{{ faqJump }}" as="j" hint-placeholder-count="8">
+              <a href="{{ j.href }}" style="border-bottom: none; display: flex; justify-content: space-between; gap: 12px; padding: 8px 0 8px 16px; margin-left: -1px; border-left: 2px solid transparent; font-size: 14px; line-height: 1.4; color: #3A4A66;" style-hover="color: #8A6512; border-left-color: #AD8A46;">
+                <span>{{ j.label }}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; flex: none; font-variant-numeric: tabular-nums;">{{ j.count }}</span>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+
+        <div data-span="1" style="grid-column: 4 / span 9;">
+          <sc-if value="{{ faqNoResults }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 32px 24px;">
+              <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 8px;">No matching question</h2>
+              <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 60ch;">Nothing in these 57 questions matches what you typed. Clear the filter to read them all, or write to the team and we will answer directly.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                <button onClick="{{ clearFaqQuery }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 12px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;">Clear the filter</button>
+                <a href="mailto:info@uaeexpatwills.com" style="border-bottom: none; display: inline-flex; align-items: center; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 12px 18px; font-size: 15px; font-weight: 500; min-height: 44px;">Email the team</a>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-for list="{{ faqCats }}" as="c" hint-placeholder-count="8">
+            <sc-if value="{{ c.has }}" hint-placeholder-val="{{ true }}">
+              <div id="cat-{{ c.id }}" style="margin-bottom: 48px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; padding-bottom: 12px; border-bottom: 1.5px solid #12233F; margin-bottom: 4px;">
+                  <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.2; letter-spacing: -0.015em; margin: 0;">{{ c.label }}</h2>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ c.shownCount }}</span>
+                </div>
+                <sc-for list="{{ c.qs }}" as="f" hint-placeholder-count="6">
+                  <div id="{{ f.anchor }}" style="border-bottom: 1px solid #E4DDCE;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                      <button onClick="{{ f.toggle }}" aria-expanded="{{ f.open }}" style="flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 20px; background: none; border: none; padding: 18px 0; text-align: left; font-size: 17px; font-weight: 600; line-height: 1.4; cursor: pointer; min-height: 44px; color: #12233F;" style-hover="color: #8A6512;">
+                        <span>{{ f.q }}</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8A6512" stroke-width="1.5" style="flex: none;"><polyline points="5,8 10,13 15,8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                      </button>
+                      <button onClick="{{ f.copy }}" aria-label="Copy link to this question" style="flex: none; background: none; border: 1px solid #E4DDCE; border-radius: 4px; min-height: 44px; margin-top: 12px; padding: 0 10px; display: flex; align-items: center; gap: 7px; cursor: pointer;" style-hover="border-color: #8A6512;">
+                        <sc-if value="{{ f.notCopied }}" hint-placeholder-val="{{ true }}">
+                          <span style="display: flex; align-items: center; gap: 7px;">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.4" style="flex: none;"><path d="M6.4 9.6a2.6 2.6 0 0 1 0-3.2l2-2a2.6 2.6 0 0 1 3.6 3.6l-.8.8" stroke-linecap="round"></path><path d="M9.6 6.4a2.6 2.6 0 0 1 0 3.2l-2 2a2.6 2.6 0 0 1-3.6-3.6l.8-.8" stroke-linecap="round"></path></svg>
+                            <span style="font-size: 13px; color: #3A4A66;">Copy link</span>
+                          </span>
+                        </sc-if>
+                        <sc-if value="{{ f.isCopied }}" hint-placeholder-val="{{ false }}">
+                          <span style="display: flex; align-items: center; gap: 7px;">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6" style="flex: none;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                            <span style="font-size: 13px; font-weight: 500; color: #2E6A4E;">Copied</span>
+                          </span>
+                        </sc-if>
+                      </button>
+                    </div>
+                    <div hidden="{{ f.closed }}" style="padding: 0 0 20px;">
+                      <p style="font-size: 16px; line-height: 1.72; margin: 0; max-width: 68ch;">{{ f.a }}</p>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </sc-for>
+
+          <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px;">
+            <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">These answers are general information, not advice about your circumstances, and they do not promise that any authority will accept a Will or complete registration within a particular period.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background: #0B1729; padding: 72px 0 64px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+        <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+          <div data-annot="1" style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A;">About us</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #B9C2D1; margin-top: 12px;">Home → About Us</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; color: #F6F1E7; margin: 0 0 20px; max-width: 26ch;">The people who will read your instructions</h1>
+            <p style="font-size: 18px; line-height: 1.65; color: #B9C2D1; margin: 0; max-width: 62ch;">Every Will prepared through this platform is reviewed by one of the two consultants below. They are named because you are entitled to know who is doing the work.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #F7F4EE; padding: 96px 0 64px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+
+        <div data-span="1" data-portrait="1" style="grid-column: 1 / span 4;">
+          <div style="width: 100%; aspect-ratio: 3 / 4; background: repeating-linear-gradient(45deg, #F1EDE4, #F1EDE4 6px, #F6F1E7 6px, #F6F1E7 12px); border: 1px solid #E4DDCE; display: grid; place-items: center; padding: 24px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; text-align: center;">headshot · 3:4<br>Ahmed Mohammedi<br>drop image here</div>
+          </div>
+        </div>
+        <div data-span="1" style="grid-column: 5 / span 7;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Managing Director and Co-Founder</div>
+          <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 20px;">Ahmed Mohammedi</h2>
+          <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 62ch;">Ahmed leads Summit Legal Consultancy UAE and is responsible for how this platform accepts, prices and delivers a matter. His view is that the difference between a document and a Will is the judgement applied before it is signed.</p>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 62ch;">He decides which matters the firm can properly accept, and which should be held for direct contact rather than pushed through an online checkout.</p>
+          <div style="display: grid; border-top: 1px solid #E4DDCE; max-width: 560px;">
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 12px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 14px; color: #5B6472;">Role</div>
+              <div style="font-size: 15px; line-height: 1.6;">Managing Director and Co-Founder, Summit Legal Consultancy UAE</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 12px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 14px; color: #5B6472;">Responsible for</div>
+              <div style="font-size: 15px; line-height: 1.6;">Matter acceptance, scope and fees; service delivery</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 12px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 14px; color: #5B6472;">Licence</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-variant-numeric: tabular-nums;">4429232.01</div>
+            </div>
+          </div>
+        </div>
+
+        <div data-span="1" style="grid-column: 1 / span 7; margin-top: 96px;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Principal Legal Consultant and Co-Founder</div>
+          <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 20px;">Dr. Mohamed Raouf</h2>
+          <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 62ch;">Dr. Raouf leads the legal review that every Will passes through. He confirms the wording, checks that the instructions are internally consistent, and identifies which registration authority is appropriate before a client is asked to approve anything.</p>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 62ch;">Where a distribution is mathematically or legally unclear, the work stops until it is corrected. That is the step an online form cannot perform.</p>
+          <div style="display: grid; border-top: 1px solid #E4DDCE; max-width: 560px;">
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 12px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 14px; color: #5B6472;">Role</div>
+              <div style="font-size: 15px; line-height: 1.6;">Principal Legal Consultant and Co-Founder</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 12px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 14px; color: #5B6472;">Responsible for</div>
+              <div style="font-size: 15px; line-height: 1.6;">Human legal review, drafting standards and authority selection</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 24px; padding: 12px 0; border-bottom: 1px solid #E4DDCE;">
+              <div style="font-size: 14px; color: #5B6472;">Applies to</div>
+              <div style="font-size: 15px; line-height: 1.6;">Every Will, without exception</div>
+            </div>
+          </div>
+        </div>
+        <div data-span="1" data-portrait="1" style="grid-column: 9 / span 4; margin-top: 96px;">
+          <div style="width: 100%; aspect-ratio: 3 / 4; background: repeating-linear-gradient(45deg, #F1EDE4, #F1EDE4 6px, #F6F1E7 6px, #F6F1E7 12px); border: 1px solid #E4DDCE; display: grid; place-items: center; padding: 24px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; text-align: center;">headshot · 3:4<br>Dr. Mohamed Raouf<br>drop image here</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #F7F4EE; padding: 32px 0 96px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+        <div data-span="1" style="grid-column: 1 / span 5;">
+          <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+          <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0;">What the firm commits to</h2>
+        </div>
+        <div data-span="1" style="grid-column: 7 / span 6;">
+          <div style="display: grid; border-top: 1px solid #E4DDCE;">
+            <div style="padding: 14px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; line-height: 1.6;">Human legal review on every single Will, without exception</div>
+            <div style="padding: 14px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; line-height: 1.6;">One clear professional fee, with authority charges named separately</div>
+            <div style="padding: 14px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; line-height: 1.6;">No payment requested while a matter is held for review</div>
+            <div style="padding: 14px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; line-height: 1.6;">Nothing submitted anywhere until you have personally approved the wording</div>
+            <div style="padding: 14px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; line-height: 1.6;">A named consultant accountable for the review of your document</div>
+          </div>
+          <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 20px 0 0; max-width: 64ch;">Summit Legal Consultancy UAE is not a court, registry, notary or government authority, and registration is completed by the competent authority under its own requirements.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #12233F; padding: 96px 0;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+        <div data-span="1" style="grid-column: 1 / span 7;">
+          <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 24px;"></div>
+          <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; color: #F6F1E7; margin: 0 0 20px; max-width: 22ch;">Start with the assessment</h2>
+          <a href="Assessment.dc.html" style="display: inline-block; border-bottom: none; background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500;">Start the assessment</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isLegal }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background: #F7F4EE; padding: 72px 0 48px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+        <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+          <div data-annot="1" style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">{{ legalEyebrow }}</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">Last updated {{ legalUpdated }}</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">{{ legalTitle }}</h1>
+            <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 62ch;">{{ legalIntro }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #F7F4EE; padding: 0 0 96px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: start;">
+        <div data-span="1" data-sticky="1" style="grid-column: 1 / span 3; position: sticky; top: 112px; max-height: calc(100vh - 160px); overflow: auto;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Clauses</div>
+          <div style="display: grid; border-left: 1px solid #E4DDCE;">
+            <sc-for list="{{ legalNav }}" as="c" hint-placeholder-count="12">
+              <a href="{{ c.href }}" style="border-bottom: none; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; padding: 7px 0 7px 16px; margin-left: -1px; border-left: 2px solid transparent; font-size: 14px; line-height: 1.4; color: #3A4A66;" style-hover="color: #8A6512; border-left-color: #AD8A46;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; font-variant-numeric: tabular-nums;">{{ c.n }}</span>
+                <span>{{ c.label }}</span>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+
+        <div data-span="1" style="grid-column: 5 / span 7;">
+          <sc-for list="{{ legalClauses }}" as="c" hint-placeholder-count="10">
+            <div id="{{ c.id }}" data-margincol="1" style="display: grid; grid-template-columns: 56px 1px minmax(0, 1fr); align-items: start; padding-bottom: 32px;">
+              <div data-annot="1" style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: #8A6512; padding: 3px 16px 0 0; font-variant-numeric: tabular-nums;">{{ c.n }}</div>
+              <div style="align-self: stretch; background: #E4DDCE;"></div>
+              <div style="padding-left: 24px;">
+                <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">{{ c.title }}</h2>
+                <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">{{ c.body }}</p>
+              </div>
+            </div>
+          </sc-for>
+
+          <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px; margin-top: 16px;">
+            <p style="font-size: 15px; line-height: 1.72; margin: 0 0 8px; max-width: 64ch;">Owned and operated by Summit Legal Consultancy UAE · Trade Licence No. 4429232.01</p>
+            <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isConsent }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background: #F7F4EE; padding: 72px 0 40px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+        <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+          <div data-annot="1" style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Cookie consent</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">The banner, at desktop size</h1>
+            <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px; max-width: 62ch;">Three actions of equal weight, nothing pre-ticked, and no pattern that makes rejecting harder than accepting. Press Manage preferences to open the panel.</p>
+            <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 62ch;">It sits at the foot of the viewport, above the WhatsApp control, and never overlaps the assessment button — the stacking order is on the Mobile board.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #F7F4EE; padding: 0 0 96px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+        <div style="background: #F1EDE4; border: 1px solid #E4DDCE; padding: 28px; position: relative; min-height: 460px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 16px;">viewport foot</div>
+          <div style="opacity: .3;">
+            <div style="height: 22px; background: #E4DDCE; width: 58%; margin-bottom: 12px;"></div>
+            <div style="height: 12px; background: #E4DDCE; width: 88%; margin-bottom: 6px;"></div>
+            <div style="height: 12px; background: #E4DDCE; width: 74%; margin-bottom: 6px;"></div>
+            <div style="height: 12px; background: #E4DDCE; width: 81%;"></div>
+          </div>
+
+          <sc-if value="{{ cookieBar }}" hint-placeholder-val="{{ true }}">
+            <div style="position: absolute; left: 24px; right: 24px; bottom: 24px; background: #12233F; border: 1px solid #1E3252; border-top: 2px solid #AD8A46; box-shadow: 0 16px 40px rgba(11,23,41,.28); padding: 24px 28px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: center;">
+              <div>
+                <div style="font-size: 17px; font-weight: 600; line-height: 1.4; color: #F6F1E7; margin-bottom: 8px;">We use cookies to run this platform</div>
+                <p style="font-size: 15px; line-height: 1.65; color: #B9C2D1; margin: 0; max-width: 72ch;">Some are needed for the assessment to hold your answers. The rest are optional and stay off unless you turn them on. Read the <a href="#cookies" style="color: #F6F1E7; border-bottom-color: #AD8A46;">Cookie Policy</a>.</p>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end;">
+                <button onClick="{{ openCookiePanel }}" style="background: transparent; color: #F6F1E7; border: 1px solid #B9C2D1; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #D8C69A;">Manage preferences</button>
+                <button style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer; white-space: nowrap;" style-hover="background: #FFFFFF;">Reject non-essential</button>
+                <button style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer; white-space: nowrap;" style-hover="background: #FFFFFF;">Accept all</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ cookiePanel }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; left: 24px; right: 24px; bottom: 24px; max-width: 640px; background: #FFFFFF; border: 1px solid #E2E6EC; border-top: 2px solid #AD8A46; border-radius: 8px; box-shadow: 0 16px 40px rgba(18,35,63,.14), 0 2px 8px rgba(18,35,63,.08);">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline;">
+                <div>
+                  <div style="font-size: 18px; font-weight: 600; line-height: 1.35; margin-bottom: 4px;">Cookie preferences</div>
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ cookieChosenLabel }}</div>
+                </div>
+                <button onClick="{{ closeCookiePanel }}" aria-label="Close preferences" style="margin-left: auto; flex: none; background: none; border: 1px solid #DCDFE4; border-radius: 4px; min-width: 44px; min-height: 44px; display: grid; place-items: center; cursor: pointer;" style-hover="border-color: #8C93A1;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#12233F" stroke-width="1.5"><path d="M4.4 4.4l7.2 7.2M11.6 4.4l-7.2 7.2" stroke-linecap="round"></path></svg>
+                </button>
+              </div>
+              <sc-for list="{{ cookieCats }}" as="c" hint-placeholder-count="4">
+                <div style="border-bottom: 1px solid #E2E6EC; padding: 16px 24px; display: grid; grid-template-columns: minmax(0, 1fr) 120px; gap: 16px; align-items: start;">
+                  <div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: baseline; margin-bottom: 4px;">
+                      <span style="font-size: 15px; font-weight: 600;">{{ c.label }}</span>
+                      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ c.count }}</span>
+                    </div>
+                    <div style="font-size: 14px; line-height: 1.6; color: #3A4A66;">{{ c.body }}</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <sc-if value="{{ c.locked }}" hint-placeholder-val="{{ false }}">
+                      <span style="display: inline-flex; align-items: center; gap: 7px; background: #F1F2F4; border: 1px solid #DCDFE4; border-radius: 999px; padding: 5px 11px; white-space: nowrap;">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.6"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                        <span style="font-size: 12px; font-weight: 500; color: #5B6472;">Always on</span>
+                      </span>
+                    </sc-if>
+                    <sc-if value="{{ c.unlocked }}" hint-placeholder-val="{{ true }}">
+                      <div>
+                        <sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}">
+                          <button onClick="{{ c.toggle }}" aria-pressed="true" style="display: inline-flex; align-items: center; gap: 7px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 4px; padding: 9px 12px; min-height: 44px; cursor: pointer; white-space: nowrap;">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                            <span style="font-size: 13px; font-weight: 500; color: #2E6A4E;">On</span>
+                          </button>
+                        </sc-if>
+                        <sc-if value="{{ c.off }}" hint-placeholder-val="{{ true }}">
+                          <button onClick="{{ c.toggle }}" aria-pressed="false" style="display: inline-flex; align-items: center; gap: 7px; background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 4px; padding: 9px 12px; min-height: 44px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #12233F;">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.8"><path d="M4.6 8h6.8" stroke-linecap="round"></path></svg>
+                            <span style="font-size: 13px; color: #3A4A66;">Off</span>
+                          </button>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+              <div style="padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                <button onClick="{{ closeCookiePanel }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer;" style-hover="background: #0B1729;">Save my choices</button>
+                <button onClick="{{ closeCookiePanel }}" style="background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer;" style-hover="background: #F6F1E7;">Reject non-essential</button>
+                <button onClick="{{ closeCookiePanel }}" style="background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer;" style-hover="background: #F6F1E7;">Accept all</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px; margin-top: 24px;">
+          <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">What is deliberately absent</div>
+          <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 68ch;">No pre-ticked optional category. Accept all and Reject non-essential carry identical weight — same fill, same size, same position in the row — so refusing costs a visitor nothing more than agreeing. Manage preferences is the outline button because it opens a panel rather than recording a decision. And no second banner nags a visitor who has already chosen; Cookie Settings in the footer reopens this panel at any time.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isErrors }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background: #F7F4EE; padding: 72px 0 32px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+        <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+          <div data-annot="1" style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Error pages</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">Four states, each with a way out</h1>
+            <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 62ch;">Each says what happened and what to do about it. None apologises, none is vague, and none uses a giant numeral as decoration.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <sc-for list="{{ errViews }}" as="e" hint-placeholder-count="4">
+                <div>
+                  <sc-if value="{{ e.on }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ e.pick }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 8px 13px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ e.label }}</button>
+                  </sc-if>
+                  <sc-if value="{{ e.off }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ e.pick }}" style="background: #FFFFFF; color: #3A4A66; border: 1px solid #DCDFE4; border-radius: 4px; padding: 8px 13px; font-size: 13px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #8C93A1;">{{ e.label }}</button>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #F7F4EE; padding: 24px 0 96px;">
+      <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+        <div data-span="1" style="grid-column: 1 / span 7;">
+          <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+            <div data-annot="1" style="padding-right: 20px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #8A6512; font-variant-numeric: tabular-nums;">{{ errCode }}</div>
+            </div>
+            <div style="align-self: stretch; background: #D8C69A;"></div>
+            <div style="padding-left: 32px;">
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 16px; max-width: 24ch;">{{ errTitle }}</h2>
+              <p style="font-size: 17px; line-height: 1.65; color: #3A4A66; margin: 0 0 14px; max-width: 60ch;">{{ errBody }}</p>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 24px; max-width: 62ch;">{{ errDetail }}</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                <a href="{{ errPrimaryHref }}" style="border-bottom: none; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 15px; font-weight: 500;">{{ errPrimary }}</a>
+                <a href="{{ errSecondaryHref }}" style="border-bottom: none; background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 15px; font-weight: 500;">{{ errSecondary }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-span="1" style="grid-column: 9 / span 4;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px 24px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">{{ errAsideTitle }}</div>
+            <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px;">{{ errAside }}</p>
+            <sc-if value="{{ errHasRef }}" hint-placeholder-val="{{ false }}">
+              <div style="border-top: 1px solid #E2E6EC; padding-top: 12px;">
+                <div style="font-size: 13px; color: #5B6472; margin-bottom: 4px;">Quote this if you contact us</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-variant-numeric: tabular-nums;">{{ errRef }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isConsent }}" hint-placeholder-val="{{ false }}">
+  <section style="background: #F7F4EE; padding: 72px 0 96px;">
+    <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+      <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 40px;">
+        <div data-annot="1" style="padding-right: 20px;">
+          <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Cookie consent</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">{{ cookieChosenLabel }}</div>
+        </div>
+        <div style="align-self: stretch; background: #D8C69A;"></div>
+        <div style="padding-left: 32px;">
+          <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">The banner, at desktop size</h1>
+          <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px; max-width: 62ch;">Three actions of equal weight, nothing pre-ticked, and no arrangement that makes refusing harder than accepting. Press Manage preferences to open the panel.</p>
+          <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 62ch;">It sits at the foot of the viewport above the WhatsApp control and never overlaps the assessment button. The stacking order at 390px is on the Mobile board.</p>
+        </div>
+      </div>
+
+      <div style="background: #F1EDE4; border: 1px solid #E4DDCE; padding: 28px; position: relative; min-height: 520px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 16px;">viewport foot · page behind dimmed for this board only</div>
+        <div style="opacity: .3;">
+          <div style="height: 24px; background: #E4DDCE; width: 58%; margin-bottom: 12px;"></div>
+          <div style="height: 12px; background: #E4DDCE; width: 88%; margin-bottom: 7px;"></div>
+          <div style="height: 12px; background: #E4DDCE; width: 74%; margin-bottom: 7px;"></div>
+          <div style="height: 12px; background: #E4DDCE; width: 81%;"></div>
+        </div>
+
+        <sc-if value="{{ cookieBar }}" hint-placeholder-val="{{ true }}">
+          <div style="position: absolute; left: 24px; right: 24px; bottom: 24px; background: #12233F; border: 1px solid #1E3252; border-top: 2px solid #AD8A46; box-shadow: 0 16px 40px rgba(11,23,41,.28); padding: 24px 28px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: center;">
+            <div>
+              <div style="font-size: 17px; font-weight: 600; line-height: 1.4; color: #F6F1E7; margin-bottom: 8px;">We use cookies to run this platform</div>
+              <p style="font-size: 15px; line-height: 1.65; color: #B9C2D1; margin: 0; max-width: 74ch;">Some are needed for the assessment to hold your answers against this device. The rest are optional and stay off unless you turn them on. Read the <a href="#cookies" style="color: #F6F1E7; border-bottom-color: #AD8A46;">Cookie Policy</a>.</p>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end;">
+              <button onClick="{{ openCookiePanel }}" style="background: transparent; color: #F6F1E7; border: 1px solid #B9C2D1; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #D8C69A;">Manage preferences</button>
+              <button style="background: transparent; color: #F6F1E7; border: 1px solid #B9C2D1; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #D8C69A;">Reject non-essential</button>
+              <button style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer; white-space: nowrap;" style-hover="background: #FFFFFF;">Accept all</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ cookiePanel }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; left: 50%; top: 32px; width: 640px; max-width: calc(100% - 48px); transform: translateX(-50%); background: #FFFFFF; border: 1px solid #E2E6EC; border-top: 2px solid #AD8A46; border-radius: 12px; box-shadow: 0 16px 40px rgba(18,35,63,.14), 0 2px 8px rgba(18,35,63,.08);">
+            <div style="padding: 24px 28px 20px; border-bottom: 1px solid #E2E6EC; display: flex; justify-content: space-between; gap: 16px; align-items: flex-start;">
+              <div>
+                <h2 style="font-size: 22px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 8px;">Choose which cookies to allow</h2>
+                <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 56ch;">Everything except the first category is off until you turn it on. Change this any time from Cookie Settings in the footer.</p>
+              </div>
+              <button onClick="{{ closeCookiePanel }}" aria-label="Close preferences" style="flex: none; background: none; border: 1px solid #DCDFE4; border-radius: 4px; min-width: 44px; min-height: 44px; display: grid; place-items: center; cursor: pointer;" style-hover="border-color: #8C93A1;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#12233F" stroke-width="1.5"><path d="M4.4 4.4l7.2 7.2M11.6 4.4l-7.2 7.2" stroke-linecap="round"></path></svg>
+              </button>
+            </div>
+            <sc-for list="{{ cookieCats }}" as="c" hint-placeholder-count="4">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 18px 28px; display: grid; grid-template-columns: minmax(0, 1fr) 136px; gap: 20px; align-items: start;">
+                <div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: baseline; margin-bottom: 6px;">
+                    <div style="font-size: 16px; font-weight: 600; line-height: 1.4;">{{ c.label }}</div>
+                    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ c.count }}</div>
+                  </div>
+                  <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0; max-width: 54ch;">{{ c.body }}</p>
+                </div>
+                <div style="text-align: right;">
+                  <sc-if value="{{ c.locked }}" hint-placeholder-val="{{ false }}">
+                    <span style="display: inline-flex; align-items: center; gap: 7px; background: #F1F2F4; border: 1px solid #DCDFE4; border-radius: 999px; padding: 5px 11px; white-space: nowrap;">
+                      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.6"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                      <span style="font-size: 12px; font-weight: 500; color: #5B6472;">Always on</span>
+                    </span>
+                  </sc-if>
+                  <sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ c.toggle }}" aria-pressed="true" style="display: inline-flex; align-items: center; gap: 8px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 4px; padding: 9px 12px; min-height: 44px; cursor: pointer; white-space: nowrap;">
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.7" style="flex: none;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                      <span style="font-size: 14px; font-weight: 500; color: #2E6A4E;">Allowed</span>
+                    </button>
+                  </sc-if>
+                  <sc-if value="{{ c.off }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ c.toggle }}" aria-pressed="false" style="display: inline-flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 4px; padding: 9px 12px; min-height: 44px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #12233F;">
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.7" style="flex: none;"><path d="M4.6 8h6.8" stroke-linecap="round"></path></svg>
+                      <span style="font-size: 14px; color: #3A4A66;">Off</span>
+                    </button>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+            <div style="padding: 20px 28px; background: #FBF8F2; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+              <button onClick="{{ closeCookiePanel }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer;" style-hover="background: #0B1729;">Save my choices</button>
+              <button onClick="{{ closeCookiePanel }}" style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 46px; cursor: pointer;">Reject non-essential</button>
+              <div style="font-size: 13px; line-height: 1.55; color: #3A4A66; flex: 1 1 200px;">Your choice is remembered for 12 months.</div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isErrors }}" hint-placeholder-val="{{ false }}">
+  <section style="background: #F7F4EE; padding: 72px 0 96px;">
+    <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+      <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 32px;">
+        <div data-annot="1" style="padding-right: 20px;">
+          <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Error pages</div>
+        </div>
+        <div style="align-self: stretch; background: #D8C69A;"></div>
+        <div style="padding-left: 32px;">
+          <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">Four failures, each with a way out</h1>
+          <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 62ch;">No apology, no vagueness, and no dead end. Each says what happened, what it means for the matter, and the one thing to do next.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{ errViews }}" as="e" hint-placeholder-count="4">
+              <div>
+                <sc-if value="{{ e.on }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ e.pick }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 8px 13px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ e.label }}</button>
+                </sc-if>
+                <sc-if value="{{ e.off }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ e.pick }}" style="background: #FFFFFF; color: #3A4A66; border: 1px solid #DCDFE4; border-radius: 4px; padding: 8px 13px; font-size: 13px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #8C93A1;">{{ e.label }}</button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+        <div data-span="1" style="grid-column: 1 / span 7;">
+          <sc-if value="{{ err404 }}" hint-placeholder-val="{{ true }}">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 40px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8A6512; margin-bottom: 20px; font-variant-numeric: tabular-nums;">404</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 14px; max-width: 24ch;">That page is not here</h2>
+              <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 58ch;">The address may be mistyped, or the page may have moved since you saved the link. Nothing about your matter has changed.</p>
+              <div style="display: grid; border-top: 1px solid #E4DDCE; max-width: 56ch; margin-bottom: 24px;">
+                <a href="#faqs" style="border-bottom: none; padding: 12px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; line-height: 1.5;">Frequently asked questions — 57 answers</a>
+                <a href="Pricing.dc.html" style="border-bottom: none; padding: 12px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; line-height: 1.5;">Pricing, and what is charged separately</a>
+                <a href="#contact" style="border-bottom: none; padding: 12px 0; border-bottom: 1px solid #E4DDCE; font-size: 16px; line-height: 1.5;">Contact the team by email or WhatsApp</a>
+              </div>
+              <a href="Homepage.dc.html" style="border-bottom: none; display: inline-block; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500;">Back to the homepage</a>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ err500 }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 40px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8C2F2F; margin-bottom: 20px; font-variant-numeric: tabular-nums;">500</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 14px; max-width: 24ch;">Something failed at our end</h2>
+              <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 58ch;">The request did not complete. If you were part-way through the assessment or the questionnaire, your saved answers are intact — nothing you had already saved is lost.</p>
+              <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px; margin-bottom: 20px; max-width: 58ch;">
+                <div style="font-size: 15px; line-height: 1.72;">If you were on the payment step, do not pay again. Check your email for a receipt first, or contact us and we will confirm whether the payment went through.</div>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5B6472; margin-bottom: 20px; font-variant-numeric: tabular-nums;">Reference ERR-8f3c1a94 · 19 Aug 2026 · 21:07 GST</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Try that again</button>
+                <a href="mailto:info@uaeexpatwills.com" style="border-bottom: none; display: inline-flex; align-items: center; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500;">Email us the reference</a>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ errExpired }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 40px;">
+              <span style="display: inline-flex; align-items: center; gap: 8px; background: #F7F0DF; border: 1px solid #E6D5A8; border-radius: 999px; padding: 5px 12px; margin-bottom: 18px; white-space: nowrap;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                <span style="font-size: 12px; font-weight: 500; color: #8A6512;">Link expired</span>
+              </span>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 14px; max-width: 24ch;">That link has expired</h2>
+              <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 58ch;">Links to your questionnaire last 24 hours, which is what stops a forwarded email from opening your matter. It expired on 18 August.</p>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 24px; max-width: 58ch;">Your answers, your documents and your case are exactly as you left them. Request a new link and it arrives within a minute.</p>
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Send me a new link</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ errRevoked }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 40px;">
+              <span style="display: inline-flex; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 5px 12px; margin-bottom: 18px; white-space: nowrap;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.6"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                <span style="font-size: 12px; font-weight: 500; color: #63467F;">Session ended</span>
+              </span>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 14px; max-width: 24ch;">This session was signed out</h2>
+              <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 58ch;">Someone signed out every session on your account, or a new password was set. Both cancel every other sign-in, including this one.</p>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 20px; max-width: 58ch;">If that was you, sign in again. If it was not, contact us before signing in and we will check the account with you.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                <a href="Auth.dc.html" style="border-bottom: none; display: inline-flex; align-items: center; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500;">Sign in again</a>
+                <a href="mailto:info@uaeexpatwills.com" style="border-bottom: none; display: inline-flex; align-items: center; color: #8C2F2F; border: 1px solid #8C2F2F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500;">This was not me</a>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div data-span="1" style="grid-column: 9 / span 4;">
+          <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px;">
+            <div style="font-size: 14px; font-weight: 600; margin-bottom: 10px;">What every error page does</div>
+            <div style="display: grid; gap: 10px; font-size: 14px; line-height: 1.6; color: #12233F;">
+              <div>Names what happened, in a sentence a non-lawyer reads once.</div>
+              <div>Says what it means for the matter — almost always “nothing has changed”.</div>
+              <div>Offers exactly one primary action, plus a real contact route.</div>
+              <div>Never apologises, never says “oops”, never leaves the reader guessing.</div>
+              <div>Carries the ownership line and the not-an-authority line in the footer, like every other page.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const TABS = [
+  { id: "need", label: "Do You Need a Will", nav: "need" },
+  { id: "faqs", label: "FAQs", nav: "faqs" },
+  { id: "about", label: "About Us", nav: "about" },
+  { id: "contact", label: "Contact", nav: "contact" },
+  { id: "terms", label: "Terms", nav: "" },
+  { id: "privacy", label: "Privacy", nav: "" },
+  { id: "refund", label: "Payment & Refund", nav: "" },
+  { id: "disclaimer", label: "Legal Disclaimer", nav: "" },
+  { id: "cookies", label: "Cookie Policy", nav: "" },
+  { id: "consent", label: "Cookie banner", nav: "" },
+  { id: "errors", label: "Error pages", nav: "" },
+];
+
+const ERRORS = {
+  "404": {
+    code: "404 · page not found",
+    title: "That page is not here",
+    body: "The address you followed does not match a page on this site. A link may have been mistyped, or a page may have been renamed.",
+    detail: "Nothing has gone wrong with your matter. If you were partway through the assessment, your answers are still held against this device and you can pick them up where you left off.",
+    primary: "Go to the homepage",
+    primaryHref: "Homepage.dc.html",
+    secondary: "Start the assessment",
+    secondaryHref: "Assessment.dc.html",
+    asideTitle: "Most people arriving here wanted",
+    aside: "The assessment, the pricing page, or the FAQs. All three are linked from the footer of every page.",
+  },
+  "500": {
+    code: "500 · server error",
+    title: "Something on our side failed",
+    body: "The page could not be built because of a fault on our servers, not anything you did. The fault has been logged and our team has been notified automatically.",
+    detail: "If you were partway through a form, your last saved step is intact. Nothing has been submitted twice and no payment has been taken as a result of this.",
+    primary: "Try that page again",
+    primaryHref: "Homepage.dc.html",
+    secondary: "Contact our team",
+    secondaryHref: "PublicPages.dc.html",
+    asideTitle: "If it happens twice",
+    aside: "Email us with the reference below and roughly what you were doing. It lets us find the exact fault in the log rather than guessing.",
+    ref: "ERR-2026-08-18-4471",
+  },
+  expired: {
+    code: "410 · link expired",
+    title: "That link has expired",
+    body: "Links to your questionnaire and your documents are time-limited, which is what stops a forwarded email from opening your matter. This one has passed its window.",
+    detail: "Your matter is unaffected and nothing has been lost. Sign in and the same page will be waiting, or ask us to send a new link.",
+    primary: "Sign in instead",
+    primaryHref: "Auth.dc.html",
+    secondary: "Send me a new link",
+    secondaryHref: "Auth.dc.html",
+    asideTitle: "How long links last",
+    aside: "A questionnaire link lasts 24 hours. A password reset link lasts one hour. Both can be used once.",
+  },
+  revoked: {
+    code: "403 · session ended",
+    title: "This session was signed out",
+    body: "You were signed out because a new password was set on your account, or because you or our team revoked this device. It was not an error.",
+    detail: "If you did not expect this, contact us before signing in again — we will check the access record on your account with you.",
+    primary: "Sign in again",
+    primaryHref: "Auth.dc.html",
+    secondary: "Contact our team",
+    secondaryHref: "PublicPages.dc.html",
+    asideTitle: "Why sessions end",
+    aside: "Setting a new password signs out every other device. A session also ends after 30 minutes without activity, or when you sign out.",
+  },
+};
+
+const COOKIE_CATS = [
+  { id: "essential", label: "Strictly necessary", locked: true, count: "4 cookies", body: "Your session, security, and the assessment answers held against this device. Without these the platform cannot run, so they cannot be switched off." },
+  { id: "prefs", label: "Preferences", count: "2 cookies", body: "Remembers this cookie choice, and your language if you set one, so you are not asked again on every page." },
+  { id: "analytics", label: "Analytics", count: "3 cookies", body: "Counts which pages are used and where people stop, so the assessment can be improved. Aggregated, and never linked to your answers." },
+  { id: "marketing", label: "Marketing", count: "2 cookies", body: "Measures whether a campaign brought you here. Off by default and not required to use the service." },
+];
+
+const PROFILES = [
+  { n: "01", span: "1 / span 6", title: "A parent of minor children", body: "Guardianship is the decision most people are actually here for. Where the selected Will route permits it, you can record who you would want to care for your children and who should act if that person cannot.", consider: "A nomination records your wishes. It does not remove the rights of the other parent, and the competent court decides." },
+  { n: "02", span: "7 / span 6", title: "Part of a blended family or a previous marriage", body: "Children from different relationships, a former spouse, and a current partner can produce an outcome nobody intended. A Will states who receives what, in your own words.", consider: "Bring any existing Will and any family, matrimonial or separation agreement to the review." },
+  { n: "03", span: "1 / span 4", title: "A UAE property owner, account holder or investor", body: "Property, bank accounts, brokerage accounts and end-of-service entitlements may each be treated differently depending on the route and the authority.", consider: "Asset type and location affect which framework is appropriate." },
+  { n: "04", span: "5 / span 4", title: "Supporting an unmarried partner, stepchild, relative or charity", body: "A person or organisation you support informally may have no automatic entitlement. Naming them is the only way the intention is recorded.", consider: "Some routes limit who may benefit; the review confirms what is possible." },
+  { n: "05", span: "9 / span 4", title: "A business owner or shareholder", body: "A shareholding may be governed by a shareholders' agreement or the company's own constitution as well as by your Will.", consider: "The two documents are read together, which is why the review asks for both." },
+  { n: "06", span: "1 / span 6", title: "Holding assets or an existing Will in more than one country", body: "One document does not operate automatically in every country. A UAE Will can sit alongside a foreign Will, but the two need to be coordinated rather than assumed to agree.", consider: "Where a foreign Will exists, the review considers whether anything needs revoking or amending." },
+  { n: "07", span: "7 / span 6", title: "A married couple preparing coordinated but separate Wills", body: "A couple does not share one Will. Each person gives their own instructions and personally approves their own document, even when the two are prepared together.", consider: "Each Will is a separate document and a separate authority registration." },
+  { n: "08", span: "1 / span 6", title: "A non-resident who owns UAE assets", body: "You do not need a UAE residence visa to hold UAE assets, and you do not necessarily need one to use every route. What applies depends on the authority's current requirements.", consider: "Residency affects the route analysis but does not by itself decide it." },
+];
+
+const FAQ_CATS = [
+  { id: "platform", label: "About the platform and the firm", qs: [
+    ["Is UAE Expat Wills a government website?", "No. UAE Expat Wills is an independent digital legal-service platform owned and operated by Summit Legal Consultancy UAE, Trade Licence No. 4429232.01. It is not a court, government authority, notary or official Will registry."],
+    ["Who actually prepares my Will?", "Summit Legal Consultancy UAE. The platform delivers the digital process — assessment, questionnaire, document exchange and status — while the legal services and human review are provided by the firm."],
+    ["Who will I be dealing with?", "Summit's legal team, led by Ahmed Mohammedi, Managing Director and Co-Founder, and Dr. Mohamed Raouf, Principal Legal Consultant and Co-Founder."],
+    ["Is this a template or document-generator service?", "No. A draft is prepared for your circumstances and every Will receives human legal review before it is treated as ready for your approval. No automated draft is released to a client."],
+    ["Do you give legal advice through the website content?", "No. The information on the website is general. Advice is given within an accepted engagement, after the legal team has reviewed your instructions."],
+    ["Does using the website create a professional engagement?", "No. Visiting the site, completing the assessment, creating an account, sending an enquiry or uploading documents does not by itself create a professional engagement. An engagement begins when Summit accepts the matter and the applicable terms are agreed."],
+    ["Can Summit decline my matter?", "Yes. Summit may decline where a matter falls outside our services, creates a conflict, lacks sufficient information, cannot be handled appropriately through the platform, or cannot lawfully or professionally be accepted."],
+    ["Is my Will registered because I completed the questionnaire or paid?", "No. Completing the assessment, paying the professional fee, completing the questionnaire or approving a draft does not itself register a Will. Registration or notarisation is completed only through the competent authority."],
+    ["Where is Summit based?", "Summit Legal Consultancy UAE is licensed in the United Arab Emirates under Trade Licence No. 4429232.01. Contact is by email and WhatsApp; no address is published on this site."],
+  ]},
+  { id: "fees", label: "Fees and payment", qs: [
+    ["How much does a standard UAE Will cost?", "The professional fee for one accepted standard Will is AED 2,199 plus VAT."],
+    ["What does that fee include?", "Will preparation, human legal review by Summit's legal team, certified legal translation of the new UAE Will, the amendment allowance stated in your Service Confirmation, and assistance submitting the application to the competent authority."],
+    ["Are government and court fees included?", "No. Government, court, registry, notary, certification, attestation, courier and identity-verification charges are separate unless expressly included in writing. They are set and collected by the relevant authority or provider."],
+    ["What are the current authority charges?", "As currently published: ADJD Civil Will AED 950.00 for one regular Will; Dubai Courts approximately AED 2,100.00 for one Will; DIFC varies by Will type. Each remains subject to the authority's current schedule and to the route confirmed after legal review."],
+    ["How much is a DIFC Will?", "DIFC engagements are quoted individually and currently start from AED 3,999 plus VAT. A DIFC matter is never shown as a fixed purchasable price and cannot be paid for online."],
+    ["Do a couple pay twice?", "Each person's Will is a separate document and a separate authority registration. The total professional fee and any package treatment is shown in the Service Confirmation before payment. Authority fees normally apply separately to each Will."],
+    ["When do I pay?", "After the assessment, once you have created an account and read the engagement terms. You see the proposed service, the fee and VAT, what is included, the amendment allowance, known exclusions and the separate charge categories before you commit."],
+    ["Could I be charged more later?", "Only with your express approval. If the detailed information reveals work outside the accepted scope, Summit pauses the affected work, explains what has changed and provides the proposed scope and fee. You may accept or decline."],
+    ["What happens if legal review says I need a DIFC Will after I have paid?", "The matter is paused and the full standard fee already paid is credited against the agreed DIFC professional fee. If you decline, the unused balance is refunded after deducting only a reasonable, documented amount for substantive work already completed."],
+    ["Am I asked to pay while my case is under review?", "No. No payment is requested while a matter is held for legal review."],
+  ]},
+  { id: "eligibility", label: "Eligibility and routes", qs: [
+    ["Can Muslims use UAE Expat Wills?", "Yes. Muslim clients complete the same online process as everyone else: provide instructions, pay the professional fee, and Summit's legal team reviews the case, confirms the correct wording under the applicable rules and selects the appropriate registration authority before you approve anything."],
+    ["Can UAE citizens use the service?", "The Will services available through this platform are not intended for UAE citizens. You are welcome to contact Summit Legal Consultancy UAE for other legal services."],
+    ["Do I need to be a UAE resident?", "Not necessarily. A non-resident who owns UAE assets may still need a UAE Will. Residency affects the route analysis but does not by itself decide it, and each authority applies its own current requirements."],
+    ["Do I have to choose the registration route myself?", "No. You do not choose between the pathways. Both begin with the same assessment, and the appropriate route is identified by the legal review."],
+    ["Which routes exist?", "A possible route may involve the DIFC Courts Wills Service, Abu Dhabi Judicial Department Civil Wills, Dubai Courts or another legally appropriate process. The comparison on the UAE Will Options page sets out who each may be relevant for."],
+  ]},
+  { id: "process", label: "The process and timing", qs: [
+    ["How long does the assessment take?", "About five minutes. It is free and no account is needed."],
+    ["How many questions are there?", "It depends on your answers — conditional questions appear only when they are relevant, so we do not promise a number."],
+    ["How quickly will I get my first draft?", "For an accepted standard matter we aim to send the first draft within 2 business days after receiving complete, usable instructions and all required documents. A matter requiring specialist analysis, further clarification or additional documents may take longer."],
+    ["How long does registration take?", "That is set by the competent authority. We cannot guarantee that any authority will accept a Will or complete registration within a particular period."],
+    ["Can I save and come back?", "Yes. Assessment answers are kept against your device until you create an account, and questionnaire progress is saved to your account after that."],
+    ["What if my circumstances change during the process?", "Tell us. Before registration, a material change such as marriage, divorce, separation, birth or adoption, the death or incapacity of a chosen person, or the acquisition or disposal of a significant asset may affect the draft."],
+    ["What does 'held for legal review' mean?", "It means one or more answers indicate that the legal team should look at your matter before recommending a service, a route or a price. It is not a rejection, and no payment is requested while a matter is held."],
+  ]},
+  { id: "family", label: "Guardianship and family", qs: [
+    ["Can I name a guardian for my children?", "You can record guardianship wishes where the selected Will route permits it. A nomination records your wishes; it does not remove the rights of the other parent, and the competent court decides."],
+    ["Will the court appoint the person I name?", "We cannot promise that. The competent court decides guardianship, taking the applicable law and the child's interests into account."],
+    ["What if my first choice cannot act?", "You can name alternatives — for beneficiaries, executors and guardians — in case a first choice dies, declines or is unable to act."],
+    ["Do I need to name my children individually?", "The detailed questionnaire asks for the information needed for the accepted scope. No names are required during the free assessment."],
+    ["Can I provide for an unmarried partner or a stepchild?", "Naming them is the only way the intention is recorded, and some routes limit who may benefit. The legal review confirms what is possible on your route."],
+  ]},
+  { id: "registration", label: "Registration and the authorities", qs: [
+    ["Who registers the Will?", "The competent authority, not the platform and not Summit. We assist with preparation and submission and explain the authority's requirements."],
+    ["Will the authority definitely accept my Will?", "No one can promise that. The authority may set its own eligibility, document, language, identity, attendance and signing requirements, and it decides whether to accept a Will for registration."],
+    ["Do I have to attend in person?", "That depends on the route and the authority's current rules. Some routes currently permit virtual registration; others require attendance. We tell you what applies before submission."],
+    ["Is the authority fee paid to Summit?", "No. It is set and collected by the authority. After legal review confirms the recommended route, we explain the then-current charge before you authorise or make that payment."],
+    ["Does registration mean the Will cannot be challenged?", "No. Registration is an authority process. It does not guarantee future validity, enforcement or any particular outcome after death."],
+    ["Does a registered Will avoid probate?", "Not automatically. The chosen framework can affect the court dealing with probate or implementation, document language, enforcement steps and asset-transfer procedures."],
+    ["Will my UAE Will work in my home country?", "One document does not operate automatically in every country. Where a foreign Will exists, the review considers how the two documents sit together."],
+    ["Is the Will translated?", "Certified legal translation of the new UAE Will is included in the standard professional fee. Legalisation, recognition or translation of a separate foreign document is not."],
+  ]},
+  { id: "privacy", label: "Documents, privacy and security", qs: [
+    ["What documents will I need?", "Typically your passport and Emirates ID, plus any document relevant to the accepted scope — an existing Will, a title deed, a shareholders' agreement. We ask for what the route requires and nothing more."],
+    ["Can I photograph documents on my phone?", "Yes. Upload supports camera capture on mobile."],
+    ["How is my information handled?", "In accordance with the Privacy Policy. Will instructions may contain sensitive personal information about you and other people, so please do not upload information that is not reasonably required for your matter."],
+    ["Should I email sensitive details?", "No. Email and messaging carry confidentiality and delivery risks. Once a matter is accepted, documents are exchanged through your secure account."],
+    ["Will you ever ask for my password or card details by message?", "Never. We do not request passwords, seed phrases, private keys or card details by email, WhatsApp or telephone."],
+    ["Who at Summit can see my answers?", "Access is limited to the staff who need it to deliver your matter. Certain sensitive answers are restricted to authorised legal staff and are excluded from ordinary notifications and case lists."],
+  ]},
+  { id: "after", label: "Changes, amendments and after registration", qs: [
+    ["Can I change my Will after it is drafted?", "Yes, within the amendment allowance stated in your Service Confirmation. Further amendments may be chargeable, and any charge is explained and approved before it applies."],
+    ["Can I change it after registration?", "A registered Will can normally be replaced or revoked, subject to the authority's process. Contact us and we will explain the route for an update."],
+    ["What if I approve a draft and later find an error?", "Tell us. If you approved a document containing an error you could reasonably have identified, or a relevant fact was not disclosed, correction work may be chargeable. This does not affect your rights where the error was ours."],
+    ["What if I want to revoke an existing Will?", "Say so in the assessment. A matter involving revoking or replacing an existing Will is reviewed by the legal team before payment."],
+    ["Do you remind me to review my Will?", "We provide a route for future updates when your family, assets or wishes change. A Will should be reviewed after any significant life event."],
+    ["Can I get my documents after the matter closes?", "Yes. Final documents are available in your account, and you can ask us for copies."],
+    ["How do I make a complaint?", "Email info@uaeexpatwills.com with your name, matter reference, the issue and the outcome you are requesting. Using our internal process does not prevent you from contacting a competent UAE consumer-protection, data-protection, regulatory or judicial authority."],
+  ]},
+];
+
+const LEGAL = {
+  terms: {
+    title: "Terms and Conditions", updated: "13 August 2026", eyebrow: "Terms and conditions",
+    intro: "These Terms apply to your use of the UAE Expat Wills platform and to the services Summit Legal Consultancy UAE provides through it. If there is a conflict between these Terms and a written service confirmation issued specifically for your matter, the service confirmation applies to that matter to the extent of the conflict.",
+    clauses: [
+      ["Who we are", "UAE Expat Wills is a digital legal-service platform owned and operated by Summit Legal Consultancy UAE, Trade Licence No. 4429232.01. Summit is not a court, registry, notary or government authority, and UAE Expat Wills does not itself register, notarise or issue Wills."],
+      ["When these Terms apply", "These Terms apply when you use the platform, complete the assessment, create an account, purchase a service, submit instructions or documents, or communicate with us through the platform. By using the platform you confirm that you have read and accepted the parts of these Terms that apply to that use."],
+      ["Important definitions", "Assessment means the free preliminary questionnaire. Service Confirmation means the written summary of the accepted service, fee and scope. Competent Authority means the court, registry or notary responsible for registration. Will includes a Will or related testamentary document prepared or reviewed within the accepted service."],
+      ["Eligibility to use the platform", "You may use the platform only if you are at least 18 years old and have the legal capacity to enter into a contract. A Competent Authority may apply different eligibility, capacity, identity or signing requirements, and an assessment result does not override legal or authority eligibility requirements."],
+      ["The free assessment", "No account or payment is required to complete the initial assessment. The result is preliminary guidance based on the answers given. We may change the preliminary outcome after checking your identity, documents or further information, and you may ask Summit to review an automated pathway result."],
+      ["When a professional engagement begins", "Visiting the website, completing the assessment, creating an account, sending an enquiry or uploading documents does not by itself create a professional engagement. Summit may decline a matter where it falls outside our services, creates a conflict, lacks sufficient information, cannot be handled appropriately through the platform, or cannot lawfully or professionally be accepted."],
+      ["Scope of the service", "The work included in your matter is the work stated in your Service Confirmation. Where a service is purchased for a couple, each person's Will is a separate document, and each person must provide or confirm their own instructions and personally approve their own final draft."],
+      ["Your responsibilities", "You agree to give complete and accurate instructions, to provide identity documents in usable form, and to tell us when your circumstances change. If distribution percentages or instructions are mathematically or legally unclear, we may pause the work until they are corrected or reviewed."],
+      ["Human legal review", "Every single Will prepared through the platform receives human legal review within the agreed scope before it is presented for final client approval — this applies without exception. We may ask for further information, recommend a consultation, revise the proposed route, or pause the standard process where a legal or factual issue appears."],
+      ["Drafts, amendments and approval", "A draft is provided for your careful review and must not be treated as ready for signing or registration until Summit confirms the relevant next step. If you approve a document containing an error that you could reasonably have identified, or fail to disclose a relevant fact, additional correction work may be chargeable."],
+      ["Registration and the role of the authority", "Registration, notarisation or acceptance is controlled by the Competent Authority. We cannot guarantee authority acceptance, appointment availability, processing time, future validity, enforcement, a court outcome or a particular result after death."],
+      ["Fees, VAT and third-party charges", "The standard professional fee for one accepted standard Will is AED 2,199 plus VAT. It includes Will preparation, human legal review, certified legal translation of the new UAE Will and assistance with submission. Payments, cancellations and refunds are governed by the Payment and Refund Policy, which forms part of these Terms."],
+      ["Delays, inactivity and changes in circumstances", "Any timing we provide is an estimate unless expressly guaranteed in writing. For an accepted standard matter we aim to send your first draft within 2 business days after receiving complete, usable instructions and all required documents."],
+      ["Privacy, confidentiality and security", "We handle personal information in accordance with our Privacy Policy. Will instructions may contain sensitive personal information about you and other people. Do not upload information that is not reasonably required for your matter."],
+      ["Electronic communications and records", "You agree that we may communicate with you electronically through the platform, email, SMS, telephone or approved messaging channels you select, and you must keep your contact details current. Email and messaging services carry confidentiality and delivery risks."],
+      ["Acceptable use", "You must not misuse the platform, submit unlawful or deliberately false information, attempt to interfere with its security, or use it to impersonate another person. We may restrict access where reasonably necessary to protect users, the platform, legal obligations or service integrity."],
+      ["Intellectual property", "The platform, branding, structure, software, questionnaires, explanatory content and document systems are owned by or licensed to Summit. You retain ownership of the original information and documents you provide, and grant us permission to use them only as reasonably necessary to deliver and secure the service."],
+      ["Third-party services and links", "The platform may link to or integrate with payment providers, identity services, electronic-signature services, cloud providers, translators, government websites or other third parties, whose own terms apply. This does not remove any responsibility Summit has under applicable law for selecting or using a provider."],
+      ["Suspension and termination", "You may ask us to stop work at any time. Fees and refunds are then assessed under the Payment and Refund Policy and your mandatory rights. Where legally and professionally permitted, we will explain the practical next steps and account fairly for paid but undelivered work."],
+      ["Availability, disclaimers and liability", "We take reasonable steps to keep the platform available and information accurate, but it may be interrupted for maintenance, security, technical failure or events outside our reasonable control. Nothing in these Terms limits liability that cannot lawfully be limited, or Summit's obligations under applicable data-protection law."],
+      ["Complaints", "If you have a concern, contact us at info@uaeexpatwills.com and include your name, matter reference, the issue and the outcome you are requesting. Using our internal process does not prevent you from exercising any right to contact a competent UAE authority."],
+      ["Changes to these Terms", "We may update these Terms to reflect changes in law, authority procedures, services, technology or business operations. Material changes affecting an already purchased service will not be applied retrospectively to reduce the agreed service or mandatory rights."],
+      ["Governing law and jurisdiction", "These Terms and use of the platform are governed by the applicable laws of the United Arab Emirates. The competent courts of the Emirate in which Summit is licensed and established will have jurisdiction, unless mandatory law requires another forum."],
+      ["General provisions", "If a provision of these Terms is invalid or unenforceable, the remaining provisions continue to apply. A delay in enforcing a right is not a waiver of that right. These Terms, the Service Confirmation and the policies incorporated by reference form the agreement for the accepted service."],
+      ["Contact us", "Summit Legal Consultancy UAE · info@uaeexpatwills.com · +971 52 466 6191. UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority."],
+    ],
+  },
+  privacy: {
+    title: "Privacy Policy", updated: "13 August 2026", eyebrow: "Privacy policy",
+    intro: "This policy explains what personal information UAE Expat Wills collects, why, how it is handled and what rights you have. Will instructions may contain sensitive information about you and about other people, so the platform collects only what a matter reasonably requires.",
+    clauses: [
+      ["Who controls your information", "Summit Legal Consultancy UAE, Trade Licence No. 4429232.01, is responsible for personal information processed through the platform."],
+      ["What we collect", "Assessment answers, account and identity details, matter information and documents, payment records, communications, and technical information such as device and log data."],
+      ["Why we collect it", "To assess your enquiry, deliver an accepted service, meet legal and professional obligations, secure the platform and communicate with you about your matter."],
+      ["Sensitive answers", "Certain answers — including any answer indicating a capacity or influence concern — are restricted to authorised legal staff, are excluded from ordinary notifications and case lists, and are not used for marketing."],
+      ["Declining to answer", "Where a question offers it, you may decline to answer. Declining may mean a matter is reviewed manually rather than continuing through the standard online pathway."],
+      ["Who we share it with", "Service providers who help deliver the service under contract, the competent authority where submission requires it, and others where the law requires. We do not sell personal information."],
+      ["Retention", "We keep matter records for as long as necessary for the service, and afterwards for the periods required by law and professional obligation."],
+      ["Your rights", "You may ask for access to your information, correction of inaccurate information, or deletion where the law permits. Contact info@uaeexpatwills.com."],
+      ["Security", "Access is limited to staff who need it. Documents are exchanged through your secure account rather than by email once a matter is accepted."],
+    ],
+  },
+  refund: {
+    title: "Payment and Refund Policy", updated: "13 August 2026", eyebrow: "Payment and refund",
+    intro: "This policy explains when a payment is taken, what it covers, and how cancellations and refunds are assessed. It forms part of the Terms and Conditions. Mandatory consumer rights continue to apply.",
+    clauses: [
+      ["When payment is taken", "After the assessment and after you have read the engagement terms. No payment is requested while a matter is held for legal review."],
+      ["What the fee covers", "The professional work stated in your Service Confirmation for one accepted standard Will: AED 2,199 plus VAT."],
+      ["What is charged separately", "Government, court, registry, notary, certification, attestation, courier and identity-verification charges, and any work outside the accepted scope that you have approved."],
+      ["Cancelling before work begins", "If you cancel before substantive work has begun, the professional fee is refunded in full."],
+      ["Cancelling after work begins", "A refund is assessed against the work actually completed, and we deduct only a reasonable, documented amount for that work."],
+      ["If a DIFC Will is required after payment", "The matter is paused and the standard fee already paid is credited against the agreed DIFC professional fee. If you decline the DIFC quotation, the unused balance is refunded on the same basis."],
+      ["If Summit cannot accept the matter", "Where Summit declines a matter after payment, the professional fee is refunded, less only a reasonable, documented amount for substantive work already completed."],
+      ["Authority charges", "An authority charge already paid to an authority is outside our control and is subject to that authority's own rules."],
+      ["How refunds are made", "To the original payment method where possible, within a reasonable period after the refund is agreed."],
+    ],
+  },
+  disclaimer: {
+    title: "Legal Disclaimer", updated: "13 August 2026", eyebrow: "Legal disclaimer",
+    intro: "This disclaimer explains the limits of the information on this website and of any assessment result it produces. It should be read with the Terms and Conditions.",
+    clauses: [
+      ["General information only", "The content of this website is general information and does not constitute legal, tax or financial advice about your circumstances."],
+      ["Not a government authority", "UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority."],
+      ["Assessment results are preliminary", "Any assessment result or pathway indication is preliminary, is not a legal opinion, and is not a decision by any registration authority."],
+      ["No guarantee of registration", "No registration, enforceability, processing time or outcome is guaranteed. Registration is completed by the competent authority under its current requirements."],
+      ["No engagement without acceptance", "No legal or professional engagement begins until Summit accepts the matter and the applicable engagement terms are agreed."],
+      ["Applicable frameworks differ", "We do not state that any single legal framework applies automatically to every person. What applies depends on individual circumstances and on the authority's own requirements."],
+      ["External links", "We are not responsible for the content of a third-party website we do not control."],
+      ["Changes to content", "Website content and authority information may change. We take reasonable steps to keep it accurate but cannot guarantee that every figure or procedure is current at the moment you read it."],
+      ["Contact", "Questions about this disclaimer: info@uaeexpatwills.com."],
+    ],
+  },
+  cookies: {
+    title: "Cookie Policy", updated: "13 August 2026", eyebrow: "Cookie policy",
+    intro: "This policy explains the cookies and similar technologies the platform uses, and how you can control them. You can change your choices at any time through Cookie Settings in the footer.",
+    clauses: [
+      ["What cookies are", "Small files stored on your device that let a site remember your session, your preferences and your progress."],
+      ["Strictly necessary cookies", "Required to run the platform: your session, security, and your saved assessment progress. These cannot be switched off."],
+      ["Preference cookies", "Remember choices such as your cookie decision so you are not asked repeatedly."],
+      ["Analytics cookies", "Help us understand which pages are used and where people stop. Used only with your consent."],
+      ["What we do not do", "We do not use cookies to build advertising profiles, and we do not sell information collected through them."],
+      ["Assessment progress", "Assessment answers are kept against your device until you create an account, which is what allows you to leave and return."],
+      ["Managing cookies", "Use Cookie Settings in the footer, or your browser settings. Blocking strictly necessary cookies will stop parts of the platform working."],
+      ["Changes to this policy", "If we add or remove a category of cookie, this page and the update date change with it."],
+      ["Contact", "Questions about cookies: info@uaeexpatwills.com."],
+    ],
+  },
+};
+
+class Component extends DCLogic {
+  state = { page: "need", faqOpen: {}, faqQuery: "", copied: "", cookiePanel: false, cookiePrefs: { prefs: false, analytics: false, marketing: false }, errView: "404" };
+
+  renderVals() {
+    const s = this.state;
+    const p = s.page;
+    const tab = TABS.find(t => t.id === p) || TABS[0];
+    const q = s.faqQuery.trim().toLowerCase();
+    let shown = 0;
+    const cats = FAQ_CATS.map(c => {
+      const qs = c.qs
+        .map((pair, i) => ({ pair: pair, key: c.id + "-" + i }))
+        .filter(x => !q || x.pair[0].toLowerCase().indexOf(q) > -1 || x.pair[1].toLowerCase().indexOf(q) > -1);
+      shown += qs.length;
+      return {
+        id: c.id, label: c.label, count: c.qs.length, shownCount: qs.length,
+        has: qs.length > 0, empty: qs.length === 0,
+        qs: qs.map(x => ({
+          q: x.pair[0], a: x.pair[1], anchor: x.key,
+          open: !!s.faqOpen[x.key],
+          closed: !s.faqOpen[x.key],
+          isCopied: s.copied === x.key,
+          notCopied: s.copied !== x.key,
+          toggle: () => {
+            const next = Object.assign({}, this.state.faqOpen);
+            next[x.key] = !next[x.key];
+            this.setState({ faqOpen: next });
+          },
+          copy: () => {
+            const url = window.location.origin + window.location.pathname + "#" + x.key;
+            const confirm = () => {
+              try { window.history.replaceState(null, "", "#" + x.key); } catch (e) {}
+              this.setState({ copied: x.key });
+              if (this._ct) clearTimeout(this._ct);
+              this._ct = setTimeout(() => this.setState({ copied: "" }), 1600);
+            };
+            const fallback = () => {
+              try {
+                const ta = document.createElement("textarea");
+                ta.value = url;
+                ta.setAttribute("readonly", "readonly");
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.select();
+                const ok = document.execCommand("copy");
+                document.body.removeChild(ta);
+                if (ok) confirm();
+              } catch (e) {}
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(confirm, fallback);
+            } else {
+              fallback();
+            }
+          },
+        })),
+      };
+    });
+    const legal = LEGAL[p] || null;
+    return {
+      faqCats: cats,
+      faqQuery: s.faqQuery,
+      onFaqQuery: e => this.setState({ faqQuery: e.target.value }),
+      clearFaqQuery: () => this.setState({ faqQuery: "" }),
+      faqTotal: q ? shown + " of 57 questions" : "57 questions in 8 categories",
+      faqHasResults: shown > 0,
+      faqNoResults: shown === 0,
+      faqJump: FAQ_CATS.map(c => ({ href: "#cat-" + c.id, label: c.label, count: String(c.qs.length) })),
+      isConsent: p === "consent",
+      isErrors: p === "errors",
+      cookiePanel: s.cookiePanel,
+      cookieBar: !s.cookiePanel,
+      openCookiePanel: () => this.setState({ cookiePanel: true }),
+      closeCookiePanel: () => this.setState({ cookiePanel: false }),
+      cookieCats: COOKIE_CATS.map(c => {
+        const on = c.locked ? true : !!s.cookiePrefs[c.id];
+        return {
+          label: c.label, body: c.body, count: c.count,
+          locked: !!c.locked, unlocked: !c.locked,
+          on: on, off: !on,
+          toggle: () => {
+            if (c.locked) return;
+            const next = Object.assign({}, s.cookiePrefs);
+            next[c.id] = !next[c.id];
+            this.setState({ cookiePrefs: next });
+          },
+        };
+      }),
+      cookieChosenLabel: (1 + ["prefs", "analytics", "marketing"].filter(k => s.cookiePrefs[k]).length) + " of 4 categories on",
+      errViews: [
+        { id: "404", label: "404" },
+        { id: "500", label: "500" },
+        { id: "expired", label: "Expired link" },
+        { id: "revoked", label: "Revoked session" },
+      ].map(x => ({
+        label: x.label, on: s.errView === x.id, off: s.errView !== x.id,
+        pick: () => this.setState({ errView: x.id }),
+      })),
+      errCode: ERRORS[s.errView].code,
+      errTitle: ERRORS[s.errView].title,
+      errBody: ERRORS[s.errView].body,
+      errDetail: ERRORS[s.errView].detail,
+      errPrimary: ERRORS[s.errView].primary,
+      errSecondary: ERRORS[s.errView].secondary,
+      errPrimaryHref: ERRORS[s.errView].primaryHref,
+      errSecondaryHref: ERRORS[s.errView].secondaryHref,
+      errAsideTitle: ERRORS[s.errView].asideTitle,
+      errAside: ERRORS[s.errView].aside,
+      errHasRef: !!ERRORS[s.errView].ref,
+      errRef: ERRORS[s.errView].ref || "",
+      isLegal: !!legal,
+      legalTitle: legal ? legal.title : "",
+      legalEyebrow: legal ? legal.eyebrow : "",
+      legalUpdated: legal ? legal.updated : "",
+      legalIntro: legal ? legal.intro : "",
+      legalClauses: legal ? legal.clauses.map((c, i) => ({
+        n: String(i + 1), id: "clause-" + (i + 1), title: c[0], body: c[1],
+      })) : [],
+      legalNav: legal ? legal.clauses.map((c, i) => ({
+        href: "#clause-" + (i + 1), n: String(i + 1), label: c[0],
+      })) : [],
+      tabs: TABS.map(t => ({
+        label: t.label, on: t.id === p, off: t.id !== p,
+        pick: () => { this.setState({ page: t.id }); window.scrollTo(0, 0); },
+      })),
+      activeNav: tab.nav,
+      isNeed: p === "need",
+      isFaqs: p === "faqs",
+      isAbout: p === "about",
+      isContact: p === "contact",
+      profiles: PROFILES,
+    };
+  }
+}
+</script>
+</body>
+</html>

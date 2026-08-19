@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  button, input { font: inherit; color: inherit; }
+  input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid #8A6512; outline-offset: 2px; }
+  @keyframes slideFwd { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+  @keyframes slideBack { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+  [data-dir="fwd"] [data-screen] { animation: slideFwd 240ms cubic-bezier(.16,1,.3,1) both; }
+  [data-dir="back"] [data-screen] { animation: slideBack 240ms cubic-bezier(.16,1,.3,1) both; }
+  @media (prefers-reduced-motion: reduce) { [data-dir] [data-screen] { animation: none !important; } }
+  @media (max-width: 1080px) { [data-map] { display: none !important; } }
+</style>
+</helmet>
+
+<section style="background: #0B1729; padding: 40px 32px 36px;">
+  <div style="max-width: 1216px; margin: 0 auto; display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+    <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; padding-right: 20px;">All sixteen questions · mobile-first at 390</div>
+    <div style="align-self: stretch; background: #D8C69A;"></div>
+    <div style="padding-left: 32px;">
+      <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 38px; line-height: 1.08; letter-spacing: -0.025em; color: #F6F1E7; margin: 0 0 16px; max-width: 26ch;">Every question, in the words the client approved</h1>
+      <p style="font-size: 17px; line-height: 1.65; color: #B9C2D1; margin: 0 0 12px; max-width: 62ch;">The flow below is live and complete: sixteen questions, ten conditional sub-questions, and the six outcomes. Answer it as a visitor would — the branches are real, and each conditional appears only when its trigger is met.</p>
+      <p style="font-size: 14px; line-height: 1.6; color: #B9C2D1; margin: 0; max-width: 62ch;">Question text, help text and notices are verbatim from the Final Qualifying Questionnaire. Anything inferred is marked in the map on the right.</p>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 40px 32px 96px;">
+  <div style="max-width: 1216px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start;">
+
+    <div style="flex: none; width: 390px;">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 10px;">live · 390px</div>
+      <div data-dir="{{ dir }}" style="width: 390px; min-height: 760px; position: relative; background: #F7F4EE; border: 1px solid #E4DDCE; overflow: hidden;">
+
+        <div style="position: sticky; top: 0; z-index: 5; background: #FFFFFF; border-bottom: 1px solid #E2E6EC;">
+          <div style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <dc-import name="Wordmark" direction="margin" context="header" ground="paper" hint-size="150px,28px"></dc-import>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472; flex: none;">{{ savedLabel }}</div>
+          </div>
+          <sc-if value="{{ inQuestions }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 0 16px 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px;">
+                <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">{{ stageName }}</div>
+                <div style="font-size: 12px; color: #5B6472;">{{ stageHint }}</div>
+              </div>
+              <div style="display: flex; gap: 4px; align-items: center;">
+                <sc-for list="{{ stages }}" as="st" hint-placeholder-count="6">
+                  <div style="flex: 1; height: 3px; background: #E4DDCE; position: relative;">
+                    <div style="position: absolute; left: 0; top: 0; bottom: 0; width: {{ st.fill }}; background: #8A6512;"></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="padding: 24px 16px 136px;">
+
+          <sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ true }}">
+            <div data-screen="1">
+              <div style="display: grid; grid-template-columns: 1px minmax(0, 1fr);">
+                <div style="align-self: stretch; background: #D8C69A;"></div>
+                <div style="padding-left: 16px;">
+                  <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 16px;">Free initial assessment</div>
+                  <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 16px;">Start with your circumstances</h2>
+                  <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px;">We ask about your connection to the UAE, your family and the general nature of your assets. You do not need an account, and no payment is required.</p>
+                  <p style="font-size: 15px; line-height: 1.72; margin: 0 0 20px;">The result is preliminary guidance. It is not a legal opinion, it does not create a Will, and it does not register anything.</p>
+                  <div style="display: grid; gap: 10px; border-top: 1px solid #E4DDCE; padding-top: 16px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                      <span style="font-size: 14px;">Free, and no account needed</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="6.2"></circle><polyline points="8,4.6 8,8.2 10.6,9.6" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                      <span style="font-size: 14px;">About five minutes</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.4" style="flex: none;"><path d="M4.5 2.5h6l3.5 3.5v9h-9.5z" stroke-linejoin="round"></path><path d="M10.5 2.5V6H14" stroke-linejoin="round"></path></svg>
+                      <span style="font-size: 14px;">You can leave and return</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isQuestion }}" hint-placeholder-val="{{ false }}">
+            <div data-screen="1">
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: #8A6512; font-variant-numeric: tabular-nums;">{{ q.code }}</span>
+                <sc-if value="{{ q.isConditional }}" hint-placeholder-val="{{ false }}">
+                  <span style="display: inline-flex; align-items: center; gap: 7px; background: #F7F0DF; border: 1px solid #E6D5A8; border-radius: 999px; padding: 4px 10px; white-space: nowrap;">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6" style="flex: none;"><path d="M8 2.8 14.4 13.6H1.6z" stroke-linejoin="round"></path><path d="M8 6.6v3" stroke-linecap="round"></path></svg>
+                    <span style="font-size: 11px; font-weight: 500; color: #8A6512;">{{ q.because }}</span>
+                  </span>
+                </sc-if>
+              </div>
+
+              <h2 style="font-size: 22px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 10px;">{{ q.title }}</h2>
+
+              <sc-if value="{{ q.hasHelp }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size: 15px; line-height: 1.6; color: #3A4A66; margin: 0 0 14px;">{{ q.help }}</p>
+              </sc-if>
+
+              <sc-if value="{{ q.hasPrivacy }}" hint-placeholder-val="{{ false }}">
+                <div style="background: #F6F1E7; border-left: 2px solid #AD8A46; padding: 14px 16px; margin: 0 0 16px;">
+                  <div style="display: flex; gap: 9px; align-items: flex-start; margin-bottom: 6px;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.5" style="flex: none; margin-top: 1px;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                    <div style="font-size: 13px; font-weight: 600;">{{ q.privacyTitle }}</div>
+                  </div>
+                  <div style="font-size: 14px; line-height: 1.6;">{{ q.privacy }}</div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ q.isCountry }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <label for="as-country" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Nationality</label>
+                  <div style="display: flex; align-items: stretch; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF; min-height: 46px;">
+                    <div style="display: flex; align-items: center; padding-left: 12px; color: #5B6472;">
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5"></circle><path d="M11.8 11.8 15.4 15.4" stroke-linecap="round"></path></svg>
+                    </div>
+                    <input id="as-country" value="{{ countryQuery }}" onChange="{{ onCountry }}" inputmode="search" autocomplete="country-name" placeholder="Start typing a country" style="flex: 1; min-width: 0; border: none; background: transparent; padding: 12px; font-size: 16px;">
+                  </div>
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin: 8px 0 12px; font-variant-numeric: tabular-nums;">{{ matchLabel }}</div>
+                  <div style="border: 1px solid #E2E6EC; background: #FFFFFF; border-radius: 4px; overflow: hidden;">
+                    <sc-for list="{{ countries }}" as="c" hint-placeholder-count="5">
+                      <div onClick="{{ c.pick }}" style="padding: 13px 14px; font-size: 15px; border-bottom: 1px solid #F1F2F4; cursor: pointer; min-height: 44px;" style-hover="background: #F6F1E7;">{{ c.name }}</div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ q.isChoice }}" hint-placeholder-val="{{ true }}">
+                <div style="display: grid; gap: 6px;">
+                  <sc-for list="{{ q.options }}" as="o" hint-placeholder-count="4">
+                    <div>
+                      <sc-if value="{{ o.on }}" hint-placeholder-val="{{ false }}">
+                        <div onClick="{{ o.pick }}" style="background: #FFFFFF; border: 1px solid #8A6512; border-radius: 4px; box-shadow: inset 3px 0 0 #AD8A46; padding: 13px 14px 13px 17px; font-size: 15px; font-weight: 600; line-height: 1.45; cursor: pointer; min-height: 44px;">{{ o.label }}</div>
+                      </sc-if>
+                      <sc-if value="{{ o.off }}" hint-placeholder-val="{{ true }}">
+                        <div onClick="{{ o.pick }}" style="background: #FFFFFF; border: 1px solid #8C93A1; border-radius: 4px; padding: 13px 14px; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px; transition: border-color 140ms ease;" style-hover="border-color: #12233F;">{{ o.label }}</div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ q.isMulti }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size: 13px; line-height: 1.55; color: #5B6472; margin-top: 10px;">{{ q.multiNote }}</div>
+                </sc-if>
+              </sc-if>
+
+              <sc-if value="{{ q.hasNotice }}" hint-placeholder-val="{{ false }}">
+                <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 4px; padding: 14px 16px; margin-top: 16px;">
+                  <div style="display: flex; gap: 9px; align-items: flex-start;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.5" style="flex: none; margin-top: 2px;"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 7.2v4" stroke-linecap="round"></path><circle cx="8" cy="4.9" r="0.6" fill="#2A4E86" stroke="none"></circle></svg>
+                    <div>
+                      <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">{{ q.noticeTitle }}</div>
+                      <div style="font-size: 14px; line-height: 1.6;">{{ q.notice }}</div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ q.hasConsent }}" hint-placeholder-val="{{ false }}">
+                <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 4px; padding: 14px 16px; margin-top: 16px; display: flex; gap: 10px; align-items: flex-start;">
+                  <input type="checkbox" checked="{{ consent }}" onChange="{{ onConsent }}" style="width: 18px; height: 18px; margin: 2px 0 0; accent-color: #12233F; flex: none;">
+                  <div style="font-size: 14px; line-height: 1.6;">I agree that this answer may be used to assess my matter and deliver the service, in accordance with the <a href="PublicPages.dc.html">Privacy Policy</a>.</div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isDeclare }}" hint-placeholder-val="{{ false }}">
+            <div data-screen="1">
+              <h2 style="font-size: 22px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 8px;">Before you see your result</h2>
+              <p style="font-size: 15px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">All seven must be confirmed. None is pre-selected.</p>
+              <div style="display: grid; gap: 12px;">
+                <sc-for list="{{ declarations }}" as="d" hint-placeholder-count="7">
+                  <div style="display: grid; grid-template-columns: 24px 20px minmax(0, 1fr); gap: 10px; align-items: start;">
+                    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; padding-top: 3px; font-variant-numeric: tabular-nums;">{{ d.n }}</div>
+                    <input type="checkbox" checked="{{ d.on }}" onChange="{{ d.toggle }}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F;">
+                    <div style="font-size: 14px; line-height: 1.6;">{{ d.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; margin-top: 16px; font-variant-numeric: tabular-nums;">{{ declLabel }}</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+            <div data-screen="1">
+              <h2 style="font-size: 22px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 6px;">Review your answers</h2>
+              <p style="font-size: 15px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">{{ answeredLabel }}</p>
+              <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+                <sc-for list="{{ summary }}" as="r" hint-placeholder-count="8">
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #E2E6EC; align-items: center;">
+                    <div>
+                      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8A6512; margin-bottom: 3px; font-variant-numeric: tabular-nums;">{{ r.code }}</div>
+                      <div style="font-size: 13px; color: #5B6472; line-height: 1.4; margin-bottom: 3px;">{{ r.label }}</div>
+                      <div style="font-size: 15px; line-height: 1.4;">{{ r.value }}</div>
+                    </div>
+                    <button onClick="{{ r.change }}" style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 2px; cursor: pointer; min-height: 44px;">Change</button>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+            <div data-screen="1">
+              <div style="display: grid; grid-template-columns: 1px minmax(0, 1fr);">
+                <div style="align-self: stretch; background: #D8C69A;"></div>
+                <div style="padding-left: 16px;">
+                  <sc-if value="{{ outcomePill }}" hint-placeholder-val="{{ true }}">
+                    <span style="display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 5px 12px; margin-bottom: 14px; white-space: nowrap; background: {{ outcomeBg }}; border: 1px solid {{ outcomeBorder }};">
+                      <span style="width: 14px; height: 14px; display: grid; place-items: center; color: {{ outcomeFg }};">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                      </span>
+                      <span style="font-size: 12px; font-weight: 500; color: {{ outcomeFg }};">{{ outcomeTag }}</span>
+                    </span>
+                  </sc-if>
+                  <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 12px;">{{ outcomeTitle }}</h2>
+                  <sc-if value="{{ outcomeIsHeld }}" hint-placeholder-val="{{ false }}">
+                    <p style="font-size: 15px; line-height: 1.72; font-weight: 600; margin: 0 0 10px;">This is not a rejection.</p>
+                  </sc-if>
+                  <p style="font-size: 15px; line-height: 1.72; margin: 0 0 14px;">{{ outcomeBody }}</p>
+                  <sc-if value="{{ hasOutcomeReason }}" hint-placeholder-val="{{ false }}">
+                    <div style="background: #F6F1E7; border-left: 2px solid #AD8A46; padding: 13px 16px; margin: 0 0 14px;">
+                      <div style="font-size: 14px; line-height: 1.65;">{{ outcomeReason }}</div>
+                    </div>
+                  </sc-if>
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ caseRef }}</div>
+                  <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 14px 0 0;">This is preliminary guidance, not a final legal decision, and not a decision by any registration authority.</p>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #FFFFFF; border-top: 1px solid #E2E6EC; padding: 12px 16px 20px; box-shadow: 0 1px 2px rgba(18,35,63,.05);">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ onBack }}" aria-label="Back" style="flex: none; background: none; border: 1px solid #8C93A1; border-radius: 4px; min-width: 44px; min-height: 44px; display: grid; place-items: center; cursor: pointer;" style-hover="border-color: #12233F;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#12233F" stroke-width="1.5"><polyline points="9.6,3.2 4.8,8 9.6,12.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+              </button>
+            </sc-if>
+            <sc-if value="{{ nextEnabled }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ onNext }}" style="flex: 1; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">{{ nextLabel }}</button>
+            </sc-if>
+            <sc-if value="{{ nextDisabled }}" hint-placeholder-val="{{ false }}">
+              <button aria-disabled="true" style="flex: 1; background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: not-allowed;">{{ nextLabel }}</button>
+            </sc-if>
+          </div>
+          <div style="font-size: 12px; line-height: 1.5; color: #5B6472; margin-top: 8px;">{{ footNote }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div data-map="1" style="flex: 1 1 420px; min-width: 340px;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 16px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.015em; margin: 0 0 12px;">The question map</h2>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 60ch;">Sixteen questions and ten conditionals. The row you are on is marked; a conditional row names its trigger. Tap any row to jump straight to it.</p>
+
+      <div style="border-top: 1.5px solid #12233F;">
+        <sc-for list="{{ map }}" as="m" hint-placeholder-count="26">
+          <div>
+            <sc-if value="{{ m.here }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ m.jump }}" style="display: grid; grid-template-columns: 56px minmax(0, 1fr) 92px; gap: 12px; padding: 11px 12px 11px 10px; border-bottom: 1px solid #E4DDCE; background: #F6F1E7; border-left: 2px solid #AD8A46; cursor: pointer; align-items: baseline;">
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512; font-variant-numeric: tabular-nums;">{{ m.code }}</div>
+                <div>
+                  <div style="font-size: 14px; font-weight: 600; line-height: 1.45;">{{ m.title }}</div>
+                  <sc-if value="{{ m.hasTrigger }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size: 12px; line-height: 1.45; color: #8A6512; margin-top: 3px;">{{ m.trigger }}</div>
+                  </sc-if>
+                </div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; text-align: right;">{{ m.kind }}</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ m.notHere }}" hint-placeholder-val="{{ true }}">
+              <div onClick="{{ m.jump }}" style="display: grid; grid-template-columns: 56px minmax(0, 1fr) 92px; gap: 12px; padding: 11px 12px 11px 10px; border-bottom: 1px solid #E4DDCE; border-left: 2px solid transparent; cursor: pointer; align-items: baseline;" style-hover="background: #FBF8F2;">
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; font-variant-numeric: tabular-nums;">{{ m.code }}</div>
+                <div>
+                  <div style="font-size: 14px; line-height: 1.45; color: #3A4A66;">{{ m.title }}</div>
+                  <sc-if value="{{ m.hasTrigger }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size: 12px; line-height: 1.45; color: #5B6472; margin-top: 3px;">{{ m.trigger }}</div>
+                  </sc-if>
+                </div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; text-align: right;">{{ m.kind }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 18px 20px; margin-top: 24px;">
+        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Two things to flag</div>
+        <p style="font-size: 14px; line-height: 1.65; margin: 0 0 10px; max-width: 64ch;">Q5 ships with a fourth option — <strong style="font-weight: 600;">I would prefer not to say</strong> — routing to manual review rather than automatic routing. The specification's own contradiction register calls for it, because consent with no refusal is not consent. <strong style="font-weight: 600;">Pending Summit's wording approval.</strong></p>
+        <p style="font-size: 14px; line-height: 1.65; margin: 0; max-width: 64ch;">Q15B routes to urgent review on any answer other than a clear yes. That screen names no reason on the client's device, so it is safe to be read over their shoulder.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const COUNTRIES = ["Australia","Bangladesh","Canada","Egypt","France","Germany","India","Ireland","Italy","Jordan","Kenya","Lebanon","Malaysia","Nepal","Netherlands","Nigeria","Pakistan","Philippines","Poland","Romania","Russia","South Africa","Spain","Sri Lanka","Sudan","Sweden","Syria","Turkey","Ukraine","United Arab Emirates","United Kingdom","United States"];
+
+const O = { C: "continue", R: "review", STOP: "stop", OTHER: "other", CITIZEN: "citizen", URGENT: "urgent" };
+
+const Q = [
+  { id: "q1", code: "Q1", stage: 0, label: "Service required", kind: "one",
+    title: "What service are you looking for today?",
+    opts: [
+      { v: "Prepare a new Will for myself", o: O.C },
+      { v: "Two separate Wills for myself and my spouse or partner", o: O.C },
+      { v: "I specifically want a DIFC Will", o: O.R },
+      { v: "Review, amend, replace or revoke an existing Will", o: O.R },
+      { v: "Someone has died and I need help with their estate", o: O.OTHER },
+    ] },
+
+  { id: "q2", code: "Q2", stage: 0, label: "Age", kind: "one",
+    title: "Are you 18 years old or above?",
+    help: "The person making the Will must be at least 18 years old.",
+    opts: [{ v: "Yes", o: O.C }, { v: "No", o: O.STOP }] },
+
+  { id: "q3", code: "Q3", stage: 0, label: "Nationality", kind: "country",
+    title: "What is your nationality?",
+    notice: "Nationality does not determine the registration authority by itself. Any second nationality, domicile or legal connection with another country will be collected later and reviewed by Summit.",
+    noticeTitle: "The Will services available through this platform are not available to UAE citizens." },
+
+  { id: "q4", code: "Q4", stage: 0, label: "Current residence", kind: "one",
+    title: "Where do you currently live?",
+    opts: [{ v: "In the United Arab Emirates", o: O.C }, { v: "Outside the United Arab Emirates", o: O.C }] },
+
+  { id: "q4a", code: "Q4A", stage: 0, label: "Emirate", kind: "one", cond: { q: "q4", is: "In the United Arab Emirates" },
+    because: "Because you live in the UAE",
+    title: "Which Emirate do you live in?",
+    help: "The Emirate is relevant but does not select the registration authority by itself.",
+    opts: ["Abu Dhabi", "Dubai", "Sharjah", "Ajman", "Umm Al Quwain", "Ras Al Khaimah", "Fujairah"].map(v => ({ v: v, o: O.C })) },
+
+  { id: "q5", code: "Q5", stage: 0, label: "Religion", kind: "one", consent: true,
+    title: "What is your religion?",
+    privacyTitle: "Why we ask, and how it is handled",
+    privacy: "Religion affects which registration routes may be available. The Dubai Courts route for non-Muslim Wills is not available to Muslims, while an ADJD Civil Will may be available to Muslim and non-Muslim applicants who are not UAE citizens. We use this answer only to assess the route and handle it in accordance with our Privacy Policy.",
+    opts: [
+      { v: "Muslim", o: O.C },
+      { v: "Non-Muslim", o: O.C },
+      { v: "I was previously Muslim", o: O.R },
+      { v: "I would prefer not to say", o: O.R, inferred: true },
+    ],
+    notice: "A Muslim customer is not automatically rejected. Muslim clients use the same online process as everyone else.",
+    noticeTitle: "To be clear" },
+
+  { id: "q6", code: "Q6", stage: 1, label: "Legal marital status", kind: "one",
+    title: "What is your legal marital status?",
+    opts: [
+      { v: "Never been married", o: O.C },
+      { v: "Married, first and only marriage", o: O.C },
+      { v: "Living with a partner or engaged, not married", o: O.C, to: "q6a" },
+      { v: "Widowed, no unfinished estate or financial right", o: O.C, to: "q6b" },
+      { v: "Married and was married before", o: O.R },
+      { v: "Divorced", o: O.R },
+      { v: "Separated or divorce proceedings ongoing", o: O.R },
+      { v: "Prenuptial or postnuptial agreement, settlement or claim between spouses", o: O.R },
+      { v: "My position is different or unclear", o: O.R },
+    ] },
+
+  { id: "q6a", code: "Q6A", stage: 1, label: "Unmarried partner", kind: "one", cond: { q: "q6", is: "Living with a partner or engaged, not married" },
+    because: "Because you are not married",
+    title: "Do you want your unmarried partner to receive part of your estate?",
+    opts: [
+      { v: "No", o: O.C },
+      { v: "Yes, and there is no existing marriage or competing claim", o: O.C, muslimReview: true },
+      { v: "Yes, and there is an existing marriage, obligation or competing claim", o: O.R },
+      { v: "I am not sure", o: O.R },
+    ],
+    notice: "For a non-Muslim client this marks a wider drafting route. For a Muslim client the same wish is reviewed before payment, because the route that permits it may not be available.",
+    noticeTitle: "This answer depends on an earlier one" },
+
+  { id: "q6b", code: "Q6B", stage: 1, label: "Late spouse", kind: "one", cond: { q: "q6", is: "Widowed, no unfinished estate or financial right" },
+    because: "Because you are widowed",
+    title: "Is there an unfinished estate, Will, jointly owned asset or financial right connected with your late spouse?",
+    opts: [{ v: "No", o: O.C }, { v: "Yes", o: O.R }, { v: "I am not sure", o: O.R }] },
+
+  { id: "q7", code: "Q7", stage: 1, label: "Children and dependants", kind: "many",
+    title: "Do you have children or anyone financially dependent on you?",
+    multiNote: "Select everything that applies. Selecting the first option clears the others.",
+    opts: [
+      { v: "No children, and nobody is financially dependent on me", o: O.C, excl: true },
+      { v: "Children from this marriage or relationship", o: O.C, to: "q8a" },
+      { v: "Children from a previous marriage or relationship", o: O.R, to: "q8a" },
+      { v: "A stepchild or a child I care for who is not legally mine", o: O.R, to: "q8a" },
+      { v: "An adult who depends on me financially", o: O.C },
+      { v: "A child is expected or planned", o: O.C },
+    ],
+    notice: "We will collect additional information later so that the legal team can review how an expected or future child should be addressed in the Will.",
+    noticeTitle: "Where a child is expected" },
+
+  { id: "q8a", code: "Q8A", stage: 1, label: "Minor children", kind: "one", cond: { q: "q7", includesAny: ["Children from this marriage or relationship", "Children from a previous marriage or relationship", "A stepchild or a child I care for who is not legally mine"] },
+    because: "Because you recorded children",
+    title: "Is any child under 18, or does anyone require a legal guardianship arrangement?",
+    opts: [{ v: "No", o: O.C }, { v: "Yes", o: O.C, to: "q8b" }, { v: "I am not sure", o: O.R }] },
+
+  { id: "q8b", code: "Q8B", stage: 1, label: "Where children live", kind: "one", cond: { q: "q8a", is: "Yes" },
+    because: "Because a child is under 18",
+    title: "Where do the children live?",
+    opts: [
+      { v: "All in the United Arab Emirates", o: O.C },
+      { v: "All outside the United Arab Emirates", o: O.R },
+      { v: "Some in the UAE and some outside", o: O.R },
+      { v: "I am not sure", o: O.R },
+    ] },
+
+  { id: "q8c", code: "Q8C", stage: 1, label: "Parental responsibility", kind: "one", cond: { q: "q8a", is: "Yes" },
+    because: "Because a child is under 18",
+    title: "Are you the legal parent of every child, with no existing or expected dispute concerning parentage, custody, guardianship, travel or parental authority?",
+    opts: [
+      { v: "Yes, and no dispute is expected", o: O.C },
+      { v: "No, or a dispute exists or may arise", o: O.R },
+      { v: "I am not sure", o: O.R },
+    ] },
+
+  { id: "q8d", code: "Q8D", stage: 1, label: "Nominating a guardian", kind: "one", cond: { q: "q8a", is: "Yes" },
+    because: "Because a child is under 18",
+    title: "Is there someone you would want to nominate as guardian?",
+    help: "A nomination in a Will records your wishes. It does not remove the rights of the other parent or the authority of the court. The child's welfare is decided by the competent court.",
+    opts: [
+      { v: "Yes, and no dispute is expected", o: O.C },
+      { v: "Not selected yet, but I can decide during the detailed questionnaire", o: O.C },
+      { v: "There is no suitable person", o: O.R },
+      { v: "There may be a dispute about this", o: O.R },
+      { v: "I am not sure", o: O.R },
+    ] },
+
+  { id: "q9", code: "Q9", stage: 2, label: "Location of assets", kind: "one",
+    title: "Where are your assets?",
+    opts: [
+      { v: "Only in the United Arab Emirates", o: O.C },
+      { v: "Mainly in the UAE, with some abroad", o: O.C },
+      { v: "Significant assets in another country as well", o: O.R },
+      { v: "No UAE assets, but I want guardianship arrangements", o: O.C },
+      { v: "I am not sure", o: O.R },
+    ] },
+
+  { id: "q10", code: "Q10", stage: 2, label: "Types of UAE assets", kind: "many", cond: { q: "q9", isNot: "No UAE assets, but I want guardianship arrangements" },
+    because: "Because you recorded UAE assets",
+    title: "What types of UAE assets do you hold?",
+    multiNote: "Select everything that applies.",
+    opts: [
+      { v: "Residential or investment property", o: O.C },
+      { v: "Bank or savings accounts", o: O.C },
+      { v: "Vehicles or personal belongings", o: O.C },
+      { v: "An account with a registered beneficiary or nomination", o: O.C, to: "q10a" },
+      { v: "Cryptocurrency or other digital assets", o: O.C, to: "q10b" },
+      { v: "Shares in a company or a business interest", o: O.R },
+      { v: "Another asset type, or I am not sure", o: O.R },
+    ] },
+
+  { id: "q10a", code: "Q10A", stage: 2, label: "Registered beneficiary", kind: "one", cond: { q: "q10", includesAny: ["An account with a registered beneficiary or nomination"] },
+    because: "Because an account has a nomination",
+    title: "Does the registered nomination match what you want to happen in your Will?",
+    opts: [
+      { v: "It matches my wishes", o: O.C },
+      { v: "I want a different result in my Will", o: O.R },
+      { v: "I do not understand the effect of the nomination", o: O.R },
+    ],
+    notice: "Some assets may pass under the registered nomination or the provider's contractual terms rather than under the Will alone. Summit must check for a conflict before drafting.",
+    noticeTitle: "Important" },
+
+  { id: "q10b", code: "Q10B", stage: 2, label: "Digital assets", kind: "one", cond: { q: "q10", includesAny: ["Cryptocurrency or other digital assets"] },
+    because: "Because you hold digital assets",
+    title: "How should your digital assets be dealt with?",
+    opts: [
+      { v: "Part of the residue, with no special instructions", o: O.C },
+      { v: "A specific wallet to a specific person, or special access instructions", o: O.R },
+      { v: "Multiple owners, a platform restriction, or I am not sure", o: O.R },
+    ],
+    notice: "We will never request or store a password, seed phrase, recovery phrase or private key. Do not enter one anywhere on this platform, and do not send one to us by email or message.",
+    noticeTitle: "Security" },
+
+  { id: "q11", code: "Q11", stage: 2, label: "Ownership and restrictions", kind: "many",
+    title: "Do any of these apply to how your assets are owned?",
+    help: "An ordinary bank loan or mortgage does not make a case complicated by itself.",
+    multiNote: "Select everything that applies. Selecting the first option clears the others.",
+    opts: [
+      { v: "None of these", o: O.C, excl: true },
+      { v: "An asset is jointly owned with another person", o: O.C },
+      { v: "An asset is owned through a company, Trust or Foundation", o: O.R },
+      { v: "An asset is subject to a restriction, mortgage dispute or third-party claim", o: O.R },
+      { v: "I am not sure how an asset is registered", o: O.R },
+    ],
+    notice: "A Will can address only your legal share in a jointly owned asset, not the entire asset. Summit will review the ownership information before drafting.",
+    noticeTitle: "Joint ownership" },
+
+  { id: "q12", code: "Q12", stage: 2, label: "Previous Wills", kind: "many",
+    title: "Do any of these already exist?",
+    multiNote: "Select everything that applies. Selecting the first option clears the others.",
+    opts: [
+      { v: "None of these", o: O.C, excl: true },
+      { v: "A Will or draft Will in the UAE", o: O.R },
+      { v: "A Will or draft Will outside the UAE", o: O.R },
+      { v: "I previously selected the law of a particular country to govern my estate", o: O.R },
+      { v: "A Trust, Foundation or similar structure", o: O.R },
+      { v: "I am not sure", o: O.R },
+    ] },
+
+  { id: "q13a", code: "Q13A", stage: 3, label: "Distribution wishes", kind: "many",
+    title: "What do you want your Will to do?",
+    multiNote: "Select everything that applies.",
+    opts: [
+      { v: "Leave everything to my spouse, then to my children", o: O.C },
+      { v: "Divide my estate between named people in shares I choose", o: O.C },
+      { v: "Leave a fixed share to someone outside my immediate family", o: O.C, muslimReview: true },
+      { v: "Exclude a person who might otherwise expect to inherit", o: O.R },
+      { v: "Leave something to a charity or an organisation", o: O.C, to: "q13b" },
+      { v: "I am not sure yet", o: O.C },
+    ],
+    notice: "If an instruction appears to require a feature available only through the Dubai Courts route and the client is Muslim, the matter is reviewed before payment, because that route may not be available.",
+    noticeTitle: "This answer depends on an earlier one" },
+
+  { id: "q13b", code: "Q13B", stage: 3, label: "Beneficiaries needing protection", kind: "one", cond: { q: "q13a", includesAny: ["Leave something to a charity or an organisation", "Divide my estate between named people in shares I choose"] },
+    because: "Because of your distribution wishes",
+    title: "Does any beneficiary need particular protection?",
+    opts: [
+      { v: "No", o: O.C },
+      { v: "A beneficiary is a minor, with no other special needs", o: O.C },
+      { v: "A beneficiary has a disability or long-term care needs", o: O.R },
+      { v: "A beneficiary may not be able to manage an inheritance", o: O.R },
+    ] },
+
+  { id: "q14", code: "Q14", stage: 3, label: "Executor", kind: "one",
+    title: "Is there someone who could act as your executor?",
+    help: "We do not need the person's name during the initial assessment. We only need to know whether the role can be arranged clearly.",
+    opts: [
+      { v: "Yes, and I can also name an alternative", o: O.C },
+      { v: "Yes, but I have not thought about an alternative", o: O.C },
+      { v: "I would want a professional executor", o: O.R },
+      { v: "There is no obvious person", o: O.R },
+      { v: "I am not sure about the role or the right person", o: O.R },
+    ] },
+
+  { id: "q15a", code: "Q15A", stage: 3, label: "Debts and disputes", kind: "many",
+    title: "Do any of these apply to you?",
+    help: "An ordinary bank loan, mortgage or credit card does not create a complication by itself unless there is a dispute, personal guarantee or insolvency concern.",
+    multiNote: "Select everything that applies. Selecting the first option clears the others.",
+    opts: [
+      { v: "None of these", o: O.C, excl: true },
+      { v: "A family dispute concerning money, ownership or inheritance", o: O.R },
+      { v: "A court case or enforcement proceeding concerning family, custody or ownership", o: O.R },
+      { v: "A disputed debt, personal guarantee or material business liability", o: O.R },
+      { v: "An insolvency or bankruptcy concern", o: O.R },
+    ] },
+
+  { id: "q15b", code: "Q15B", stage: 3, label: "Capacity and free will", kind: "one",
+    title: "Do you understand the nature and effect of a Will and are you making your decisions freely, without pressure from another person?",
+    opts: [
+      { v: "Yes", o: O.C },
+      { v: "I would rather discuss this with the legal team", o: O.URGENT },
+      { v: "No", o: O.URGENT },
+    ] },
+
+  { id: "q16", code: "Q16", stage: 3, label: "Language and assistance", kind: "one",
+    title: "Can you complete a detailed questionnaire in English?",
+    help: "This answer does not, by itself, make the case legally complex.",
+    opts: [
+      { v: "Yes, I can complete it in English", o: O.C },
+      { v: "Yes, but I may need a simple explanation of some terms", o: O.C },
+      { v: "I need assistance in Arabic", o: O.C },
+      { v: "I need another language or additional assistance", o: O.C },
+    ] },
+];
+
+const STAGE_NAMES = ["About you", "Your family", "Your assets", "Your wishes", "Declarations"];
+const STAGE_HINTS = ["A few basics", "No names needed yet", "Categories only", "Handled privately", "Almost there"];
+
+const DECLARATIONS = [
+  "I confirm that my answers are true and complete to the best of my knowledge.",
+  "I understand that the result is preliminary and is not a final legal opinion or a decision by a registration authority.",
+  "I understand that completing the assessment does not create or register a Will.",
+  "I understand that the registration authority is not confirmed until I complete the detailed questionnaire and Summit reviews my information.",
+  "I understand that paying Summit's fees or receiving a draft does not mean the Will has been registered.",
+  "I understand that government, court, notary and third-party fees are separate, and that legal translation of the new Will is included in Summit's professional fee for the recommended standard route.",
+  "I agree that my answers may be used for assessment and service delivery in accordance with the Privacy Policy.",
+];
+
+const OUTCOMES = {
+  continue: { tag: "Assessment completed", tone: "positive", title: "You may continue through our online service", body: "Your answers indicate that your circumstances may be suitable for the standard online UAE Will service. This is not final acceptance by any authority, and your Will has not yet been prepared or registered." },
+  review: { tag: "Held for legal review", tone: "held", title: "We would like our legal team to review your circumstances first", body: "One or more of your answers means we should look at your matter before recommending a service, a registration authority or a price. No payment is required at this stage, and nothing you have entered is lost." },
+  other: { tag: "A different service", tone: "neutral", title: "A different service may be required", body: "This relates to the administration of an estate after death rather than the preparation of a new Will. Our team will explain the next step. No payment is requested." },
+  stop: { tag: "", tone: "neutral", title: "A person making a Will must be at least 18", body: "You cannot continue through the online Will preparation service because the person making the Will must be at least 18 years old. Nothing has been charged, and no account has been created." },
+  citizen: { tag: "", tone: "neutral", title: "A different route applies", body: "The Will services available through this platform are not intended for UAE citizens. You are welcome to contact Summit Legal Consultancy UAE, which advises on matters outside the scope of this platform." },
+  urgent: { tag: "", tone: "neutral", title: "We will complete this with you directly", body: "Please continue with our legal team rather than online. A member of the team will contact you using the details you provide, at a time that suits you. There is nothing to pay." },
+};
+
+const PILL = {
+  positive: { fg: "#2E6A4E", bg: "#EAF2ED", border: "#C4DCD0" },
+  held: { fg: "#63467F", bg: "#F0EBF6", border: "#D6C9E5" },
+  neutral: { fg: "#5B6472", bg: "#F1F2F4", border: "#DCDFE4" },
+};
+
+class Component extends DCLogic {
+  state = { step: "welcome", dir: "fwd", answers: {}, countryQuery: "", consent: false, decl: [false,false,false,false,false,false,false] };
+
+  visible() {
+    const a = this.state.answers;
+    return Q.filter(q => {
+      if (!q.cond) return true;
+      const v = a[q.cond.q];
+      if (v === undefined) return false;
+      if (q.cond.is) return v === q.cond.is;
+      if (q.cond.isNot) return v !== q.cond.isNot;
+      if (q.cond.includesAny) return Array.isArray(v) && q.cond.includesAny.some(x => v.indexOf(x) > -1);
+      return false;
+    });
+  }
+
+  outcome() {
+    const a = this.state.answers;
+    if (a.q1 === "Someone has died and I need help with their estate") return "other";
+    if (a.q2 === "No") return "stop";
+    if (a.q3 === "United Arab Emirates") return "citizen";
+    const muslim = a.q5 === "Muslim";
+    let worst = "continue";
+    this.visible().forEach(q => {
+      const v = a[q.id];
+      if (v === undefined) return;
+      const vals = Array.isArray(v) ? v : [v];
+      vals.forEach(x => {
+        const opt = (q.opts || []).find(o => o.v === x);
+        if (!opt) return;
+        if (opt.o === O.URGENT) worst = "urgent";
+        else if (opt.o === O.R && worst !== "urgent") worst = "review";
+        else if (opt.muslimReview && muslim && worst === "continue") worst = "review";
+      });
+    });
+    return worst;
+  }
+
+  seq() {
+    const ids = this.visible().map(q => q.id);
+    return ["welcome"].concat(ids, ["declare", "reviewAnswers", "result"]);
+  }
+
+  go(step, dir) { this.setState({ step: step, dir: dir || "fwd" }); }
+
+  renderVals() {
+    const s = this.state;
+    const a = s.answers;
+    const vis = this.visible();
+    const seq = this.seq();
+    const idx = seq.indexOf(s.step);
+    const q = Q.find(x => x.id === s.step);
+    const outKey = this.outcome();
+    const out = OUTCOMES[outKey];
+    const pill = PILL[out.tone];
+
+    const early = (s.step === "result") && (outKey === "other" || outKey === "stop" || outKey === "citizen");
+
+    const cq = s.countryQuery.trim().toLowerCase();
+    const matches = cq ? COUNTRIES.filter(c => c.toLowerCase().indexOf(cq) > -1) : COUNTRIES;
+    const declCount = s.decl.filter(Boolean).length;
+
+    const stageIdx = q ? q.stage : (s.step === "declare" || s.step === "reviewAnswers" ? 4 : 0);
+    const perStage = [0, 0, 0, 0, 0];
+    const doneStage = [0, 0, 0, 0, 0];
+    vis.forEach(x => {
+      perStage[x.stage] += 1;
+      if (a[x.id] !== undefined) doneStage[x.stage] += 1;
+    });
+
+    let answered = 0;
+    vis.forEach(x => { if (a[x.id] !== undefined) answered += 1; });
+
+    const setOne = (qq, val) => () => {
+      const next = Object.assign({}, a);
+      next[qq.id] = val;
+      Object.keys(next).forEach(k => {
+        const dep = Q.find(z => z.id === k);
+        if (dep && dep.cond && dep.cond.q === qq.id) delete next[k];
+      });
+      this.setState({ answers: next });
+    };
+
+    const toggleMany = (qq, val, excl) => () => {
+      const cur = Array.isArray(a[qq.id]) ? a[qq.id].slice() : [];
+      const exclOpt = (qq.opts.find(o => o.excl) || {}).v;
+      let nextArr;
+      if (excl) nextArr = cur.indexOf(val) > -1 ? [] : [val];
+      else {
+        const base = cur.filter(x => x !== exclOpt && x !== val);
+        nextArr = cur.indexOf(val) > -1 ? base : base.concat(val);
+      }
+      const next = Object.assign({}, a);
+      if (nextArr.length) next[qq.id] = nextArr; else delete next[qq.id];
+      this.setState({ answers: next });
+    };
+
+    const gate = () => {
+      if (s.step === "welcome") return true;
+      if (s.step === "declare") return declCount === 7;
+      if (s.step === "reviewAnswers" || s.step === "result") return true;
+      if (!q) return true;
+      if (q.kind === "country") return !!a.q3;
+      const v = a[q.id];
+      if (v === undefined) return false;
+      if (q.consent && !s.consent) return false;
+      return true;
+    };
+
+    const nextStep = () => {
+      if (s.step === "welcome") return seq[1];
+      if (q) {
+        if (q.id === "q1" && a.q1 === "Someone has died and I need help with their estate") return "result";
+        if (q.id === "q2" && a.q2 === "No") return "result";
+        if (q.id === "q3" && a.q3 === "United Arab Emirates") return "result";
+        const nseq = this.seq();
+        const at = nseq.indexOf(q.id);
+        return nseq[at + 1] || "result";
+      }
+      return seq[idx + 1] || "result";
+    };
+
+    return {
+      dir: s.dir,
+      isWelcome: s.step === "welcome",
+      isQuestion: !!q,
+      isDeclare: s.step === "declare",
+      isReview: s.step === "reviewAnswers",
+      isResult: s.step === "result",
+      inQuestions: !!q || s.step === "declare" || s.step === "reviewAnswers",
+      savedLabel: s.step === "welcome" ? "" : "saved just now",
+
+      stageName: STAGE_NAMES[stageIdx],
+      stageHint: STAGE_HINTS[stageIdx],
+      stages: [0, 1, 2, 3, 4].map(i => ({
+        fill: i < stageIdx ? "100%" : (i === stageIdx ? (perStage[i] ? Math.round((doneStage[i] / perStage[i]) * 100) + "%" : "50%") : "0%"),
+      })),
+
+      q: q ? {
+        code: q.code, title: q.title,
+        help: q.help || "", hasHelp: !!q.help,
+        privacy: q.privacy || "", privacyTitle: q.privacyTitle || "", hasPrivacy: !!q.privacy,
+        notice: q.notice || "", noticeTitle: q.noticeTitle || "", hasNotice: !!q.notice,
+        isConditional: !!q.cond, because: q.because || "",
+        isCountry: q.kind === "country",
+        isChoice: q.kind !== "country",
+        isMulti: q.kind === "many",
+        multiNote: q.multiNote || "",
+        hasConsent: !!q.consent,
+        options: (q.opts || []).map(o => {
+          const cur = a[q.id];
+          const on = q.kind === "many" ? (Array.isArray(cur) && cur.indexOf(o.v) > -1) : cur === o.v;
+          return {
+            label: o.v, on: on, off: !on,
+            pick: q.kind === "many" ? toggleMany(q, o.v, !!o.excl) : setOne(q, o.v),
+          };
+        }),
+      } : { code: "", title: "", options: [] },
+
+      countryQuery: s.countryQuery,
+      matchLabel: matches.length === 1 ? "1 match" : matches.length + " matches",
+      countries: matches.slice(0, 5).map(name => ({
+        name: name,
+        pick: () => { const next = Object.assign({}, a); next.q3 = name; this.setState({ answers: next, countryQuery: name }); },
+      })),
+      onCountry: e => this.setState({ countryQuery: e.target.value }),
+
+      consent: s.consent,
+      onConsent: () => this.setState({ consent: !s.consent }),
+
+      declarations: DECLARATIONS.map((label, i) => ({
+        label: label, n: String(i + 1).padStart(2, "0"), on: s.decl[i],
+        toggle: () => { const n = s.decl.slice(); n[i] = !n[i]; this.setState({ decl: n }); },
+      })),
+      declLabel: declCount + " of 7 confirmed",
+
+      answeredLabel: answered + " questions answered. You can change any of them.",
+      summary: vis.filter(x => a[x.id] !== undefined).map(x => ({
+        code: x.code, label: x.label,
+        value: Array.isArray(a[x.id]) ? a[x.id].join(" · ") : a[x.id],
+        change: () => this.go(x.id, "back"),
+      })),
+
+      outcomeTag: out.tag, outcomePill: !!out.tag,
+      outcomeFg: pill.fg, outcomeBg: pill.bg, outcomeBorder: pill.border,
+      outcomeTitle: out.title, outcomeBody: out.body,
+      outcomeIsHeld: outKey === "review",
+      hasOutcomeReason: outKey === "review" && a.q5 === "I would prefer not to say",
+      outcomeReason: "You chose not to share this, so our legal team will confirm the right route with you directly. No payment is taken while we do.",
+      caseRef: outKey === "continue" ? "Reference SLC-2026-04418 · 18 Aug 2026" : "Reference SLC-2026-04418 · held 18 Aug 2026",
+
+      canBack: s.step !== "welcome",
+      onBack: () => {
+        if (s.step === "result") {
+          if (early) {
+            const which = outKey === "other" ? "q1" : (outKey === "stop" ? "q2" : "q3");
+            return this.go(which, "back");
+          }
+          return this.go("reviewAnswers", "back");
+        }
+        const nseq = this.seq();
+        const at = nseq.indexOf(s.step);
+        this.go(nseq[Math.max(at - 1, 0)], "back");
+      },
+      onNext: () => this.go(nextStep(), "fwd"),
+      nextEnabled: gate(),
+      nextDisabled: !gate(),
+      nextLabel: s.step === "welcome" ? "Start the assessment" : (s.step === "declare" || s.step === "reviewAnswers" ? "See my result" : (s.step === "result" ? "Continue" : "Continue")),
+      footNote: s.step === "welcome" ? "Free · No account needed · About five minutes."
+        : (s.step === "result" ? "Preliminary guidance only, not a legal decision."
+        : (q && q.consent ? "Visible only to authorised legal staff."
+        : (q && q.kind === "many" ? "Broad categories only — no names or amounts."
+        : "The number of questions depends on your answers."))),
+
+      map: Q.map(x => {
+        const shown = vis.some(v => v.id === x.id);
+        return {
+          code: x.code, title: x.title,
+          kind: x.kind === "many" ? "select all" : (x.kind === "country" ? "type-ahead" : "select one"),
+          hasTrigger: !!x.because, trigger: shown ? x.because : (x.because || "") + " · not shown yet",
+          here: s.step === x.id, notHere: s.step !== x.id,
+          jump: () => this.go(x.id, "fwd"),
+        };
+      }),
+    };
+  }
+}
+</script>
+</body>
+</html>

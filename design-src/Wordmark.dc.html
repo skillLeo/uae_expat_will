@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Libre+Caslon+Display&family=Prata&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</helmet>
+
+<div style="display: inline-block;">
+
+  <sc-if value="{{ marginHeaderPaper }}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; align-items: baseline;">
+      <div style="width: 32px; flex: none; font-family: Newsreader, serif; font-weight: 500; font-size: 10px; letter-spacing: 0.1em; color: #8A6512;">UAE</div>
+      <div style="width: 1px; align-self: stretch; background: #D8C69A;"></div>
+      <div style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1; letter-spacing: -0.015em; color: #12233F; padding-left: 12px;">Expat Wills</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ marginHeaderInk }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; align-items: baseline;">
+      <div style="width: 32px; flex: none; font-family: Newsreader, serif; font-weight: 500; font-size: 10px; letter-spacing: 0.1em; color: #D8C69A;">UAE</div>
+      <div style="width: 1px; align-self: stretch; background: #AD8A46;"></div>
+      <div style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1; letter-spacing: -0.015em; color: #F6F1E7; padding-left: 12px;">Expat Wills</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ marginLockupPaper }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; align-items: baseline;">
+      <div style="width: 48px; flex: none; font-family: Newsreader, serif; font-weight: 500; font-size: 14px; letter-spacing: 0.12em; color: #8A6512;">UAE</div>
+      <div style="width: 1px; align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 20px;">
+        <div style="font-family: Newsreader, serif; font-weight: 400; font-size: 42px; line-height: 1; letter-spacing: -0.015em; color: #12233F;">Expat Wills</div>
+        <div style="font-family: 'Instrument Sans', sans-serif; font-size: 10px; font-weight: 500; line-height: 1.4; letter-spacing: 0.135em; text-transform: uppercase; color: #5B6472; padding-top: 12px;">A Summit Legal Consultancy UAE Platform</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ marginLockupInk }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; align-items: baseline;">
+      <div style="width: 48px; flex: none; font-family: Newsreader, serif; font-weight: 500; font-size: 14px; letter-spacing: 0.12em; color: #D8C69A;">UAE</div>
+      <div style="width: 1px; align-self: stretch; background: #AD8A46;"></div>
+      <div style="padding-left: 20px;">
+        <div style="font-family: Newsreader, serif; font-weight: 400; font-size: 42px; line-height: 1; letter-spacing: -0.015em; color: #F6F1E7;">Expat Wills</div>
+        <div style="font-family: 'Instrument Sans', sans-serif; font-size: 10px; font-weight: 500; line-height: 1.4; letter-spacing: 0.135em; text-transform: uppercase; color: #B9C2D1; padding-top: 12px;">A Summit Legal Consultancy UAE Platform</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ engHeaderPaper }}" hint-placeholder-val="{{ false }}">
+    <div style="width: 190px;">
+      <div style="height: 1px; background: #D8C69A;"></div>
+      <div style="font-family: Newsreader, serif; font-weight: 500; font-size: 16px; line-height: 1.2; letter-spacing: 0.145em; text-transform: uppercase; text-align: center; text-indent: 0.145em; color: #12233F; padding: 6px 0 7px;">UAE Expat Wills</div>
+      <div style="height: 1.5px; background: #12233F;"></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ engHeaderInk }}" hint-placeholder-val="{{ false }}">
+    <div style="width: 190px;">
+      <div style="height: 1px; background: #AD8A46;"></div>
+      <div style="font-family: Newsreader, serif; font-weight: 500; font-size: 16px; line-height: 1.2; letter-spacing: 0.145em; text-transform: uppercase; text-align: center; text-indent: 0.145em; color: #F6F1E7; padding: 6px 0 7px;">UAE Expat Wills</div>
+      <div style="height: 1.5px; background: #F6F1E7;"></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ engLockupPaper }}" hint-placeholder-val="{{ false }}">
+    <div style="width: 300px;">
+      <div style="height: 1px; background: #D8C69A;"></div>
+      <div style="font-family: Newsreader, serif; font-weight: 500; font-size: 25px; line-height: 1.2; letter-spacing: 0.155em; text-transform: uppercase; text-align: center; text-indent: 0.155em; color: #12233F; padding: 12px 0 13px;">UAE Expat Wills</div>
+      <div style="height: 2px; background: #12233F;"></div>
+      <div style="font-family: 'Instrument Sans', sans-serif; font-size: 10px; font-weight: 500; line-height: 1.4; letter-spacing: 0.135em; text-transform: uppercase; text-align: center; text-indent: 0.135em; color: #5B6472; padding-top: 10px;">A Summit Legal Consultancy UAE Platform</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ engLockupInk }}" hint-placeholder-val="{{ false }}">
+    <div style="width: 300px;">
+      <div style="height: 1px; background: #AD8A46;"></div>
+      <div style="font-family: Newsreader, serif; font-weight: 500; font-size: 25px; line-height: 1.2; letter-spacing: 0.155em; text-transform: uppercase; text-align: center; text-indent: 0.155em; color: #F6F1E7; padding: 12px 0 13px;">UAE Expat Wills</div>
+      <div style="height: 2px; background: #F6F1E7;"></div>
+      <div style="font-family: 'Instrument Sans', sans-serif; font-size: 10px; font-weight: 500; line-height: 1.4; letter-spacing: 0.135em; text-transform: uppercase; text-align: center; text-indent: 0.135em; color: #B9C2D1; padding-top: 10px;">A Summit Legal Consultancy UAE Platform</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ regHeaderPaper }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; align-items: baseline; gap: 9px;">
+      <span style="font-family: 'Instrument Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; color: #3A4A66;">UAE</span>
+      <span style="font-family: Newsreader, serif; font-weight: 400; font-size: 27px; line-height: 1; letter-spacing: -0.018em; color: #12233F;">Expat Wills</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ regHeaderInk }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; align-items: baseline; gap: 9px;">
+      <span style="font-family: 'Instrument Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; color: #B9C2D1;">UAE</span>
+      <span style="font-family: Newsreader, serif; font-weight: 400; font-size: 27px; line-height: 1; letter-spacing: -0.018em; color: #F6F1E7;">Expat Wills</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ regLockupPaper }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display: flex; align-items: baseline; gap: 12px;">
+        <span style="font-family: 'Instrument Sans', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.17em; color: #3A4A66;">UAE</span>
+        <span style="font-family: Newsreader, serif; font-weight: 400; font-size: 42px; line-height: 1; letter-spacing: -0.018em; color: #12233F;">Expat Wills</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding-top: 14px;">
+        <div style="width: 44px; height: 1px; background: #AD8A46;"></div>
+        <div style="font-family: 'Instrument Sans', sans-serif; font-size: 10px; font-weight: 500; line-height: 1.4; letter-spacing: 0.135em; text-transform: uppercase; color: #5B6472;">A Summit Legal Consultancy UAE Platform</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ regLockupInk }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display: flex; align-items: baseline; gap: 12px;">
+        <span style="font-family: 'Instrument Sans', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.17em; color: #B9C2D1;">UAE</span>
+        <span style="font-family: Newsreader, serif; font-weight: 400; font-size: 42px; line-height: 1; letter-spacing: -0.018em; color: #F6F1E7;">Expat Wills</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding-top: 14px;">
+        <div style="width: 44px; height: 1px; background: #AD8A46;"></div>
+        <div style="font-family: 'Instrument Sans', sans-serif; font-size: 10px; font-weight: 500; line-height: 1.4; letter-spacing: 0.135em; text-transform: uppercase; color: #B9C2D1;">A Summit Legal Consultancy UAE Platform</div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:160},&quot;direction&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;margin&quot;,&quot;engrossment&quot;,&quot;registers&quot;],&quot;default&quot;:&quot;margin&quot;,&quot;tsType&quot;:&quot;\&quot;margin\&quot; | \&quot;engrossment\&quot; | \&quot;registers\&quot;&quot;,&quot;section&quot;:&quot;Wordmark&quot;},&quot;context&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;header&quot;,&quot;lockup&quot;],&quot;default&quot;:&quot;header&quot;,&quot;tsType&quot;:&quot;\&quot;header\&quot; | \&quot;lockup\&quot;&quot;,&quot;section&quot;:&quot;Wordmark&quot;},&quot;ground&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;paper&quot;,&quot;ink&quot;],&quot;default&quot;:&quot;paper&quot;,&quot;tsType&quot;:&quot;\&quot;paper\&quot; | \&quot;ink\&quot;&quot;,&quot;section&quot;:&quot;Wordmark&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const d = this.props.direction ?? "margin";
+    const c = this.props.context ?? "header";
+    const ink = (this.props.ground ?? "paper") === "ink";
+    const sig = d + "|" + c + "|" + ink;
+    if (this._sig === sig && this._vals) return this._vals;
+    this._sig = sig;
+    const k = (dir, ctx, isInk) => d === dir && c === ctx && ink === isInk;
+    this._vals = {
+      marginHeaderPaper: k("margin", "header", false),
+      marginHeaderInk: k("margin", "header", true),
+      marginLockupPaper: k("margin", "lockup", false),
+      marginLockupInk: k("margin", "lockup", true),
+      engHeaderPaper: k("engrossment", "header", false),
+      engHeaderInk: k("engrossment", "header", true),
+      engLockupPaper: k("engrossment", "lockup", false),
+      engLockupInk: k("engrossment", "lockup", true),
+      regHeaderPaper: k("registers", "header", false),
+      regHeaderInk: k("registers", "header", true),
+      regLockupPaper: k("registers", "lockup", false),
+      regLockupInk: k("registers", "lockup", true),
+    };
+    return this._vals;
+  }
+}
+</script>
+</body>
+</html>

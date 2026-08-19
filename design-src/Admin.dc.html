@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #FBF8F2; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  button, input, select { font: inherit; color: inherit; }
+  kbd { font-family: "IBM Plex Mono", monospace; font-size: 11px; line-height: 16px; min-width: 18px; display: inline-grid; place-items: center; border: 1px solid #5B6472; border-radius: 2px; padding: 1px 4px; background: #12233F; color: #D8C69A; }
+  @keyframes paletteIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { [data-palette] { animation: none !important; } }
+  @media (max-width: 1080px) {
+    [data-shell] { grid-template-columns: minmax(0, 1fr) !important; }
+    [data-rail] { display: none !important; }
+    [data-two] { grid-template-columns: minmax(0, 1fr) !important; }
+  }
+</style>
+</helmet>
+
+<div style="background: #0B1729; border-bottom: 1px solid #1E3252; padding: 10px 24px;">
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; flex: none;">Deliverable 07 · internal tool</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="8">
+        <div>
+          <sc-if value="{{ t.on }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ t.pick }}" style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 6px 11px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ t.label }}</button>
+          </sc-if>
+          <sc-if value="{{ t.off }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ t.pick }}" style="background: transparent; color: #B9C2D1; border: 1px solid #1E3252; border-radius: 4px; padding: 6px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #AD8A46; color: #F6F1E7;">{{ t.label }}</button>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 12px;">
+      <button onClick="{{ openPalette }}" style="display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid #1E3252; border-radius: 4px; padding: 5px 10px; cursor: pointer;" style-hover="border-color: #AD8A46;">
+        <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="#B9C2D1" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="5"></circle><path d="M11.8 11.8 15.4 15.4" stroke-linecap="round"></path></svg>
+        <span style="font-size: 12px; color: #B9C2D1;">Search or jump</span>
+        <kbd>⌘</kbd><kbd>K</kbd>
+      </button>
+      <div style="font-size: 12px; color: #B9C2D1;">Viewing as</div>
+      <button onClick="{{ toggleRole }}" style="background: transparent; color: #F6F1E7; border: 1px solid #5B6472; border-radius: 4px; padding: 6px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #AD8A46;">{{ roleLabel }}</button>
+    </div>
+  </div>
+</div>
+
+<sc-if value="{{ paletteOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closePalette }}" style="position: fixed; inset: 0; z-index: 200; background: rgba(11,23,41,.44); display: grid; justify-items: center; align-items: start; padding: 88px 24px 24px;">
+    <div data-palette="1" onClick="{{ stop }}" style="width: 100%; max-width: 620px; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 16px 40px rgba(11,23,41,.28), 0 2px 8px rgba(11,23,41,.18); overflow: hidden; animation: paletteIn 140ms cubic-bezier(.16,1,.3,1) both;">
+      <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #E2E6EC; padding: 12px 16px;">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#5B6472" stroke-width="1.4" style="flex: none;"><circle cx="8" cy="8" r="5"></circle><path d="M11.8 11.8 15.4 15.4" stroke-linecap="round"></path></svg>
+        <input value="{{ paletteQuery }}" onChange="{{ onPaletteQuery }}" ref="{{ paletteRef }}" placeholder="Go to a screen, find a case, run an action" style="flex: 1; min-width: 0; border: none; background: transparent; padding: 6px 0; font-size: 16px;">
+        <kbd style="border-color: #DCDFE4; background: #FBF8F2; color: #5B6472;">esc</kbd>
+      </div>
+      <div style="max-height: 380px; overflow: auto;">
+        <sc-if value="{{ paletteEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 24px 16px;">
+            <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px;">Nothing matches that</div>
+            <div style="font-size: 14px; line-height: 1.6; color: #3A4A66;">Try a case reference, a client name, or a screen name such as payments or audit.</div>
+          </div>
+        </sc-if>
+        <sc-for list="{{ paletteGroups }}" as="g" hint-placeholder-count="3">
+          <div>
+            <div style="padding: 10px 16px 6px; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #5B6472;">{{ g.label }}</div>
+            <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="4">
+              <div>
+                <sc-if value="{{ i.active }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ i.run }}" onMouseEnter="{{ i.focus }}" style="display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 16px; background: #F6F1E7; border-left: 2px solid #AD8A46; cursor: pointer;">
+                    <div style="display: grid; place-items: center; color: #8A6512;">
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="4.4,8 11.6,8" stroke-linecap="round"></polyline><polyline points="8.6,5 11.6,8 8.6,11" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                    </div>
+                    <div>
+                      <div style="font-size: 14px; font-weight: 600; line-height: 1.4;">{{ i.label }}</div>
+                      <div style="font-size: 12px; line-height: 1.4; color: #3A4A66;">{{ i.hint }}</div>
+                    </div>
+                    <kbd style="border-color: #DCDFE4; background: #FFFFFF; color: #5B6472;">↵</kbd>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ i.inactive }}" hint-placeholder-val="{{ true }}">
+                  <div onClick="{{ i.run }}" onMouseEnter="{{ i.focus }}" style="display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 16px; border-left: 2px solid transparent; cursor: pointer;">
+                    <div style="display: grid; place-items: center; color: #B9C2D1;">
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="4.4,8 11.6,8" stroke-linecap="round"></polyline></svg>
+                    </div>
+                    <div>
+                      <div style="font-size: 14px; line-height: 1.4;">{{ i.label }}</div>
+                      <div style="font-size: 12px; line-height: 1.4; color: #5B6472;">{{ i.hint }}</div>
+                    </div>
+                    <div></div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-top: 1px solid #E2E6EC; padding: 9px 16px; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; background: #FBF8F2;">
+        <div style="display: flex; align-items: center; gap: 6px;"><kbd style="border-color: #DCDFE4; background: #FFFFFF; color: #5B6472;">↑</kbd><kbd style="border-color: #DCDFE4; background: #FFFFFF; color: #5B6472;">↓</kbd><span style="font-size: 12px; color: #3A4A66;">move</span></div>
+        <div style="display: flex; align-items: center; gap: 6px;"><kbd style="border-color: #DCDFE4; background: #FFFFFF; color: #5B6472;">↵</kbd><span style="font-size: 12px; color: #3A4A66;">run</span></div>
+        <div style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ paletteCount }}</div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toastOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position: fixed; left: 50%; bottom: 24px; z-index: 210; transform: translateX(-50%); background: #12233F; border: 1px solid #1E3252; border-radius: 4px; box-shadow: 0 16px 40px rgba(11,23,41,.28); padding: 11px 16px; display: flex; align-items: center; gap: 10px;">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#D8C69A" stroke-width="1.6" style="flex: none;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+    <span style="font-size: 14px; color: #F6F1E7;">{{ toastText }}</span>
+  </div>
+</sc-if>
+
+<div data-shell="1" style="display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; align-items: start;">
+
+  <aside data-rail="1" style="background: #12233F; min-height: 100vh; padding: 20px 0; position: sticky; top: 0;">
+    <div style="padding: 0 20px 20px;">
+      <dc-import name="Wordmark" direction="margin" context="header" ground="ink" hint-size="170px,30px"></dc-import>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #B9C2D1; margin-top: 10px;">Case management</div>
+    </div>
+    <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+      <div style="padding: 0 0 16px;">
+        <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #D8C69A; padding: 8px 20px;">{{ g.label }}</div>
+        <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="4">
+          <div>
+            <sc-if value="{{ i.on }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ i.pick }}" style="width: 100%; text-align: left; background: #0B1729; color: #F6F1E7; border: none; border-left: 2px solid #AD8A46; padding: 9px 20px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; justify-content: space-between; gap: 8px;">
+                <span>{{ i.label }}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #D8C69A; font-variant-numeric: tabular-nums;">{{ i.count }}</span>
+              </button>
+            </sc-if>
+            <sc-if value="{{ i.off }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ i.pick }}" style="width: 100%; text-align: left; background: transparent; color: #B9C2D1; border: none; border-left: 2px solid transparent; padding: 9px 20px; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; gap: 8px;" style-hover="color: #F6F1E7; border-left-color: #5B6472;">
+                <span>{{ i.label }}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ i.count }}</span>
+              </button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+    <div style="padding: 16px 20px; border-top: 1px solid #1E3252; margin-top: 8px;">
+      <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #D8C69A; margin-bottom: 12px;">Keyboard</div>
+      <div style="display: grid; gap: 7px;">
+        <div style="display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: center;">
+          <div style="display: flex; gap: 3px;"><kbd>⌘</kbd><kbd>K</kbd></div>
+          <div style="font-size: 12px; line-height: 1.3; color: #B9C2D1;">Command palette</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: center;">
+          <div style="display: flex; gap: 3px;"><kbd>/</kbd></div>
+          <div style="font-size: 12px; line-height: 1.3; color: #B9C2D1;">Search cases</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: center;">
+          <div style="display: flex; gap: 3px;"><kbd>J</kbd><kbd>K</kbd></div>
+          <div style="font-size: 12px; line-height: 1.3; color: #B9C2D1;">Move through rows</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: center;">
+          <div style="display: flex; gap: 3px;"><kbd>↵</kbd></div>
+          <div style="font-size: 12px; line-height: 1.3; color: #B9C2D1;">Open the focused case</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: center;">
+          <div style="display: flex; gap: 4px; align-items: center;"><kbd>G</kbd><span style="font-size: 11px; color: #5B6472;">then</span><kbd>C</kbd></div>
+          <div style="font-size: 12px; line-height: 1.3; color: #B9C2D1;">Jump — C cases, P payments, A audit</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main style="padding: 0 0 64px;">
+
+    <sc-if value="{{ isCases }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px;">
+            <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">Cases</h1>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ caseCount }}</div>
+            <div style="margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px;">
+              <div style="display: flex; align-items: stretch; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF; min-height: 36px;">
+                <div style="display: grid; place-items: center; padding-left: 10px; color: #5B6472;">
+                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5"></circle><path d="M11.8 11.8 15.4 15.4" stroke-linecap="round"></path></svg>
+                </div>
+                <input value="{{ caseQuery }}" onChange="{{ onCaseQuery }}" placeholder="Reference, name or email" style="width: 240px; max-width: 100%; border: none; background: transparent; padding: 7px 10px; font-size: 14px;">
+              </div>
+              <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Export CSV</button>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+              <div>
+                <sc-if value="{{ f.on }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ f.pick }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 6px 11px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ f.label }} · {{ f.count }}</button>
+                </sc-if>
+                <sc-if value="{{ f.off }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ f.pick }}" style="background: #FFFFFF; color: #3A4A66; border: 1px solid #DCDFE4; border-radius: 4px; padding: 6px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #8C93A1;">{{ f.label }} · {{ f.count }}</button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 12px 24px; display: flex; flex-wrap: wrap; gap: 1px; overflow: hidden;">
+          <sc-for list="{{ pipeline }}" as="s" hint-placeholder-count="8">
+            <div style="flex: 1 1 120px; min-width: 0; border-left: 2px solid #E2E6EC; padding: 6px 10px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 500; line-height: 1.1; font-variant-numeric: tabular-nums;">{{ s.n }}</div>
+              <div style="font-size: 11px; line-height: 1.4; color: #5B6472; margin-top: 2px;">{{ s.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="padding: 0 24px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Reference</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Client</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Status</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Owner</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Fee</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Due</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ cases }}" as="c" hint-placeholder-count="8">
+                <tr onClick="{{ c.open }}" onMouseEnter="{{ c.focus }}" style="border-bottom: 1px solid #E2E6EC; cursor: pointer; background: {{ c.rowBg }};">
+                  <td style="padding: 11px 12px 11px 10px; border-left: 2px solid {{ c.rowEdge }}; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ c.ref }}</td>
+                  <td style="padding: 11px 12px; font-size: 14px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span>{{ c.client }}</span>
+                      <sc-if value="{{ c.restricted }}" hint-placeholder-val="{{ false }}">
+                        <span style="display: inline-flex; align-items: center; gap: 5px; border: 1px solid #DCDFE4; border-radius: 2px; padding: 2px 6px; background: #F1F2F4; white-space: nowrap;">
+                          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.5"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                          <span style="font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #5B6472;">Restricted</span>
+                        </span>
+                      </sc-if>
+                    </div>
+                    <div style="font-size: 12px; color: #5B6472;">{{ c.email }}</div>
+                  </td>
+                  <td style="padding: 11px 12px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; white-space: nowrap; background: {{ c.pillBg }}; border: 1px solid {{ c.pillBorder }};">
+                      <span style="width: 14px; height: 14px; display: grid; place-items: center; color: {{ c.pillFg }};">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                      </span>
+                      <span style="font-size: 12px; font-weight: 500; color: {{ c.pillFg }};">{{ c.status }}</span>
+                    </span>
+                  </td>
+                  <td style="padding: 11px 12px; font-size: 14px;">{{ c.owner }}</td>
+                  <td style="padding: 11px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ c.fee }}</td>
+                  <td style="padding: 11px 12px; text-align: right; white-space: nowrap;">
+                    <sc-if value="{{ c.overdue }}" hint-placeholder-val="{{ false }}">
+                      <span style="display: inline-flex; align-items: center; gap: 5px;">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.6"><path d="M8 2.8 14.4 13.6H1.6z" stroke-linejoin="round"></path><path d="M8 6.6v3" stroke-linecap="round"></path></svg>
+                        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8C2F2F; font-variant-numeric: tabular-nums;">{{ c.due }}</span>
+                      </span>
+                    </sc-if>
+                    <sc-if value="{{ c.onTime }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums;">{{ c.due }}</span>
+                    </sc-if>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 14px 0;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">Showing 1–8 of 214</div>
+            <div style="margin-left: auto; display: flex; gap: 6px;">
+              <button style="background: #FFFFFF; border: 1px solid #DCDFE4; border-radius: 4px; padding: 7px 12px; font-size: 13px; min-height: 36px; cursor: pointer;">Previous</button>
+              <button style="background: #FFFFFF; border: 1px solid #DCDFE4; border-radius: 4px; padding: 7px 12px; font-size: 13px; min-height: 36px; cursor: pointer;">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAssign }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 4px;">Staff assignment</h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0; max-width: 68ch;">Workload is visible before an assignment is made, and a reassignment records why. Both appear in the audit log.</p>
+        </div>
+        <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; padding: 24px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+            <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Current workload</div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr>
+                  <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 16px;">Staff</th>
+                  <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Open</th>
+                  <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Overdue</th>
+                  <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 16px; width: 200px;">Load against cap</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ staff }}" as="s" hint-placeholder-count="4">
+                  <tr style="border-bottom: 1px solid #E2E6EC;">
+                    <td style="padding: 11px 16px;">
+                      <div style="font-size: 14px; font-weight: 500;">{{ s.name }}</div>
+                      <div style="font-size: 12px; color: #5B6472;">{{ s.role }}</div>
+                    </td>
+                    <td style="padding: 11px 12px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums;">{{ s.open }}</td>
+                    <td style="padding: 11px 12px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums;">{{ s.overdue }}</td>
+                    <td style="padding: 11px 16px;">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="flex: 1; height: 4px; background: #F1F2F4;"><div style="height: 4px; width: {{ s.loadPct }}; background: #8A6512;"></div></div>
+                        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; flex: none; font-variant-numeric: tabular-nums;">{{ s.open }} / {{ s.cap }}</div>
+                      </div>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 14px;">Reassign SLC-2026-04418</div>
+            <div style="display: grid; gap: 12px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Currently assigned</label>
+                <div style="font-size: 15px;">Dr. Mohamed Raouf</div>
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Reassign to</label>
+                <select style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-size: 15px; min-height: 40px; background: #FFFFFF;">
+                  <option>Ahmed Mohammedi — 24 open</option>
+                  <option>Layla Nasser — 18 open · cannot see restricted</option>
+                  <option>Omar Farouk — 9 open · cannot see restricted</option>
+                </select>
+              </div>
+              <div style="background: #F7F0DF; border: 1px solid #E6D5A8; padding: 11px 12px;">
+                <div style="display: flex; gap: 9px; align-items: flex-start;">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.5" style="flex: none; margin-top: 2px;"><path d="M8 2.6 14.2 13.2H1.8z" stroke-linejoin="round"></path><path d="M8 6.6v3.1" stroke-linecap="round"></path></svg>
+                  <div style="font-size: 13px; line-height: 1.55; color: #12233F;">This case carries a restricted flag. A coordinator without restricted access will see the case but not the flag content, and cannot progress it.</div>
+                </div>
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Reason for reassignment</label>
+                <div style="height: 68px; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF;"></div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-top: 4px; text-align: right; font-variant-numeric: tabular-nums;">0 / 500 · required</div>
+              </div>
+              <button aria-disabled="true" style="background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 40px; cursor: not-allowed;">Reassign</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStatuses }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">Statuses</h1>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">27 internal · 8 customer-facing</div>
+            <div style="margin-left: auto; display: flex; gap: 8px;">
+              <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Add internal status</button>
+            </div>
+          </div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 10px 0 0; max-width: 72ch;">An internal status is only ever shown to staff. Every one maps to exactly one of the eight the client sees, so a client never reads an internal label. Drag to reorder within a group.</p>
+        </div>
+        <div style="padding: 24px;">
+          <sc-for list="{{ statusMap }}" as="g" hint-placeholder-count="8">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; margin-bottom: 12px;">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; flex: none; font-variant-numeric: tabular-nums;">{{ g.n }}</span>
+                <span style="font-size: 15px; font-weight: 600;">{{ g.group }}</span>
+                <span style="font-size: 12px; color: #5B6472;">customer-facing</span>
+                <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ g.count }} internal</span>
+              </div>
+              <sc-for list="{{ g.internal }}" as="i" hint-placeholder-count="3">
+                <div style="border-bottom: 1px solid #F1F2F4; padding: 10px 16px; display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 12px; align-items: center;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#B9C2D1" stroke-width="1.5"><path d="M4 5.5h8M4 8h8M4 10.5h8" stroke-linecap="round"></path></svg>
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                    <span style="font-size: 14px;">{{ i.label }}</span>
+                    <sc-if value="{{ i.restricted }}" hint-placeholder-val="{{ false }}">
+                      <span style="display: inline-flex; align-items: center; gap: 5px; border: 1px solid #DCDFE4; border-radius: 2px; padding: 2px 6px; background: #F1F2F4; white-space: nowrap;">
+                        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.6"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                        <span style="font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #5B6472;">Restricted</span>
+                      </span>
+                    </sc-if>
+                  </div>
+                  <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 13px; padding: 2px 1px; cursor: pointer;" style-hover="color: #8A6512;">Edit</button>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPaylink }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 4px;">Generate a payment link</h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0; max-width: 68ch;">A link is bound to one customer, one case, one amount and one payment stage. It cannot be generated for a case that is held.</p>
+        </div>
+        <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; padding: 24px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+            <div style="display: grid; gap: 14px; max-width: 520px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Case</label>
+                <select style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-size: 15px; min-height: 40px; background: #FFFFFF;">
+                  <option>SLC-2026-04416 — Ahmed El-Masry — Questionnaire in progress</option>
+                  <option>SLC-2026-04415 — Maria Santos — Draft review</option>
+                </select>
+                <div style="font-size: 12px; color: #5B6472; margin-top: 5px;">Held cases are excluded from this list.</div>
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Payment stage</label>
+                <div style="display: grid; gap: 6px;">
+                  <div style="border: 1px solid #8A6512; border-radius: 4px; box-shadow: inset 3px 0 0 #AD8A46; padding: 11px 14px 11px 17px; font-size: 14px; font-weight: 600;">Full professional fee</div>
+                  <div style="border: 1px solid #8C93A1; border-radius: 4px; padding: 11px 14px; font-size: 14px;">Staged — first instalment</div>
+                  <div style="border: 1px solid #8C93A1; border-radius: 4px; padding: 11px 14px; font-size: 14px;">Staged — balance</div>
+                  <div style="border: 1px solid #8C93A1; border-radius: 4px; padding: 11px 14px; font-size: 14px;">Additional approved work</div>
+                </div>
+              </div>
+              <div data-two="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Amount before VAT</label>
+                  <input value="2,199.00" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; font-variant-numeric: tabular-nums;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">VAT at 5%</label>
+                  <input value="109.95" readonly="readonly" style="width: 100%; border: 1px solid #DCDFE4; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; background: #FBF8F2; color: #3A4A66; font-variant-numeric: tabular-nums;">
+                </div>
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Link expires</label>
+                <select style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-size: 15px; min-height: 40px; background: #FFFFFF;">
+                  <option>7 days</option>
+                  <option>48 hours</option>
+                  <option>30 days</option>
+                </select>
+              </div>
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 40px; cursor: pointer; width: fit-content;">Generate link</button>
+            </div>
+          </div>
+          <div style="display: grid; gap: 16px; align-content: start;">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+              <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Generated</span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #E9EFF8; border: 1px solid #C3D4EA; border-radius: 999px; padding: 3px 9px; white-space: nowrap;">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.8"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                  <span style="font-size: 11px; font-weight: 500; color: #2A4E86;">Awaiting payment</span>
+                </span>
+              </div>
+              <div style="background: #FBF8F2; border: 1px solid #E2E6EC; padding: 11px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.6; word-break: break-all; color: #12233F;">pay.uaeexpatwills.com/l/8f3c1a94b7</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Copy link</button>
+                <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Send by email</button>
+                <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Send by WhatsApp</button>
+              </div>
+              <div style="border-top: 1px solid #E2E6EC; margin-top: 12px; padding-top: 12px; display: grid; gap: 6px; font-size: 13px; line-height: 1.5;">
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Amount</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 2,308.95</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Expires</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">25 Aug 2026</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Single use</span><span>Yes</span></div>
+              </div>
+            </div>
+            <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 14px 16px;">
+              <p style="font-size: 13px; line-height: 1.6; margin: 0;">Generating a link does not accept a matter and does not register a Will. The receipt states this too.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPayments }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px;">
+            <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">Payment history</h1>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">Aug 2026 · 42 transactions</div>
+            <button style="margin-left: auto; background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Export CSV</button>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{ payFilters }}" as="f" hint-placeholder-count="7">
+              <div>
+                <sc-if value="{{ f.on }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ f.pick }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 6px 11px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ f.label }}</button>
+                </sc-if>
+                <sc-if value="{{ f.off }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ f.pick }}" style="background: #FFFFFF; color: #3A4A66; border: 1px solid #DCDFE4; border-radius: 4px; padding: 6px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #8C93A1;">{{ f.label }}</button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 0 24px 24px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Transaction</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Client</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">State</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Method</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Amount</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ payments }}" as="p" hint-placeholder-count="7">
+                <tr style="border-bottom: 1px solid #E2E6EC;">
+                  <td style="padding: 11px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ p.txn }}</td>
+                  <td style="padding: 11px 12px; font-size: 14px;">{{ p.client }}</td>
+                  <td style="padding: 11px 12px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; white-space: nowrap; background: {{ p.bg }}; border: 1px solid {{ p.border }};">
+                      <span style="width: 13px; height: 13px; display: grid; place-items: center; color: {{ p.fg }};">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                      </span>
+                      <span style="font-size: 12px; font-weight: 500; color: {{ p.fg }};">{{ p.state }}</span>
+                    </span>
+                  </td>
+                  <td style="padding: 11px 12px; font-size: 14px;">{{ p.method }}</td>
+                  <td style="padding: 11px 12px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ p.amount }}</td>
+                  <td style="padding: 11px 12px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ p.date }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          <p style="font-size: 13px; line-height: 1.6; color: #3A4A66; margin: 14px 0 0; max-width: 72ch;">Failed and refunded transactions are never removed. A refund is recorded as its own row against the original transaction reference, so the history reconciles.</p>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isManual }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 4px;">Record a manual payment</h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0; max-width: 68ch;">Bank transfer or cash received outside the platform. Evidence is required before the record can be saved, and only a full administrator may do this.</p>
+        </div>
+        <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; padding: 24px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+            <div style="display: grid; gap: 14px; max-width: 520px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Case</label>
+                <input value="SLC-2026-04413" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; font-variant-numeric: tabular-nums;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Method</label>
+                <div style="display: grid; gap: 6px;">
+                  <div style="border: 1px solid #8A6512; border-radius: 4px; box-shadow: inset 3px 0 0 #AD8A46; padding: 11px 14px 11px 17px; font-size: 14px; font-weight: 600;">Bank transfer</div>
+                  <div style="border: 1px solid #8C93A1; border-radius: 4px; padding: 11px 14px; font-size: 14px;">Cash</div>
+                </div>
+              </div>
+              <div data-two="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Amount received</label>
+                  <input value="4,198.95" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; font-variant-numeric: tabular-nums;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Date received</label>
+                  <input value="11 Aug 2026" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; font-variant-numeric: tabular-nums;">
+                </div>
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Bank reference</label>
+                <input value="FTS-8841-2026" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; font-variant-numeric: tabular-nums;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Evidence</label>
+                <div style="border: 1px dashed #8C93A1; border-radius: 2px; padding: 16px; background: #FBF8F2;">
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#5B6472" stroke-width="1.4" style="flex: none;"><path d="M5.5 3h6l3.5 3.5v10.5h-9.5z" stroke-linejoin="round"></path><path d="M11.5 3v3.5H15" stroke-linejoin="round"></path></svg>
+                    <div style="flex: 1 1 200px; font-size: 14px;">transfer-advice-FTS-8841.pdf</div>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 3px 9px; white-space: nowrap;">
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                      <span style="font-size: 11px; font-weight: 500; color: #2E6A4E;">Attached</span>
+                    </span>
+                  </div>
+                </div>
+                <div style="font-size: 12px; color: #5B6472; margin-top: 5px;">Required. The record cannot be saved without it.</div>
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Note</label>
+                <div style="height: 68px; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF;"></div>
+              </div>
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 40px; cursor: pointer; width: fit-content;">Record payment</button>
+            </div>
+          </div>
+          <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px; align-self: start;">
+            <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">What this does</div>
+            <p style="font-size: 13px; line-height: 1.65; margin: 0 0 10px;">It writes a payment row with method Bank transfer or Cash, marks the case paid, and issues the VAT receipt to the client.</p>
+            <p style="font-size: 13px; line-height: 1.65; margin: 0;">The action, the operator and the evidence filename are written to the audit log and cannot be edited afterwards.</p>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isEditor }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">Questionnaire and routing rules</h1>
+            <span style="display: inline-flex; align-items: center; gap: 6px; background: #F7F0DF; border: 1px solid #E6D5A8; border-radius: 999px; padding: 4px 10px; white-space: nowrap;">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6"><path d="M8 2.8 14.4 13.6H1.6z" stroke-linejoin="round"></path><path d="M8 6.6v3" stroke-linecap="round"></path></svg>
+              <span style="font-size: 12px; font-weight: 500; color: #8A6512;">Draft v14 — not live</span>
+            </span>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">Live: v13 · published 11 Aug 2026</div>
+            <div style="margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px;">
+              <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Preview as a client</button>
+              <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Compare with v13</button>
+              <sc-if value="{{ canPublish }}" hint-placeholder-val="{{ true }}">
+                <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Publish v14</button>
+              </sc-if>
+              <sc-if value="{{ cannotPublish }}" hint-placeholder-val="{{ false }}">
+                <span style="display: inline-flex; align-items: center; gap: 7px; background: #F1F2F4; border: 1px solid #DCDFE4; border-radius: 4px; padding: 8px 12px; min-height: 36px;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.5" style="flex: none;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                  <span style="font-size: 13px; color: #5B6472;">Publishing needs authorisation</span>
+                </span>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+
+        <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; padding: 24px;">
+          <div style="display: grid; gap: 16px; align-content: start;">
+            <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 68ch;">Each rule reads as a sentence. A rule can test the answer in front of the client, or an answer stored earlier in the same assessment — rule R-07 below does both, which is why the same client wish can produce two different outcomes.</p>
+
+            <sc-for list="{{ rules }}" as="r" hint-placeholder-count="4">
+              <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+                <button onClick="{{ r.toggle }}" aria-expanded="{{ r.open }}" style="width: 100%; text-align: left; background: none; border: none; padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; cursor: pointer; min-height: 44px;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #8A6512; flex: none;">{{ r.id }}</span>
+                  <span style="font-size: 15px; font-weight: 600; line-height: 1.4;">{{ r.name }}</span>
+                  <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; white-space: nowrap; background: {{ r.pillBg }}; border: 1px solid {{ r.pillBorder }};">
+                    <span style="width: 13px; height: 13px; display: grid; place-items: center; color: {{ r.pillFg }};">
+                      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                    </span>
+                    <span style="font-size: 12px; font-weight: 500; color: {{ r.pillFg }};">{{ r.outcome }}</span>
+                  </span>
+                  <sc-if value="{{ r.restricted }}" hint-placeholder-val="{{ false }}">
+                    <span style="display: inline-flex; align-items: center; gap: 5px; border: 1px solid #DCDFE4; border-radius: 2px; padding: 2px 6px; background: #F1F2F4; white-space: nowrap;">
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.5"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                      <span style="font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #5B6472;">Restricted</span>
+                    </span>
+                  </sc-if>
+                  <span style="margin-left: auto; flex: none;">
+                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#8A6512" stroke-width="1.5"><polyline points="5,8 10,13 15,8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  </span>
+                </button>
+
+                <div hidden="{{ r.closed }}" style="border-top: 1px solid #E2E6EC; padding: 16px;">
+                  <sc-if value="{{ r.redacted }}" hint-placeholder-val="{{ false }}">
+                    <div style="display: flex; gap: 10px; align-items: flex-start;">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.5" style="flex: none; margin-top: 2px;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                      <div style="font-size: 14px; line-height: 1.6; color: #3A4A66; max-width: 64ch;">This rule exists and is active. Its conditions and outcome are limited to authorised legal staff, so they are not shown here.</div>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ r.noBranches }}" hint-placeholder-val="{{ true }}">
+                    <div>
+                      <sc-for list="{{ r.when }}" as="w" hint-placeholder-count="1">
+                        <div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: baseline; padding-bottom: 10px;">
+                          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8A6512;">{{ w.joiner }}</div>
+                          <div style="font-size: 15px; line-height: 1.6;">
+                            <span style="border-bottom: 1px solid #DCDFE4; padding-bottom: 1px;">{{ w.q }}</span>
+                            <span style="color: #5B6472;"> {{ w.op }} </span>
+                            <span style="font-weight: 600;">{{ w.v }}</span>
+                          </div>
+                        </div>
+                      </sc-for>
+                      <div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: baseline; border-top: 1px solid #E2E6EC; padding-top: 10px;">
+                        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8A6512;">Then</div>
+                        <div style="font-size: 15px; font-weight: 600; line-height: 1.6;">{{ r.outcome }}</div>
+                      </div>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ r.hasBranches }}" hint-placeholder-val="{{ false }}">
+                    <div>
+                      <sc-for list="{{ r.when }}" as="w" hint-placeholder-count="1">
+                        <div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: baseline; padding-bottom: 12px;">
+                          <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8A6512;">{{ w.joiner }}</div>
+                          <div style="font-size: 15px; line-height: 1.6;">
+                            <span style="border-bottom: 1px solid #DCDFE4; padding-bottom: 1px;">{{ w.q }}</span>
+                            <span style="color: #5B6472;"> {{ w.op }} </span>
+                            <span style="font-weight: 600;">{{ w.v }}</span>
+                          </div>
+                        </div>
+                      </sc-for>
+                      <div style="border-top: 1px solid #E2E6EC; padding-top: 12px;">
+                        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8A6512; margin-bottom: 10px;">Then it depends on an earlier answer</div>
+                        <sc-for list="{{ r.branches }}" as="b" hint-placeholder-count="2">
+                          <div style="display: grid; grid-template-columns: 24px minmax(0, 1fr) 200px; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">
+                            <div style="height: 1px; background: #AD8A46;"></div>
+                            <div style="font-size: 15px; line-height: 1.6;">{{ b.on }}</div>
+                            <div>
+                              <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; white-space: nowrap; background: {{ b.bg }}; border: 1px solid {{ b.border }};">
+                                <span style="width: 13px; height: 13px; display: grid; place-items: center; color: {{ b.fg }};">
+                                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                                </span>
+                                <span style="font-size: 12px; font-weight: 500; color: {{ b.fg }};">{{ b.then }}</span>
+                              </span>
+                            </div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+
+                  <div style="border-top: 1px solid #E2E6EC; margin-top: 12px; padding-top: 12px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                    <div style="flex: 1 1 320px; font-size: 13px; line-height: 1.6; color: #3A4A66; max-width: 64ch;">{{ r.note }}</div>
+                    <div style="display: flex; gap: 8px;">
+                      <button style="background: transparent; border: 1px solid #DCDFE4; border-radius: 4px; padding: 7px 12px; font-size: 13px; min-height: 36px; cursor: pointer;" style-hover="border-color: #8C93A1;">Add a condition</button>
+                      <button style="background: transparent; border: 1px solid #DCDFE4; border-radius: 4px; padding: 7px 12px; font-size: 13px; min-height: 36px; cursor: pointer;" style-hover="border-color: #8C93A1;">Test this rule</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+
+            <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px;">
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Why R-07 is built this way</div>
+              <p style="font-size: 14px; line-height: 1.65; color: #12233F; margin: 0; max-width: 68ch;">A rule that only reads the current answer cannot express “this wish is fine for one client and needs review for another”. R-07 states the wish once, then splits on the religion answer stored earlier in the same assessment. An administrator reads two sentences rather than a formula, and the branch that routes to review says so in words.</p>
+            </div>
+          </div>
+
+          <div style="display: grid; gap: 24px; align-content: start;">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Version history</div>
+              <sc-for list="{{ versions }}" as="v" hint-placeholder-count="4">
+                <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px;">
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px;">
+                    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums;">{{ v.v }}</span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 9px; white-space: nowrap; background: {{ v.bg }}; border: 1px solid {{ v.border }};">
+                      <span style="width: 12px; height: 12px; display: grid; place-items: center; color: {{ v.fg }};">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                      </span>
+                      <span style="font-size: 11px; font-weight: 500; color: {{ v.fg }};">{{ v.state }}</span>
+                    </span>
+                    <sc-if value="{{ v.canRollback }}" hint-placeholder-val="{{ false }}">
+                      <button style="margin-left: auto; background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 13px; padding: 2px 1px; cursor: pointer;" style-hover="color: #8A6512;">Roll back</button>
+                    </sc-if>
+                  </div>
+                  <div style="font-size: 13px; line-height: 1.5; margin-bottom: 4px;">{{ v.what }}</div>
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ v.at }} · {{ v.who }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Before publishing</div>
+              <div style="display: grid; gap: 10px;">
+                <div style="display: flex; gap: 9px; align-items: flex-start;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6" style="flex: none; margin-top: 2px;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <div style="font-size: 13px; line-height: 1.5;">Every question reachable from at least one path</div>
+                </div>
+                <div style="display: flex; gap: 9px; align-items: flex-start;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6" style="flex: none; margin-top: 2px;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <div style="font-size: 13px; line-height: 1.5;">Every rule resolves to one of the six outcomes</div>
+                </div>
+                <div style="display: flex; gap: 9px; align-items: flex-start;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6" style="flex: none; margin-top: 2px;"><path d="M8 2.6 14.2 13.2H1.8z" stroke-linejoin="round"></path><path d="M8 6.6v3.1" stroke-linecap="round"></path></svg>
+                  <div style="font-size: 13px; line-height: 1.5;">R-07 branch “Prefer not to say” is new in v14 and has no live data yet</div>
+                </div>
+                <div style="display: flex; gap: 9px; align-items: flex-start;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6" style="flex: none; margin-top: 2px;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <div style="font-size: 13px; line-height: 1.5;">No rule requests payment on a held outcome</div>
+                </div>
+              </div>
+              <div style="border-top: 1px solid #E2E6EC; margin-top: 12px; padding-top: 12px; font-size: 13px; line-height: 1.5; color: #3A4A66;">Publishing replaces v13 for new assessments only. A case already in progress keeps the version it started on.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isNotifications }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 4px;">Notification settings</h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0; max-width: 68ch;">WhatsApp Business Cloud API and email delivery, the two administrator numbers, working hours and countdown thresholds. Delivery is logged per notification.</p>
+        </div>
+        <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; padding: 24px;">
+          <div style="display: grid; gap: 16px; align-content: start;">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+              <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px;">
+                <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">WhatsApp Business Cloud API</div>
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 3px 9px; white-space: nowrap;">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <span style="font-size: 11px; font-weight: 500; color: #2E6A4E;">Connected</span>
+                </span>
+              </div>
+              <div style="display: grid; gap: 12px; max-width: 520px;">
+                <div data-two="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Phone number ID</label>
+                    <input value="•••• •••• 4471" readonly="readonly" style="width: 100%; border: 1px solid #DCDFE4; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px; background: #FBF8F2; color: #3A4A66;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Business account ID</label>
+                    <input value="•••• •••• 1902" readonly="readonly" style="width: 100%; border: 1px solid #DCDFE4; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px; background: #FBF8F2; color: #3A4A66;">
+                  </div>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Administrator numbers for internal alerts</label>
+                  <div style="display: grid; gap: 6px;">
+                    <input value="+971 52 466 6191" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; font-variant-numeric: tabular-nums;">
+                    <input value="+971 50 118 2240" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; font-variant-numeric: tabular-nums;">
+                  </div>
+                  <div style="font-size: 12px; color: #5B6472; margin-top: 5px;">Both receive every new-lead alert and every overdue escalation.</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 14px;">Email delivery</div>
+              <div style="display: grid; gap: 12px; max-width: 520px;">
+                <div data-two="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Sends from</label>
+                    <input value="noreply@uaeexpatwills.com" readonly="readonly" style="width: 100%; border: 1px solid #DCDFE4; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px; background: #FBF8F2; color: #3A4A66;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Replies to</label>
+                    <input value="info@uaeexpatwills.com" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 14px;">Working hours and countdowns</div>
+              <div style="display: grid; gap: 12px; max-width: 520px;">
+                <div data-two="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Working days</label>
+                    <select style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-size: 15px; min-height: 40px; background: #FFFFFF;"><option>Sunday to Thursday</option><option>Monday to Friday</option></select>
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px;">Hours, Gulf Standard Time</label>
+                    <input value="09:00 – 18:00" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-height: 40px; font-variant-numeric: tabular-nums;">
+                  </div>
+                </div>
+                <div style="display: grid; border-top: 1px solid #E2E6EC; padding-top: 10px;">
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 128px; gap: 12px; padding: 9px 0; border-bottom: 1px solid #F1F2F4; align-items: center;">
+                    <div style="font-size: 14px;">First contact on a held case</div>
+                    <input value="4 hours" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 8px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 36px;">
+                  </div>
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 128px; gap: 12px; padding: 9px 0; border-bottom: 1px solid #F1F2F4; align-items: center;">
+                    <div style="font-size: 14px;">Review decision</div>
+                    <input value="2 days" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 8px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 36px;">
+                  </div>
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 128px; gap: 12px; padding: 9px 0; align-items: center;">
+                    <div style="font-size: 14px;">First draft after complete instructions</div>
+                    <input value="2 business days" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 8px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 36px;">
+                  </div>
+                </div>
+                <div style="font-size: 12px; line-height: 1.55; color: #5B6472;">Countdowns pause outside working hours. They are internal targets and are never shown to a client as a guarantee.</div>
+              </div>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Delivery log</div>
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 16px;">Sent</th>
+                    <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Template</th>
+                    <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Channel</th>
+                    <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid #E2E6EC;">
+                    <td style="padding: 10px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap;">18 Aug · 09:14</td>
+                    <td style="padding: 10px 12px; font-size: 13px;">draft_ready</td>
+                    <td style="padding: 10px 12px; font-size: 13px;">Email</td>
+                    <td style="padding: 10px 12px;"><span style="display: inline-flex; align-items: center; gap: 6px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 3px 9px; white-space: nowrap;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 11px; font-weight: 500; color: #2E6A4E;">Delivered</span></span></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #E2E6EC;">
+                    <td style="padding: 10px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap;">18 Aug · 09:14</td>
+                    <td style="padding: 10px 12px; font-size: 13px;">draft_ready</td>
+                    <td style="padding: 10px 12px; font-size: 13px;">WhatsApp</td>
+                    <td style="padding: 10px 12px;"><span style="display: inline-flex; align-items: center; gap: 6px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 3px 9px; white-space: nowrap;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 11px; font-weight: 500; color: #2E6A4E;">Read</span></span></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #E2E6EC;">
+                    <td style="padding: 10px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap;">17 Aug · 09:05</td>
+                    <td style="padding: 10px 12px; font-size: 13px;">internal_new_lead</td>
+                    <td style="padding: 10px 12px; font-size: 13px;">WhatsApp ×2</td>
+                    <td style="padding: 10px 12px;"><span style="display: inline-flex; align-items: center; gap: 6px; background: #F8ECEA; border: 1px solid #E8C9C4; border-radius: 999px; padding: 3px 9px; white-space: nowrap;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.8"><path d="M8 2.8 14.4 13.6H1.6z" stroke-linejoin="round"></path><path d="M8 6.6v3" stroke-linecap="round"></path></svg><span style="font-size: 11px; font-weight: 500; color: #8C2F2F;">1 of 2 failed</span></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="background: #F0EBF6; border: 1px solid #D6C9E5; padding: 16px 20px; align-self: start;">
+            <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px;">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.5" style="flex: none; margin-top: 2px;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+              <div style="font-size: 14px; font-weight: 600; color: #12233F;">The restricted flag never enters a notification</div>
+            </div>
+            <p style="font-size: 13px; line-height: 1.65; margin: 0 0 10px; color: #12233F;">A capacity or influence concern raises an internal alert that says only: a case requires urgent legal attention, with its reference. It names no reason, no question and no answer.</p>
+            <p style="font-size: 13px; line-height: 1.65; margin: 0; color: #12233F;">The reason is readable only inside the case, and only by authorised legal staff. This cannot be reconfigured on this screen — it is enforced in the notification layer.</p>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isContent }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">Content management</h1>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">13 approved templates</div>
+          </div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 10px 0 0; max-width: 72ch;">Copy is editable. Page structure is not — a template cannot be restructured here, because compliance wording depends on its position on the page.</p>
+        </div>
+        <div style="padding: 24px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Page</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Template</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">State</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Last published</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ pages }}" as="p" hint-placeholder-count="13">
+                <tr style="border-bottom: 1px solid #E2E6EC;">
+                  <td style="padding: 10px 12px; font-size: 14px;">{{ p.name }}</td>
+                  <td style="padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66;">{{ p.tpl }}</td>
+                  <td style="padding: 10px 12px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 9px; white-space: nowrap; background: {{ p.bg }}; border: 1px solid {{ p.border }};">
+                      <span style="width: 12px; height: 12px; display: grid; place-items: center; color: {{ p.fg }};">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                      </span>
+                      <span style="font-size: 11px; font-weight: 500; color: {{ p.fg }};">{{ p.state }}</span>
+                    </span>
+                  </td>
+                  <td style="padding: 10px 12px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ p.at }}</td>
+                  <td style="padding: 10px 12px; text-align: right;"><button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 13px; padding: 2px 1px; cursor: pointer;" style-hover="color: #8A6512;">Edit copy</button></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px; margin-top: 16px;">
+            <p style="font-size: 14px; line-height: 1.65; margin: 0; max-width: 72ch;">Five blocks are locked against editing on every page: the ownership and licence line, the not-a-government-authority line, the registration disclaimer, the fee-exclusions sentence and the legal-notice block. Changing them requires a compliance review outside this tool.</p>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAnalytics }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">Analytics</h1>
+            <select style="border: 1px solid #8C93A1; border-radius: 2px; padding: 7px 10px; font-size: 13px; min-height: 36px; background: #FFFFFF;"><option>August 2026</option><option>Last 90 days</option></select>
+          </div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 10px 0 0; max-width: 72ch;">Operational metrics only. No client answer is aggregated in a way that could identify an individual, and the restricted flag is excluded from every count on this page.</p>
+        </div>
+        <div style="padding: 24px; display: grid; gap: 24px;">
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: #E2E6EC; border: 1px solid #E2E6EC;">
+            <div style="background: #FFFFFF; padding: 16px 20px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 500; line-height: 1.05; font-variant-numeric: tabular-nums;">932</div>
+              <div style="font-size: 12px; line-height: 1.4; color: #5B6472; margin-top: 4px;">Assessments started</div>
+            </div>
+            <div style="background: #FFFFFF; padding: 16px 20px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 500; line-height: 1.05; font-variant-numeric: tabular-nums;">318</div>
+              <div style="font-size: 12px; line-height: 1.4; color: #5B6472; margin-top: 4px;">Completed · 34.1%</div>
+            </div>
+            <div style="background: #FFFFFF; padding: 16px 20px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 500; line-height: 1.05; font-variant-numeric: tabular-nums;">42</div>
+              <div style="font-size: 12px; line-height: 1.4; color: #5B6472; margin-top: 4px;">Paid · 13.2% of completed</div>
+            </div>
+            <div style="background: #FFFFFF; padding: 16px 20px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 500; line-height: 1.05; font-variant-numeric: tabular-nums;">96,976</div>
+              <div style="font-size: 12px; line-height: 1.4; color: #5B6472; margin-top: 4px;">AED professional fees, ex VAT</div>
+            </div>
+          </div>
+
+          <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px;">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Abandonment by question</div>
+              <div style="padding: 16px;">
+                <sc-for list="{{ abandon }}" as="a" hint-placeholder-count="7">
+                  <div style="display: grid; grid-template-columns: 208px minmax(0, 1fr) 76px; gap: 12px; align-items: center; padding: 7px 0; border-bottom: 1px solid #F1F2F4;">
+                    <div style="font-size: 13px;">{{ a.q }}</div>
+                    <div style="height: 8px; background: #F1F2F4;"><div style="height: 8px; width: {{ a.w }}; background: #8A6512;"></div></div>
+                    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; text-align: right; font-variant-numeric: tabular-nums;">{{ a.n }} · {{ a.pctLabel }}</div>
+                  </div>
+                </sc-for>
+                <p style="font-size: 13px; line-height: 1.6; color: #3A4A66; margin: 12px 0 0;">The religion question is the largest single drop. It carries its privacy explanation for that reason.</p>
+              </div>
+            </div>
+
+            <div style="display: grid; gap: 24px; align-content: start;">
+              <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+                <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Route outcome split</div>
+                <div style="padding: 4px 16px 12px;">
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 12px; padding: 9px 0; border-bottom: 1px solid #F1F2F4; align-items: center;"><div style="font-size: 14px;">Continue online</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums;">212 · 66.7%</div></div>
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 12px; padding: 9px 0; border-bottom: 1px solid #F1F2F4; align-items: center;"><div style="font-size: 14px;">Held for review</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums;">71 · 22.3%</div></div>
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 12px; padding: 9px 0; border-bottom: 1px solid #F1F2F4; align-items: center;"><div style="font-size: 14px;">A different service</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums;">19 · 6.0%</div></div>
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 12px; padding: 9px 0; align-items: center;"><div style="font-size: 14px;">Cannot continue</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums;">16 · 5.0%</div></div>
+                </div>
+              </div>
+              <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+                <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Leads by source</div>
+                <div style="padding: 4px 16px 12px;">
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 12px; padding: 9px 0; border-bottom: 1px solid #F1F2F4; align-items: center;"><div style="font-size: 14px;">Google organic</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums;">431</div></div>
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 12px; padding: 9px 0; border-bottom: 1px solid #F1F2F4; align-items: center;"><div style="font-size: 14px;">Google Ads · expat-wills-aug</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums;">288</div></div>
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 12px; padding: 9px 0; border-bottom: 1px solid #F1F2F4; align-items: center;"><div style="font-size: 14px;">WhatsApp referral</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums;">154</div></div>
+                  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 12px; padding: 9px 0; align-items: center;"><div style="font-size: 14px;">Direct</div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums;">59</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isUsers }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">Users, roles and permissions</h1>
+            <button style="margin-left: auto; background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Add user</button>
+          </div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 10px 0 0; max-width: 72ch;">Two full administrators, plus restricted roles created here without code. Restricted access to the capacity or influence flag is a separate permission and is off by default.</p>
+        </div>
+        <div style="padding: 24px; display: grid; gap: 24px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+            <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Permission matrix</div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr>
+                  <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 16px;">Capability</th>
+                  <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: center; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px; width: 152px;">Full administrator</th>
+                  <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: center; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px; width: 152px;">Case coordinator</th>
+                  <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: center; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px; width: 152px;">Read only</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ perms }}" as="p" hint-placeholder-count="13">
+                  <tr style="border-bottom: 1px solid #E2E6EC;">
+                    <td style="padding: 10px 16px; font-size: 14px;">{{ p.cap }}</td>
+                    <td style="padding: 10px 12px; text-align: center;">
+                      <sc-if value="{{ p.fullYes }}" hint-placeholder-val="{{ true }}">
+                        <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 12px; color: #2E6A4E;">Allowed</span></span>
+                      </sc-if>
+                      <sc-if value="{{ p.fullNo }}" hint-placeholder-val="{{ false }}">
+                        <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.8"><path d="M4.6 8h6.8" stroke-linecap="round"></path></svg><span style="font-size: 12px; color: #5B6472;">No</span></span>
+                      </sc-if>
+                    </td>
+                    <td style="padding: 10px 12px; text-align: center;">
+                      <sc-if value="{{ p.coordYes }}" hint-placeholder-val="{{ true }}">
+                        <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 12px; color: #2E6A4E;">Allowed</span></span>
+                      </sc-if>
+                      <sc-if value="{{ p.coordNo }}" hint-placeholder-val="{{ false }}">
+                        <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.8"><path d="M4.6 8h6.8" stroke-linecap="round"></path></svg><span style="font-size: 12px; color: #5B6472;">No</span></span>
+                      </sc-if>
+                    </td>
+                    <td style="padding: 10px 12px; text-align: center;">
+                      <sc-if value="{{ p.readYes }}" hint-placeholder-val="{{ true }}">
+                        <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 12px; color: #2E6A4E;">Allowed</span></span>
+                      </sc-if>
+                      <sc-if value="{{ p.readNo }}" hint-placeholder-val="{{ false }}">
+                        <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.8"><path d="M4.6 8h6.8" stroke-linecap="round"></path></svg><span style="font-size: 12px; color: #5B6472;">No</span></span>
+                      </sc-if>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div style="background: #F1F2F4; border: 1px solid #DCDFE4; padding: 16px 20px;">
+            <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px;">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.5" style="flex: none; margin-top: 2px;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+              <div style="font-size: 14px; font-weight: 600;">What a case coordinator cannot see</div>
+            </div>
+            <p style="font-size: 13px; line-height: 1.65; margin: 0; max-width: 72ch;">The case, its client, its status and its ordinary answers — all visible. The capacity or influence answer, its trigger reason and rule R-09 are served as “Restricted — authorised legal staff only”. The record is present and countable, never invisible, so a coordinator cannot mistake a held case for an empty one. Switch the Viewing as control in the top bar to see it.</p>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAudit }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">Audit log</h1>
+            <span style="display: inline-flex; align-items: center; gap: 6px; background: #F1F2F4; border: 1px solid #DCDFE4; border-radius: 999px; padding: 4px 10px; white-space: nowrap;">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.6"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+              <span style="font-size: 12px; font-weight: 500; color: #5B6472;">Append-only</span>
+            </span>
+            <button style="margin-left: auto; background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Export CSV</button>
+          </div>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 10px 0 0; max-width: 72ch;">There is no edit or delete control on this screen for any role, including a full administrator. Entries are written by the system and retained under the retention policy.</p>
+        </div>
+        <div style="padding: 24px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">When</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Who</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Action</th>
+                <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 9px 12px;">Detail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ audit }}" as="a" hint-placeholder-count="8">
+                <tr style="border-bottom: 1px solid #E2E6EC;">
+                  <td style="padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ a.at }}</td>
+                  <td style="padding: 10px 12px; font-size: 13px; white-space: nowrap;">{{ a.who }}</td>
+                  <td style="padding: 10px 12px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 9px; white-space: nowrap; background: {{ a.bg }}; border: 1px solid {{ a.border }};">
+                      <span style="width: 12px; height: 12px; display: grid; place-items: center; color: {{ a.fg }};">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                      </span>
+                      <span style="font-size: 11px; font-weight: 500; color: {{ a.fg }};">{{ a.act }}</span>
+                    </span>
+                  </td>
+                  <td style="padding: 10px 12px; font-size: 13px; line-height: 1.5;">{{ a.detail }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <h1 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 4px;">System and retention settings</h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0; max-width: 68ch;">Retention periods are legal settings. Changing one is written to the audit log with the operator and the previous value.</p>
+        </div>
+        <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; padding: 24px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+            <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Retention</div>
+            <div style="padding: 4px 16px 16px;">
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 16px; padding: 12px 0; border-bottom: 1px solid #F1F2F4; align-items: center;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 500;">Incomplete questionnaire</div>
+                  <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">Deleted if the client never returns. Default 30 days.</div>
+                </div>
+                <input value="30 days" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 9px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px; font-variant-numeric: tabular-nums;">
+              </div>
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 16px; padding: 12px 0; border-bottom: 1px solid #F1F2F4; align-items: center;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 500;">Abandoned assessment, no account</div>
+                  <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">Device-held answers with no account attached.</div>
+                </div>
+                <input value="30 days" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 9px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px; font-variant-numeric: tabular-nums;">
+              </div>
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 16px; padding: 12px 0; border-bottom: 1px solid #F1F2F4; align-items: center;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 500;">Declined or cancelled matter</div>
+                  <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">Held for the period required by professional obligation.</div>
+                </div>
+                <input value="5 years" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 9px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px; font-variant-numeric: tabular-nums;">
+              </div>
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 16px; padding: 12px 0; border-bottom: 1px solid #F1F2F4; align-items: center;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 500;">Completed matter records</div>
+                  <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">Registered Will, translation and authority receipt.</div>
+                </div>
+                <input value="10 years" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 9px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px; font-variant-numeric: tabular-nums;">
+              </div>
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 16px; padding: 12px 0; align-items: center;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 500;">Audit log</div>
+                  <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">Append-only. Cannot be shortened below the statutory floor.</div>
+                </div>
+                <input value="10 years" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 9px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; min-height: 40px; font-variant-numeric: tabular-nums;">
+              </div>
+            </div>
+          </div>
+          <div style="display: grid; gap: 16px; align-content: start;">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">System</div>
+              <div style="display: grid; gap: 10px; font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">VAT rate</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">5%</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Standard fee, ex VAT</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 2,199.00</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">DIFC from, ex VAT</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 3,999.00</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Timezone</span><span>Gulf Standard Time</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Magic link validity</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">24 hours</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Session timeout</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">30 minutes</span></div>
+              </div>
+            </div>
+            <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px;">
+              <p style="font-size: 13px; line-height: 1.65; margin: 0;">The fee shown here drives the checkout, the receipt and the pricing page. It is not editable by a coordinator.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="background: #FFFFFF; border-bottom: 1px solid #E2E6EC; padding: 16px 24px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <button onClick="{{ backToCases }}" style="background: none; border: 1px solid #DCDFE4; border-radius: 4px; min-width: 36px; min-height: 36px; display: grid; place-items: center; cursor: pointer;" style-hover="border-color: #8C93A1;">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#12233F" stroke-width="1.5"><polyline points="9.6,3.2 4.8,8 9.6,12.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+            </button>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums;">SLC-2026-04418</div>
+            <h1 style="font-size: 20px; font-weight: 600; line-height: 1.3; margin: 0;">Priya Raghunathan</h1>
+            <span style="display: inline-flex; align-items: center; gap: 6px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 4px 10px; white-space: nowrap;">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.6"><circle cx="7.2" cy="7.2" r="4.6"></circle><path d="M10.6 10.6 13.8 13.8" stroke-linecap="round"></path></svg>
+              <span style="font-size: 12px; font-weight: 500; color: #63467F;">Under review</span>
+            </span>
+            <div style="margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px;">
+              <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Assign</button>
+              <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Change status</button>
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 8px 12px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Send payment link</button>
+            </div>
+          </div>
+        </div>
+
+        <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; padding: 24px;">
+          <div style="display: grid; gap: 24px; align-content: start;">
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline;">
+                <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Trigger reasons</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">3 itemised</div>
+              </div>
+              <sc-for list="{{ triggers }}" as="t" hint-placeholder-count="3">
+                <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; display: grid; grid-template-columns: 20px minmax(0, 1fr) 132px; gap: 12px; align-items: start;">
+                  <div style="padding-top: 2px;">
+                    <sc-if value="{{ t.visible }}" hint-placeholder-val="{{ true }}">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.5"><path d="M8 2.6 14.2 13.2H1.8z" stroke-linejoin="round"></path><path d="M8 6.6v3.1" stroke-linecap="round"></path></svg>
+                    </sc-if>
+                    <sc-if value="{{ t.hidden }}" hint-placeholder-val="{{ false }}">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.5"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                    </sc-if>
+                  </div>
+                  <div>
+                    <div style="font-size: 14px; font-weight: 500; line-height: 1.4; margin-bottom: 3px;">{{ t.title }}</div>
+                    <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">{{ t.detail }}</div>
+                  </div>
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.5; color: #5B6472;">{{ t.rule }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Assessment answers</div>
+              <sc-for list="{{ answers }}" as="a" hint-placeholder-count="8">
+                <div style="border-bottom: 1px solid #E2E6EC; padding: 10px 16px; display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 16px; align-items: baseline;">
+                  <div style="font-size: 13px; color: #5B6472; line-height: 1.5;">{{ a.q }}</div>
+                  <sc-if value="{{ a.plain }}" hint-placeholder-val="{{ true }}">
+                    <div style="font-size: 14px; line-height: 1.5;">{{ a.v }}</div>
+                  </sc-if>
+                  <sc-if value="{{ a.redacted }}" hint-placeholder-val="{{ false }}">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.5" style="flex: none;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5B6472;">Restricted — authorised legal staff only</span>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+              <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Activity log</div>
+              <sc-for list="{{ activity }}" as="a" hint-placeholder-count="6">
+                <div style="border-bottom: 1px solid #E2E6EC; padding: 10px 16px; display: grid; grid-template-columns: 148px 132px minmax(0, 1fr); gap: 16px; align-items: baseline;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ a.at }}</div>
+                  <div style="font-size: 13px; color: #3A4A66;">{{ a.who }}</div>
+                  <div style="font-size: 13px; line-height: 1.5;">{{ a.what }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display: grid; gap: 24px; align-content: start;">
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Case</div>
+              <div style="display: grid; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 12px; font-size: 13px;"><div style="color: #5B6472;">Pathway</div><div>DIFC / sensitive</div></div>
+                <div style="display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 12px; font-size: 13px;"><div style="color: #5B6472;">Owner</div><div>Dr. M. Raouf</div></div>
+                <div style="display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 12px; font-size: 13px;"><div style="color: #5B6472;">Opened</div><div style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">17 Aug 2026</div></div>
+                <div style="display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 12px; font-size: 13px;"><div style="color: #5B6472;">Payment</div><div>None requested</div></div>
+              </div>
+              <div style="border-top: 1px solid #E2E6EC; margin-top: 12px; padding-top: 12px;">
+                <div style="display: flex; gap: 8px; align-items: flex-start;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.5" style="flex: none; margin-top: 2px;"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 7.2v4" stroke-linecap="round"></path><circle cx="8" cy="4.9" r="0.6" fill="#2A4E86" stroke="none"></circle></svg>
+                  <div style="font-size: 13px; line-height: 1.5; color: #12233F;">Payment controls are disabled while a case is held. No payment link can be generated for this case.</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Countdown</div>
+              <div style="display: grid; gap: 10px;">
+                <div>
+                  <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 13px; margin-bottom: 5px;">
+                    <span>First contact</span>
+                    <span style="font-family: 'IBM Plex Mono', monospace; color: #8C2F2F; font-variant-numeric: tabular-nums;">4h overdue</span>
+                  </div>
+                  <div style="height: 3px; background: #F1F2F4;"><div style="height: 3px; width: 100%; background: #8C2F2F;"></div></div>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 13px; margin-bottom: 5px;">
+                    <span>Review decision</span>
+                    <span style="font-family: 'IBM Plex Mono', monospace; color: #3A4A66; font-variant-numeric: tabular-nums;">1d 6h left</span>
+                  </div>
+                  <div style="height: 3px; background: #F1F2F4;"><div style="height: 3px; width: 62%; background: #8A6512;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Notes and contact history</div>
+              <div style="display: grid; gap: 12px;">
+                <div style="border-left: 2px solid #E4DDCE; padding-left: 12px;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 3px; font-variant-numeric: tabular-nums;">17 Aug 2026 · 14:20 · A. Mohammedi</div>
+                  <div style="font-size: 13px; line-height: 1.5;">Called, no answer. WhatsApp sent asking for a convenient time.</div>
+                </div>
+                <div style="border-left: 2px solid #E4DDCE; padding-left: 12px;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 3px; font-variant-numeric: tabular-nums;">17 Aug 2026 · 09:05 · System</div>
+                  <div style="font-size: 13px; line-height: 1.5;">Case held automatically. Notification sent without case detail.</div>
+                </div>
+              </div>
+              <div style="border-top: 1px solid #E2E6EC; margin-top: 12px; padding-top: 12px;">
+                <div style="height: 68px; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; font-variant-numeric: tabular-nums;">0 / 2000</div>
+                  <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 8px 14px; font-size: 13px; font-weight: 500; min-height: 36px; cursor: pointer;">Add note</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cases&quot;,&quot;detail&quot;,&quot;editor&quot;],&quot;default&quot;:&quot;cases&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Admin&quot;}}">
+const NAV_GROUPS = [
+  { label: "Work", items: [
+    { id: "cases", label: "Cases", count: "214" },
+    { id: "assign", label: "Assignment", count: "4" },
+    { id: "review", label: "Awaiting review", count: "12" },
+    { id: "registration", label: "Registration", count: "18" },
+  ]},
+  { label: "Money", items: [
+    { id: "paylink", label: "Payment link", count: "" },
+    { id: "payments", label: "Payment history", count: "42" },
+    { id: "manual", label: "Manual recording", count: "" },
+  ]},
+  { label: "Configuration", items: [
+    { id: "editor", label: "Questionnaire and rules", count: "" },
+    { id: "statuses", label: "Statuses", count: "27" },
+    { id: "notifications", label: "Notifications", count: "" },
+    { id: "content", label: "Content", count: "" },
+  ]},
+  { label: "Administration", items: [
+    { id: "analytics", label: "Analytics", count: "" },
+    { id: "users", label: "Users and roles", count: "9" },
+    { id: "audit", label: "Audit log", count: "" },
+    { id: "settings", label: "Settings", count: "" },
+  ]},
+];
+
+const PILL = {
+  positive: { fg: "#2E6A4E", bg: "#EAF2ED", border: "#C4DCD0" },
+  progress: { fg: "#2A4E86", bg: "#E9EFF8", border: "#C3D4EA" },
+  attention: { fg: "#8A6512", bg: "#F7F0DF", border: "#E6D5A8" },
+  held: { fg: "#63467F", bg: "#F0EBF6", border: "#D6C9E5" },
+  critical: { fg: "#8C2F2F", bg: "#F8ECEA", border: "#E8C9C4" },
+  neutral: { fg: "#5B6472", bg: "#F1F2F4", border: "#DCDFE4" },
+};
+
+const CASES = [
+  { ref: "SLC-2026-04418", client: "Priya Raghunathan", email: "p.raghunathan@example.ae", status: "Under review", tone: "held", owner: "Dr. M. Raouf", fee: "—", due: "4h overdue", overdue: true, restricted: true },
+  { ref: "SLC-2026-04417", client: "James Whitfield", email: "j.whitfield@example.com", status: "Legal review and drafting", tone: "progress", owner: "Dr. M. Raouf", fee: "AED 2,199.00", due: "1d 6h" },
+  { ref: "SLC-2026-04416", client: "Ahmed El-Masry", email: "a.elmasry@example.com", status: "Questionnaire in progress", tone: "progress", owner: "Unassigned", fee: "AED 2,199.00", due: "3d" },
+  { ref: "SLC-2026-04415", client: "Maria Santos", email: "m.santos@example.ph", status: "Draft review", tone: "attention", owner: "A. Mohammedi", fee: "AED 2,199.00", due: "2d 4h" },
+  { ref: "SLC-2026-04414", client: "Oleg Semenov", email: "o.semenov@example.ru", status: "Terms and payment required", tone: "attention", owner: "A. Mohammedi", fee: "AED 2,199.00", due: "6h overdue", overdue: true },
+  { ref: "SLC-2026-04413", client: "Fatima Haddad", email: "f.haddad@example.lb", status: "Registration in progress", tone: "progress", owner: "Dr. M. Raouf", fee: "AED 3,999.00", due: "5d" },
+  { ref: "SLC-2026-04412", client: "David Okonkwo", email: "d.okonkwo@example.ng", status: "Completed", tone: "positive", owner: "Dr. M. Raouf", fee: "AED 2,199.00", due: "—" },
+  { ref: "SLC-2026-04411", client: "Elena Kowalski", email: "e.kowalski@example.pl", status: "Cancelled", tone: "neutral", owner: "—", fee: "Refunded", due: "—" },
+];
+
+const PIPELINE = [
+  { n: "18", label: "Assessment completed" },
+  { n: "12", label: "Under review" },
+  { n: "9", label: "Terms and payment" },
+  { n: "24", label: "Questionnaire" },
+  { n: "31", label: "Legal review" },
+  { n: "16", label: "Draft review" },
+  { n: "18", label: "Registration" },
+  { n: "86", label: "Completed" },
+];
+
+const FILTERS = [
+  { id: "all", label: "All", count: "214" },
+  { id: "mine", label: "Assigned to me", count: "38" },
+  { id: "overdue", label: "Overdue", count: "6" },
+  { id: "held", label: "Held", count: "12" },
+  { id: "unassigned", label: "Unassigned", count: "4" },
+];
+
+const ANSWERS = [
+  { q: "Service required", v: "I specifically want a DIFC Will" },
+  { q: "Age 18 or above", v: "Yes" },
+  { q: "Nationality", v: "India" },
+  { q: "Country of residence", v: "United Arab Emirates" },
+  { q: "Religion", v: "Non-Muslim" },
+  { q: "Children or dependants", v: "Yes, at least one under 18" },
+  { q: "Guardianship wishes", v: "Yes, I have someone in mind" },
+  { q: "Existing documents", v: "A Will or draft Will outside the UAE" },
+  { q: "Influence on your instructions", v: "", restricted: true },
+];
+
+const ACTIVITY = [
+  { at: "17 Aug 2026 · 14:20", who: "A. Mohammedi", what: "WhatsApp sent — request for a convenient time" },
+  { at: "17 Aug 2026 · 14:02", who: "A. Mohammedi", what: "Outbound call attempted, no answer" },
+  { at: "17 Aug 2026 · 09:07", who: "System", what: "Owner assigned to Dr. M. Raouf by routing rule R-07" },
+  { at: "17 Aug 2026 · 09:05", who: "System", what: "Case held for legal review — 3 trigger reasons recorded" },
+  { at: "17 Aug 2026 · 09:05", who: "System", what: "Notification sent to legal team without case detail" },
+  { at: "17 Aug 2026 · 09:04", who: "Client", what: "Assessment completed" },
+];
+
+const RULES = [
+  {
+    id: "R-02", name: "DIFC requested", outcome: "Hold for legal review", tone: "held",
+    when: [{ q: "What service are you looking for today?", op: "is", v: "I specifically want a DIFC Will" }],
+    note: "No payment is requested. DIFC is quoted individually.",
+  },
+  {
+    id: "R-05", name: "Existing Will outside the UAE", outcome: "Hold for legal review", tone: "held",
+    when: [{ q: "Do any of these already exist?", op: "includes", v: "A Will or draft Will outside the UAE" }],
+    note: "The two documents must be read together before a route is recommended.",
+  },
+  {
+    id: "R-07", name: "Distribution wish depends on an earlier answer", outcome: "Depends — see both branches", tone: "attention",
+    when: [{ q: "Do you want to leave a fixed share to someone outside your immediate family?", op: "is", v: "Yes" }],
+    branches: [
+      { on: "Religion (asked earlier) is Non-Muslim", then: "Continue online", tone: "positive" },
+      { on: "Religion (asked earlier) is Muslim, or Prefer not to say", then: "Hold for legal review", tone: "held" },
+    ],
+    note: "This is the rule type that needs an earlier stored answer. The client's own wish is identical in both branches; only the earlier answer changes the outcome.",
+  },
+  {
+    id: "R-09", name: "Capacity or influence concern", outcome: "Urgent review, restricted", tone: "critical",
+    when: [{ q: "Is anyone influencing what you put in your Will?", op: "is not", v: "No, these are my own wishes" }],
+    note: "Restricted. Excluded from notifications and case lists. The client screen names no reason.",
+    restricted: true,
+  },
+];
+
+const VERSIONS = [
+  { v: "v14", state: "Draft", at: "18 Aug 2026 · 09:12", who: "A. Mohammedi", what: "Added R-07 second branch for Prefer not to say", tone: "attention" },
+  { v: "v13", state: "Published", at: "11 Aug 2026 · 16:40", who: "Dr. M. Raouf", what: "Reworded the influence question and its consent line", tone: "positive" },
+  { v: "v12", state: "Archived", at: "02 Aug 2026 · 11:25", who: "A. Mohammedi", what: "Split the existing-Will question into UAE and foreign options", tone: "neutral" },
+  { v: "v11", state: "Archived", at: "24 Jul 2026 · 14:03", who: "Dr. M. Raouf", what: "Added the Prefer not to say option to the religion question", tone: "neutral" },
+];
+
+const STAFF = [
+  { name: "Dr. Mohamed Raouf", role: "Principal Legal Consultant", open: "31", overdue: "1", cap: "35", load: 89 },
+  { name: "Ahmed Mohammedi", role: "Managing Director", open: "24", overdue: "2", cap: "30", load: 80 },
+  { name: "Layla Nasser", role: "Case coordinator — restricted", open: "18", overdue: "0", cap: "30", load: 60 },
+  { name: "Omar Farouk", role: "Case coordinator — restricted", open: "9", overdue: "0", cap: "30", load: 30 },
+];
+
+const STATUS_MAP = [
+  { group: "Assessment Completed", internal: ["Assessment submitted", "Awaiting triage"] },
+  { group: "Under Review or Further Information Required", internal: ["Held — DIFC route", "Held — sensitive matter", "Held — capacity or influence (restricted)", "Further information requested", "Awaiting client reply"] },
+  { group: "Accepted, Terms and Payment Required", internal: ["Accepted — terms issued", "Payment link sent", "Payment failed — retry"] },
+  { group: "Questionnaire In Progress", internal: ["Questionnaire released", "Questionnaire partially complete"] },
+  { group: "Legal Review and Drafting", internal: ["In legal review", "Drafting", "Internal QA"] },
+  { group: "Draft Review, Amendments or Approval", internal: ["Draft sent", "Amendment round 1", "Amendment round 2", "Approved by client"] },
+  { group: "Registration Preparation or In Progress", internal: ["Translation in progress", "Submission prepared", "Lodged with authority"] },
+  { group: "Completed", internal: ["Registered and delivered", "Closed — cancelled", "Closed — declined"] },
+];
+
+const PAYMENTS = [
+  { txn: "TXN-2026-11840", client: "James Whitfield", amount: "2,308.95", date: "14 Aug 2026", method: "Card", state: "Paid", tone: "positive" },
+  { txn: "TXN-2026-11839", client: "Oleg Semenov", amount: "2,308.95", date: "13 Aug 2026", method: "Card", state: "Failed", tone: "critical" },
+  { txn: "TXN-2026-11838", client: "Maria Santos", amount: "1,154.48", date: "12 Aug 2026", method: "Card", state: "Partially Paid", tone: "attention" },
+  { txn: "TXN-2026-11837", client: "Fatima Haddad", amount: "4,198.95", date: "11 Aug 2026", method: "Bank transfer", state: "Paid", tone: "positive" },
+  { txn: "TXN-2026-11836", client: "Elena Kowalski", amount: "2,308.95", date: "08 Aug 2026", method: "Card", state: "Refunded", tone: "neutral" },
+  { txn: "TXN-2026-11835", client: "Ahmed El-Masry", amount: "2,308.95", date: "07 Aug 2026", method: "Card", state: "Pending", tone: "progress" },
+  { txn: "TXN-2026-11834", client: "Rohan Mehta", amount: "2,308.95", date: "05 Aug 2026", method: "Card", state: "Cancelled", tone: "neutral" },
+];
+
+const PERMS = [
+  { cap: "View case list and case detail", full: "yes", coord: "yes", read: "yes" },
+  { cap: "View restricted capacity or influence flag", full: "yes", coord: "no", read: "no" },
+  { cap: "Assign and reassign staff", full: "yes", coord: "yes", read: "no" },
+  { cap: "Change case status", full: "yes", coord: "yes", read: "no" },
+  { cap: "Generate a payment link", full: "yes", coord: "yes", read: "no" },
+  { cap: "Record a manual payment", full: "yes", coord: "no", read: "no" },
+  { cap: "Issue a refund", full: "yes", coord: "no", read: "no" },
+  { cap: "Edit questionnaire and routing rules", full: "yes", coord: "no", read: "no" },
+  { cap: "Publish a questionnaire version", full: "yes", coord: "no", read: "no" },
+  { cap: "Edit page content", full: "yes", coord: "yes", read: "no" },
+  { cap: "Create users and change permissions", full: "yes", coord: "no", read: "no" },
+  { cap: "View the audit log", full: "yes", coord: "no", read: "no" },
+  { cap: "Export case data", full: "yes", coord: "no", read: "no" },
+];
+
+const AUDIT = [
+  { at: "18 Aug 2026 · 09:12", who: "A. Mohammedi", act: "Rule changed", detail: "R-07 second branch added in draft v14", tone: "attention" },
+  { at: "18 Aug 2026 · 08:47", who: "L. Nasser", act: "Case accessed", detail: "SLC-2026-04417 opened — restricted fields not served", tone: "neutral" },
+  { at: "17 Aug 2026 · 16:20", who: "A. Mohammedi", act: "Permission changed", detail: "O. Farouk granted Case coordinator — restricted", tone: "attention" },
+  { at: "17 Aug 2026 · 14:20", who: "A. Mohammedi", act: "Notification sent", detail: "WhatsApp to client on SLC-2026-04418 — no case detail in body", tone: "progress" },
+  { at: "17 Aug 2026 · 09:07", who: "System", act: "Assignment", detail: "SLC-2026-04418 assigned to Dr. M. Raouf by rule R-07", tone: "progress" },
+  { at: "17 Aug 2026 · 09:05", who: "System", act: "Status changed", detail: "SLC-2026-04418 → Held — reason withheld from this log entry", tone: "held" },
+  { at: "16 Aug 2026 · 18:02", who: "Dr. M. Raouf", act: "Export", detail: "Payment history 01–16 Aug exported as CSV", tone: "neutral" },
+  { at: "16 Aug 2026 · 08:31", who: "L. Nasser", act: "Login", detail: "Signed in — 2FA verified", tone: "positive" },
+];
+
+const ABANDON = [
+  { q: "Q1 · Service required", pct: 4, n: "38" },
+  { q: "Q4 · Nationality", pct: 9, n: "84" },
+  { q: "Q6 · Religion", pct: 17, n: "158" },
+  { q: "Q9 · Existing documents", pct: 11, n: "102" },
+  { q: "Q12 · Children and dependants", pct: 7, n: "65" },
+  { q: "Q14 · Influence", pct: 6, n: "56" },
+  { q: "Declarations", pct: 12, n: "111" },
+];
+
+const SCREEN_INDEX = [
+  { id: "cases", label: "Case list", hint: "All 214 open cases · G then C" },
+  { id: "assign", label: "Staff assignment", hint: "Workload and reassignment" },
+  { id: "editor", label: "Questionnaire and routing rules", hint: "Draft v14 · publish and rollback" },
+  { id: "statuses", label: "Statuses", hint: "27 internal · 8 customer-facing" },
+  { id: "paylink", label: "Generate a payment link", hint: "Bound to case, stage and amount" },
+  { id: "payments", label: "Payment history", hint: "42 transactions · G then P" },
+  { id: "manual", label: "Manual recording", hint: "Bank transfer and cash" },
+  { id: "notifications", label: "Notification settings", hint: "WhatsApp and email delivery" },
+  { id: "content", label: "Content management", hint: "13 approved templates" },
+  { id: "analytics", label: "Analytics", hint: "Abandonment, routes, conversion" },
+  { id: "users", label: "Users, roles and permissions", hint: "Permission matrix" },
+  { id: "audit", label: "Audit log", hint: "Append-only · G then A" },
+  { id: "settings", label: "System and retention settings", hint: "Retention and fees" },
+];
+
+class Component extends DCLogic {
+  state = {
+    page: "cases", role: "authorised", filter: "all", caseQuery: "", openRule: "R-07", payFilter: "all",
+    paletteOpen: false, paletteQuery: "", paletteIdx: 0, rowIdx: 0, toast: "", gPending: false,
+  };
+
+  componentDidMount() {
+    this._onKey = e => {
+      const t = e.target;
+      const typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable);
+      const mod = e.metaKey || e.ctrlKey;
+
+      if (mod && (e.key === "k" || e.key === "K")) {
+        e.preventDefault();
+        this.setState({ paletteOpen: true, paletteQuery: "", paletteIdx: 0 });
+        return;
+      }
+      if (e.key === "Escape") {
+        if (this.state.paletteOpen) { e.preventDefault(); this.setState({ paletteOpen: false }); }
+        else if (typing && t.blur) t.blur();
+        return;
+      }
+
+      if (this.state.paletteOpen) {
+        const flat = this._flat || [];
+        if (!typing && e.key.length === 1 && !mod) {
+          e.preventDefault();
+          this.setState({ paletteQuery: this.state.paletteQuery + e.key, paletteIdx: 0 });
+          this.focusPalette();
+          return;
+        }
+        if (!typing && e.key === "Backspace") {
+          e.preventDefault();
+          this.setState({ paletteQuery: this.state.paletteQuery.slice(0, -1), paletteIdx: 0 });
+          this.focusPalette();
+          return;
+        }
+        if (e.key === "ArrowDown" || (mod && e.key === "n")) {
+          e.preventDefault();
+          this.setState({ paletteIdx: flat.length ? (this.state.paletteIdx + 1) % flat.length : 0 });
+        } else if (e.key === "ArrowUp" || (mod && e.key === "p")) {
+          e.preventDefault();
+          this.setState({ paletteIdx: flat.length ? (this.state.paletteIdx - 1 + flat.length) % flat.length : 0 });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          const item = flat[this.state.paletteIdx];
+          if (item) item.run();
+        }
+        return;
+      }
+
+      if (typing) return;
+
+      if (this.state.gPending) {
+        const k = e.key.toLowerCase();
+        const jump = { c: "cases", p: "payments", a: "audit", e: "editor", u: "users", s: "settings", n: "notifications" }[k];
+        this.setState({ gPending: false });
+        if (jump) { e.preventDefault(); this.setState({ page: jump, rowIdx: 0 }); window.scrollTo(0, 0); }
+        return;
+      }
+      if (e.key === "g" || e.key === "G") { this.setState({ gPending: true }); return; }
+
+      if (e.key === "/") {
+        e.preventDefault();
+        const input = document.querySelector('input[placeholder="Reference, name or email"]');
+        if (input) input.focus();
+        else this.setState({ paletteOpen: true, paletteQuery: "", paletteIdx: 0 });
+        return;
+      }
+
+      if (this.state.page !== "cases") return;
+      const rows = this._rowCount || 0;
+      if (e.key === "j" || e.key === "ArrowDown") {
+        e.preventDefault();
+        this.setState({ rowIdx: rows ? Math.min(this.state.rowIdx + 1, rows - 1) : 0 });
+      } else if (e.key === "k" || e.key === "ArrowUp") {
+        e.preventDefault();
+        this.setState({ rowIdx: Math.max(this.state.rowIdx - 1, 0) });
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        this.setState({ page: "detail" });
+        window.scrollTo(0, 0);
+      } else if (e.key === "a" || e.key === "A") {
+        e.preventDefault();
+        this.setState({ page: "assign" });
+        window.scrollTo(0, 0);
+      } else if (e.key === "s" || e.key === "S") {
+        e.preventDefault();
+        this.flash("Status change — opens on the focused case");
+      }
+    };
+    window.addEventListener("keydown", this._onKey);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this._onKey);
+    if (this._tt) clearTimeout(this._tt);
+  }
+
+  focusPalette() {
+    const run = () => {
+      if (this.state.paletteOpen && this._paletteInput && document.activeElement !== this._paletteInput) {
+        this._paletteInput.focus();
+        this._paletteInput.select();
+      }
+    };
+    run();
+    if (window.requestAnimationFrame) window.requestAnimationFrame(run);
+    setTimeout(run, 0);
+  }
+
+  componentDidUpdate() {
+    if (this.state.paletteOpen) this.focusPalette();
+  }
+
+  flash(text) {
+    this.setState({ toast: text });
+    if (this._tt) clearTimeout(this._tt);
+    this._tt = setTimeout(() => this.setState({ toast: "" }), 2200);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const authorised = s.role === "authorised";
+    const pq = s.paletteQuery.trim().toLowerCase();
+    const match = str => !pq || str.toLowerCase().indexOf(pq) > -1;
+    const go = id => () => {
+      this.setState({ page: id, paletteOpen: false, rowIdx: 0 });
+      window.scrollTo(0, 0);
+    };
+    const rawGroups = [
+      {
+        label: "Go to",
+        items: SCREEN_INDEX.filter(x => match(x.label) || match(x.hint)).map(x => ({
+          label: x.label, hint: x.hint, run: go(x.id),
+        })),
+      },
+      {
+        label: "Cases",
+        items: CASES.filter(c => match(c.ref) || match(c.client) || match(c.email) || match(c.status)).slice(0, 5).map(c => ({
+          label: c.ref + " · " + c.client,
+          hint: c.status + (c.restricted && authorised ? " · restricted flag" : "") + " · " + c.owner,
+          run: () => { this.setState({ page: "detail", paletteOpen: false }); window.scrollTo(0, 0); },
+        })),
+      },
+      {
+        label: "Actions",
+        items: [
+          { label: "Generate a payment link", hint: "Held cases are excluded", run: go("paylink") },
+          { label: "Record a manual payment", hint: "Bank transfer or cash · evidence required", run: go("manual") },
+          { label: "Publish questionnaire v14", hint: authorised ? "Replaces v13 for new assessments" : "Needs authorisation", run: go("editor") },
+          { label: "Export payment history", hint: "CSV · written to the audit log", run: () => { this.setState({ paletteOpen: false }); this.flash("Export queued — recorded in the audit log"); } },
+          { label: authorised ? "Switch to support staff view" : "Switch to authorised legal staff view", hint: "Changes what restricted records show", run: () => { this.setState({ role: authorised ? "support" : "authorised", paletteOpen: false }); this.flash(authorised ? "Now viewing as support staff" : "Now viewing as authorised legal staff"); } },
+        ].filter(x => match(x.label) || match(x.hint)),
+      },
+    ].filter(g => g.items.length > 0);
+
+    const flat = [];
+    rawGroups.forEach(g => g.items.forEach(i => flat.push(i)));
+    this._flat = flat;
+    const activeIdx = flat.length ? Math.min(s.paletteIdx, flat.length - 1) : 0;
+    let cursor = -1;
+    const pGroups = rawGroups.map(g => ({
+      label: g.label,
+      items: g.items.map(i => {
+        cursor += 1;
+        const at = cursor;
+        return {
+          label: i.label, hint: i.hint, run: i.run,
+          active: at === activeIdx, inactive: at !== activeIdx,
+          focus: () => this.setState({ paletteIdx: at }),
+        };
+      }),
+    }));
+
+    const tabs = [
+      { id: "cases", label: "Case list" },
+      { id: "detail", label: "Case detail" },
+      { id: "assign", label: "Assignment" },
+      { id: "editor", label: "Questionnaire and rules" },
+      { id: "statuses", label: "Statuses" },
+      { id: "paylink", label: "Payment link" },
+      { id: "payments", label: "Payment history" },
+      { id: "manual", label: "Manual recording" },
+      { id: "notifications", label: "Notifications" },
+      { id: "content", label: "Content" },
+      { id: "analytics", label: "Analytics" },
+      { id: "users", label: "Users and roles" },
+      { id: "audit", label: "Audit log" },
+      { id: "settings", label: "Settings" },
+    ];
+    return {
+      tabs: tabs.map(t => ({
+        label: t.label, on: t.id === s.page, off: t.id !== s.page,
+        pick: () => { this.setState({ page: t.id }); window.scrollTo(0, 0); },
+      })),
+      openPalette: () => this.setState({ paletteOpen: true, paletteQuery: "", paletteIdx: 0 }),
+      roleLabel: authorised ? "Authorised legal staff" : "Support staff — no restricted access",
+      toggleRole: () => this.setState({ role: authorised ? "support" : "authorised" }),
+      navGroups: NAV_GROUPS.map(g => ({
+        label: g.label,
+        items: g.items.map(i => ({
+          label: i.label, count: i.count,
+          on: i.id === s.page, off: i.id !== s.page,
+          pick: () => this.setState({ page: i.id }),
+        })),
+      })),
+      isCases: s.page === "cases",
+      isDetail: s.page === "detail",
+      paletteOpen: s.paletteOpen,
+      paletteQuery: s.paletteQuery,
+      paletteRef: el => {
+        this._paletteInput = el || null;
+        if (el) this.focusPalette();
+      },
+      onPaletteQuery: e => this.setState({ paletteQuery: e.target.value, paletteIdx: 0 }),
+      closePalette: () => this.setState({ paletteOpen: false }),
+      stop: e => e.stopPropagation(),
+      paletteGroups: pGroups,
+      paletteEmpty: flat.length === 0,
+      paletteCount: flat.length === 1 ? "1 result" : flat.length + " results",
+      toastOpen: !!s.toast,
+      toastText: s.toast,
+      isEditor: s.page === "editor",
+      isAssign: s.page === "assign",
+      isStatuses: s.page === "statuses",
+      isPaylink: s.page === "paylink",
+      isPayments: s.page === "payments",
+      isManual: s.page === "manual",
+      isNotifications: s.page === "notifications",
+      isContent: s.page === "content",
+      isAnalytics: s.page === "analytics",
+      isUsers: s.page === "users",
+      isAudit: s.page === "audit",
+      isSettings: s.page === "settings",
+      staff: STAFF.map(x => Object.assign({}, x, { loadPct: x.load + "%" })),
+      statusMap: STATUS_MAP.map((g, gi) => ({
+        group: g.group,
+        n: String(gi + 1).padStart(2, "0"),
+        count: String(g.internal.length),
+        internal: g.internal.map(i => ({
+          label: i,
+          restricted: i.indexOf("restricted") > -1,
+          plain: i.indexOf("restricted") === -1,
+        })),
+      })),
+      payments: PAYMENTS.filter(x => s.payFilter === "all" || x.state === s.payFilter).map(x => {
+        const p = PILL[x.tone];
+        return Object.assign({}, x, { fg: p.fg, bg: p.bg, border: p.border });
+      }),
+      payFilters: ["all", "Paid", "Pending", "Failed", "Partially Paid", "Refunded", "Cancelled"].map(f => ({
+        label: f === "all" ? "All" : f,
+        on: s.payFilter === f, off: s.payFilter !== f,
+        pick: () => this.setState({ payFilter: f }),
+      })),
+      perms: PERMS.map(p => ({
+        cap: p.cap,
+        fullYes: p.full === "yes", fullNo: p.full === "no",
+        coordYes: p.coord === "yes", coordNo: p.coord === "no",
+        readYes: p.read === "yes", readNo: p.read === "no",
+      })),
+      audit: AUDIT.map(a => {
+        const p = PILL[a.tone];
+        return Object.assign({}, a, { fg: p.fg, bg: p.bg, border: p.border });
+      }),
+      abandon: ABANDON.map(a => Object.assign({}, a, { w: a.pct + "%", pctLabel: a.pct + "%" })),
+      pages: [
+        { name: "Home", tpl: "home", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "How It Works", tpl: "journey", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "Do You Need a UAE Will", tpl: "profiles", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "UAE Will Options", tpl: "comparison", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "Pricing", tpl: "pricing", state: "Draft", tone: "attention", at: "11 Aug 2026" },
+        { name: "FAQs", tpl: "faq", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "About Us", tpl: "people", state: "Draft", tone: "attention", at: "—" },
+        { name: "Contact", tpl: "contact", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "Terms and Conditions", tpl: "legal", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "Privacy Policy", tpl: "legal", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "Payment and Refund Policy", tpl: "legal", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "Legal Disclaimer", tpl: "legal", state: "Published", tone: "positive", at: "13 Aug 2026" },
+        { name: "Cookie Policy", tpl: "legal", state: "Published", tone: "positive", at: "13 Aug 2026" },
+      ].map(p => {
+        const t = PILL[p.tone];
+        return Object.assign({}, p, { fg: t.fg, bg: t.bg, border: t.border });
+      }),
+      canPublish: authorised,
+      cannotPublish: !authorised,
+      rules: RULES.map(r => {
+        const p = PILL[r.tone];
+        const open = s.openRule === r.id;
+        return {
+          id: r.id, name: r.name, outcome: r.outcome, note: r.note,
+          pillFg: p.fg, pillBg: p.bg, pillBorder: p.border,
+          open: open, closed: !open,
+          restricted: !!r.restricted && authorised,
+          redacted: !!r.restricted && !authorised,
+          when: r.when.map((w, i) => ({
+            q: w.q, op: w.op, v: w.v,
+            joiner: i === 0 ? "When" : "And when",
+          })),
+          hasBranches: !!r.branches,
+          noBranches: !r.branches,
+          branches: (r.branches || []).map(b => {
+            const bp = PILL[b.tone];
+            return { on: b.on, then: b.then, fg: bp.fg, bg: bp.bg, border: bp.border };
+          }),
+          toggle: () => this.setState({ openRule: open ? "" : r.id }),
+        };
+      }),
+      versions: VERSIONS.map(v => {
+        const p = PILL[v.tone];
+        return { v: v.v, state: v.state, at: v.at, who: v.who, what: v.what,
+          fg: p.fg, bg: p.bg, border: p.border,
+          canRollback: v.state === "Archived" };
+      }),
+      caseCount: "214 open · 6 overdue",
+      caseQuery: s.caseQuery,
+      onCaseQuery: e => this.setState({ caseQuery: e.target.value }),
+      filters: FILTERS.map(f => ({
+        label: f.label, count: f.count,
+        on: f.id === s.filter, off: f.id !== s.filter,
+        pick: () => this.setState({ filter: f.id }),
+      })),
+      pipeline: PIPELINE,
+      cases: (() => {
+        const q = s.caseQuery.trim().toLowerCase();
+        const rows = CASES.filter(c => !q || (c.ref + " " + c.client + " " + c.email).toLowerCase().indexOf(q) > -1);
+        this._rowCount = rows.length;
+        const focus = rows.length ? Math.min(s.rowIdx, rows.length - 1) : 0;
+        return rows.map((c, i) => {
+          const p = PILL[c.tone];
+          return {
+            ref: c.ref, client: c.client, email: c.email, status: c.status,
+            owner: c.owner, fee: c.fee, due: c.due,
+            overdue: !!c.overdue, onTime: !c.overdue,
+            restricted: !!c.restricted && authorised,
+            pillFg: p.fg, pillBg: p.bg, pillBorder: p.border,
+            rowBg: i === focus ? "#F6F1E7" : "#FFFFFF",
+            rowEdge: i === focus ? "#AD8A46" : "transparent",
+            open: () => { this.setState({ page: "detail", rowIdx: i }); window.scrollTo(0, 0); },
+            focus: () => this.setState({ rowIdx: i }),
+          };
+        });
+      })(),
+      backToCases: () => this.setState({ page: "cases" }),
+      triggers: [
+        { title: "DIFC Will requested", detail: "Answer to service question selects the DIFC route, which cannot be sold through the standard checkout.", rule: "R-02 · service = difc", visible: true, hidden: false },
+        { title: "Existing foreign Will", detail: "A Will already exists outside the UAE and must be read alongside the new document.", rule: "R-05 · documents contains foreign_will", visible: true, hidden: false },
+        authorised
+          ? { title: "Capacity or influence concern", detail: "Client indicated they would prefer to discuss the influence question with the legal team. Handle by direct contact only.", rule: "R-09 · restricted", visible: true, hidden: false }
+          : { title: "Restricted trigger", detail: "One further trigger is recorded on this case. Its content is limited to authorised legal staff.", rule: "R-09 · restricted", visible: false, hidden: true },
+      ],
+      answers: ANSWERS.map(a => ({
+        q: a.q,
+        v: a.v,
+        plain: !a.restricted || false,
+        redacted: !!a.restricted,
+      })).map(a => a.redacted && authorised
+        ? { q: a.q, v: "Would rather discuss with the legal team", plain: true, redacted: false }
+        : a),
+      activity: ACTIVITY,
+    };
+  }
+}
+</script>
+</body>
+</html>

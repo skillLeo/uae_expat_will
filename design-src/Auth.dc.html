@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  button, input, select { font: inherit; color: inherit; }
+  input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid #8A6512; outline-offset: 2px; }
+  input:-webkit-autofill { -webkit-box-shadow: 0 0 0 40px #F2EAD8 inset; -webkit-text-fill-color: #12233F; }
+  @keyframes cardSettle { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes stepFwd { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+  @keyframes stepBack { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+  @keyframes errIn { from { opacity: 0; } to { opacity: 1; } }
+  [data-card] { animation: cardSettle 320ms cubic-bezier(.16,1,.3,1) both; }
+  [data-dir="fwd"] [data-step] { animation: stepFwd 200ms cubic-bezier(.16,1,.3,1) both; }
+  [data-dir="back"] [data-step] { animation: stepBack 200ms cubic-bezier(.16,1,.3,1) both; }
+  [data-err] { animation: errIn 160ms ease both; }
+  @media (prefers-reduced-motion: reduce) {
+    [data-card], [data-dir] [data-step], [data-err] { animation: none !important; }
+  }
+  @media (max-width: 1080px) {
+    [data-split] { grid-template-columns: minmax(0, 1fr) !important; }
+    [data-split] > [data-span] { grid-column: 1 / -1 !important; }
+    [data-manifest] { padding: 24px 24px 28px !important; }
+    [data-manifest-body] { display: none !important; }
+    [data-manifest-band] { display: block !important; }
+  }
+  @media (max-width: 719px) {
+    [data-pad] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-card-pad] { padding: 24px 16px !important; }
+    [data-two] { grid-template-columns: minmax(0, 1fr) !important; }
+  }
+</style>
+</helmet>
+
+<div style="background: #0B1729; border-bottom: 1px solid #1E3252; padding: 10px 24px;">
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; flex: none;">Deliverable 09 · authentication</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="9">
+        <div>
+          <sc-if value="{{ t.on }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ t.pick }}" style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 6px 11px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ t.label }}</button>
+          </sc-if>
+          <sc-if value="{{ t.off }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ t.pick }}" style="background: transparent; color: #B9C2D1; border: 1px solid #1E3252; border-radius: 4px; padding: 6px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #AD8A46; color: #F6F1E7;">{{ t.label }}</button>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<sc-if value="{{ isPhaseTwo }}" hint-placeholder-val="{{ false }}">
+  <div style="background: #63467F; padding: 10px 24px;">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;">
+      <span style="display: inline-flex; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 4px; padding: 5px 11px; white-space: nowrap;">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.6" style="flex: none;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+        <span style="font-size: 12px; font-weight: 600; color: #63467F;">Phase two — pending written approval</span>
+      </span>
+      <div style="font-size: 13px; color: #F0EBF6;">Customer authentication is the portal — Clause 16 exclusion 3. Designed, not approved.</div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+  <section style="background: #F7F4EE; padding: 40px 32px 96px;">
+    <div style="max-width: 1216px; margin: 0 auto;">
+      <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 40px;">
+        <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; padding-right: 20px;">Authentication at 390px</div>
+        <div style="align-self: stretch; background: #D8C69A;"></div>
+        <div style="padding-left: 32px;">
+          <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 38px; line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 16px; max-width: 24ch;">The ink panel becomes a band</h1>
+          <p style="font-size: 17px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 62ch;">The manifest collapses to one true line, the form fills the viewport, and the primary action is bottom-anchored above the keyboard rather than scrolled to. The 2FA field sets at 22px so iOS cannot zoom it on focus.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start;">
+        <div style="flex: none; width: 390px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 10px;">admin sign in · step 1</div>
+          <div style="width: 390px; background: #F7F4EE; border: 1px solid #E4DDCE; overflow: hidden; position: relative; min-height: 540px;">
+            <div style="background: #0B1729; border-bottom: 1px solid #AD8A46; padding: 16px;">
+              <dc-import name="Wordmark" direction="margin" context="header" ground="ink" hint-size="150px,28px"></dc-import>
+              <div style="font-size: 13px; line-height: 1.6; color: #B9C2D1; margin-top: 12px;">Staff access to the live matter register. Two-factor authentication is required.</div>
+            </div>
+            <div style="padding: 24px 16px 108px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Step 1 of 3</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 28px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Sign in to the case register</h2>
+              <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px;">Client accounts sign in from the client area, not here.</p>
+              <label for="m-email" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Work email address</label>
+              <input id="m-email" value="" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+              <div style="min-height: 40px; padding-top: 6px;"><div style="font-size: 13px; line-height: 1.5; color: #5B6472;">Use the address Summit issued you.</div></div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #FFFFFF; border-top: 1px solid #E2E6EC; padding: 12px 16px 20px; box-shadow: 0 1px 2px rgba(18,35,63,.05);">
+              <button aria-disabled="true" style="width: 100%; background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: not-allowed;">Continue</button>
+              <div style="font-size: 12px; line-height: 1.5; color: #5B6472; margin-top: 8px;">Enter your email address to continue.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex: none; width: 390px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 10px;">two-factor · 22px, no zoom</div>
+          <div style="width: 390px; background: #F7F4EE; border: 1px solid #E4DDCE; overflow: hidden; position: relative; min-height: 540px;">
+            <div style="background: #0B1729; border-bottom: 1px solid #AD8A46; padding: 16px;">
+              <dc-import name="Wordmark" direction="margin" context="header" ground="ink" hint-size="150px,28px"></dc-import>
+            </div>
+            <div style="padding: 24px 16px 108px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">Step 3 of 3 · required</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 10px;">Enter the code from your authenticator</h2>
+              <p style="font-size: 15px; line-height: 1.6; color: #3A4A66; margin: 0 0 18px;">You can paste it — the field takes all six digits at once.</p>
+              <label for="m-code" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;">Six-digit code</label>
+              <input id="m-code" value="418" inputmode="numeric" autocomplete="one-time-code" maxlength="6" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 13px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 22px; letter-spacing: 0.34em; min-height: 56px; background: #FFFFFF; font-variant-numeric: tabular-nums;">
+              <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <div style="flex: 1; height: 2px; background: #AD8A46;"></div>
+                <div style="flex: 1; height: 2px; background: #AD8A46;"></div>
+                <div style="flex: 1; height: 2px; background: #AD8A46;"></div>
+                <div style="flex: 1; height: 2px; background: #E4DDCE;"></div>
+                <div style="flex: 1; height: 2px; background: #E4DDCE;"></div>
+                <div style="flex: 1; height: 2px; background: #E4DDCE;"></div>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; padding-top: 8px;">
+                <div style="font-size: 13px; color: #5B6472;">3 of 6 digits entered</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8A6512; font-variant-numeric: tabular-nums;">expires in 0:22</div>
+              </div>
+              <div style="border-top: 1px solid #E4DDCE; margin-top: 16px; padding-top: 14px;">
+                <div style="font-size: 14px; font-weight: 500; color: #12233F; border-bottom: 1px solid #8A6512; display: inline-block; padding-bottom: 1px;">Use a backup code instead</div>
+              </div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #FFFFFF; border-top: 1px solid #E2E6EC; padding: 12px 16px 20px;">
+              <button aria-disabled="true" style="width: 100%; background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: not-allowed;">Verify and sign in</button>
+              <div style="font-size: 12px; line-height: 1.5; color: #5B6472; margin-top: 8px;">3 more digits needed.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex: none; width: 390px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 10px;">locked · real countdown</div>
+          <div style="width: 390px; background: #F7F4EE; border: 1px solid #E4DDCE; overflow: hidden; min-height: 540px;">
+            <div style="background: #0B1729; border-bottom: 1px solid #AD8A46; padding: 16px;">
+              <dc-import name="Wordmark" direction="margin" context="header" ground="ink" hint-size="150px,28px"></dc-import>
+            </div>
+            <div style="padding: 24px 16px;">
+              <span style="display: inline-flex; align-items: center; gap: 8px; background: #F8ECEA; border: 1px solid #E8C9C4; border-radius: 999px; padding: 5px 12px; margin-bottom: 14px; white-space: nowrap;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.6"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                <span style="font-size: 12px; font-weight: 500; color: #8C2F2F;">Sign-in paused</span>
+              </span>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 10px;">Five attempts failed, so sign-in is paused</h2>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 18px;">Your account is not disabled and nothing has been lost.</p>
+              <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 18px;">
+                <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 8px;">Next attempt permitted in</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 34px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums;">13:42</div>
+                <div style="height: 2px; background: #E4DDCE; margin-top: 12px;"><div style="height: 2px; width: 38%; background: #AD8A46;"></div></div>
+              </div>
+              <div style="border-top: 1px solid #E4DDCE; margin-top: 18px; padding-top: 16px;">
+                <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">If you cannot wait</div>
+                <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px;">Either administrator can clear the lock immediately.</p>
+                <div style="display: grid; gap: 8px;">
+                  <a href="mailto:info@uaeexpatwills.com" style="font-family: 'IBM Plex Mono', monospace; font-size: 14px;">info@uaeexpatwills.com</a>
+                  <a href="https://wa.me/971524666191" style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-variant-numeric: tabular-nums;">+971 52 466 6191</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ showSplit }}" hint-placeholder-val="{{ true }}">
+<div data-split="1" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: stretch;">
+
+  <div data-manifest="1" data-span="1" style="grid-column: 1 / span 5; background: #0B1729; padding: 48px 40px; border-right: 2px solid #AD8A46; display: flex; flex-direction: column;">
+    <div>
+      <dc-import name="Wordmark" direction="margin" context="lockup" ground="ink" hint-size="280px,90px"></dc-import>
+    </div>
+
+    <div data-manifest-band="1" style="display: none; margin-top: 20px;">
+      <div style="font-size: 14px; line-height: 1.6; color: #B9C2D1;">{{ bandLine }}</div>
+    </div>
+
+    <div data-manifest-body="1" style="margin-top: 36px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; margin-bottom: 14px;">{{ manifestTitle }}</div>
+      <p style="font-size: 15px; line-height: 1.65; color: #B9C2D1; margin: 0 0 24px; max-width: 44ch;">{{ manifestLede }}</p>
+      <div style="border-top: 1px solid #1E3252;">
+        <sc-for list="{{ manifest }}" as="m" hint-placeholder-count="8">
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; padding: 10px 0; border-bottom: 1px solid {{ m.rule }}; align-items: baseline;">
+            <div style="font-size: 14px; line-height: 1.5; color: #B9C2D1;">{{ m.label }}</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #F6F1E7; text-align: right; font-variant-numeric: tabular-nums;">{{ m.value }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div data-manifest-body="1" style="padding-top: 32px;">
+      <div style="font-size: 12px; line-height: 1.7; color: #B9C2D1; max-width: 44ch;">Owned and operated by Summit Legal Consultancy UAE · Trade Licence No. 4429232.01</div>
+      <div style="font-size: 12px; line-height: 1.7; color: #5B6472; margin-top: 8px; max-width: 44ch;">UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority.</div>
+    </div>
+  </div>
+
+  <div data-pad="1" data-span="1" style="grid-column: 6 / span 7; background: #F7F4EE; padding: 48px 40px; display: flex; align-items: center; justify-content: center;">
+    <div data-dir="{{ dir }}" style="width: 100%; max-width: 560px;">
+
+      <sc-if value="{{ isSignin }}" hint-placeholder-val="{{ true }}">
+        <div data-card="1" data-step="1" style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+          <div data-card-pad="1" style="padding: 32px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">{{ stepLabel }}</div>
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">{{ signinTitle }}</h1>
+            <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 28px; max-width: 52ch;">{{ signinLede }}</p>
+
+            <sc-if value="{{ hasFormError }}" hint-placeholder-val="{{ false }}">
+              <div data-err="1" ref="{{ errRef }}" tabindex="-1" role="alert" aria-live="assertive" style="background: #F8ECEA; border: 1px solid #E8C9C4; border-radius: 4px; padding: 14px 16px; margin-bottom: 20px; outline-offset: 2px;">
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.6" style="flex: none; margin-top: 2px;"><path d="M8 2.8 14.4 13.6H1.6z" stroke-linejoin="round"></path><path d="M8 6.6v3" stroke-linecap="round"></path></svg>
+                  <div>
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 3px;">{{ formErrorTitle }}</div>
+                    <div style="font-size: 14px; line-height: 1.6;">{{ formErrorBody }}</div>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ atEmail }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <div style="margin-bottom: 20px;">
+                  <label for="au-email" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Work email address</label>
+                  <input id="au-email" value="{{ email }}" onChange="{{ onEmail }}" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" style="width: 100%; border: 1px solid {{ emailBorder }}; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+                  <div style="min-height: 40px; padding-top: 6px;">
+                    <sc-if value="{{ emailBad }}" hint-placeholder-val="{{ false }}">
+                      <div data-err="1" style="display: flex; gap: 7px; align-items: flex-start;">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.6" style="flex: none; margin-top: 2px;"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 5v3.6" stroke-linecap="round"></path><circle cx="8" cy="11" r="0.7" fill="#8C2F2F" stroke="none"></circle></svg>
+                        <div style="font-size: 13px; line-height: 1.5; color: #8C2F2F;">{{ emailError }}</div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ emailOk }}" hint-placeholder-val="{{ true }}">
+                      <div style="font-size: 13px; line-height: 1.5; color: #5B6472;">Use the address Summit issued you. Personal addresses cannot access the case register.</div>
+                    </sc-if>
+                  </div>
+                </div>
+                <sc-if value="{{ canEmail }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ toPassword }}" style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Continue</button>
+                </sc-if>
+                <sc-if value="{{ cannotEmail }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                    <button aria-disabled="true" style="flex: 1 1 200px; background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: not-allowed;">Continue</button>
+                    <div style="font-size: 13px; line-height: 1.5; color: #5B6472; flex: 1 1 160px;">Enter your email address to continue.</div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ atPassword }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div style="background: #FBF8F2; border: 1px solid #E2E6EC; border-radius: 4px; padding: 11px 14px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                  <div style="flex: 1 1 200px; min-width: 0;">
+                    <div style="font-size: 12px; color: #5B6472; margin-bottom: 2px;">Signing in as</div>
+                    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; word-break: break-all;">{{ email }}</div>
+                  </div>
+                  <button onClick="{{ toEmail }}" style="flex: none; background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 1px; cursor: pointer;" style-hover="color: #8A6512;">Change</button>
+                </div>
+
+                <div style="margin-bottom: 8px;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 6px;">
+                    <label for="au-pass" style="font-size: 14px; font-weight: 500;">Password</label>
+                    <button onClick="{{ toggleReveal }}" aria-pressed="{{ revealed }}" aria-controls="au-pass" style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 13px; padding: 3px 1px; cursor: pointer;" style-hover="color: #8A6512;">{{ revealLabel }}</button>
+                  </div>
+                  <input id="au-pass" type="{{ passType }}" value="{{ pass }}" onChange="{{ onPass }}" onKeyUp="{{ onPassKey }}" autocomplete="current-password" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+                  <div style="min-height: 40px; padding-top: 6px;">
+                    <sc-if value="{{ capsOn }}" hint-placeholder-val="{{ false }}">
+                      <div data-err="1" style="display: flex; gap: 7px; align-items: flex-start;">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6" style="flex: none; margin-top: 2px;"><path d="M8 3.2 12.4 8H3.6z" stroke-linejoin="round"></path><path d="M4.6 11.4h6.8" stroke-linecap="round"></path></svg>
+                        <div style="font-size: 13px; line-height: 1.5; color: #8A6512;">Caps Lock is on. Passwords are case sensitive.</div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ capsOff }}" hint-placeholder-val="{{ true }}">
+                      <div style="font-size: 13px; line-height: 1.5; color: #5B6472;">Your password manager can fill this. Nothing is submitted until you press Sign in.</div>
+                    </sc-if>
+                  </div>
+                </div>
+
+                <div style="border-top: 1px solid #E2E6EC; padding-top: 16px; margin-bottom: 20px;">
+                  <div style="font-size: 14px; font-weight: 500; margin-bottom: 4px;">Keep me signed in for</div>
+                  <p style="font-size: 13px; line-height: 1.55; color: #5B6472; margin: 0 0 10px;">Choose the shortest that suits how you work. A shared or public machine should use the first option.</p>
+                  <div style="display: grid; gap: 6px;">
+                    <sc-for list="{{ sessionOpts }}" as="o" hint-placeholder-count="3">
+                      <div>
+                        <sc-if value="{{ o.on }}" hint-placeholder-val="{{ false }}">
+                          <div onClick="{{ o.pick }}" style="border: 1px solid #8A6512; border-radius: 4px; box-shadow: inset 3px 0 0 #AD8A46; padding: 11px 14px 11px 17px; min-height: 44px; cursor: pointer;">
+                            <div style="font-size: 15px; font-weight: 600; line-height: 1.4;">{{ o.label }}</div>
+                            <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">{{ o.note }}</div>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ o.off }}" hint-placeholder-val="{{ true }}">
+                          <div onClick="{{ o.pick }}" style="border: 1px solid #8C93A1; border-radius: 4px; padding: 11px 14px; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">
+                            <div style="font-size: 15px; line-height: 1.4;">{{ o.label }}</div>
+                            <div style="font-size: 13px; line-height: 1.5; color: #5B6472;">{{ o.note }}</div>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <sc-if value="{{ submitting }}" hint-placeholder-val="{{ false }}">
+                  <div>
+                    <div aria-busy="true" style="width: 100%; background: #0B1729; color: #F6F1E7; border: 1px solid #0B1729; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; text-align: center;">Signing in</div>
+                    <div style="height: 2px; background: #E4DDCE; margin-top: 6px;"><div style="height: 2px; width: 62%; background: #AD8A46;"></div></div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ notSubmitting }}" hint-placeholder-val="{{ true }}">
+                  <div>
+                    <button onClick="{{ submit }}" style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Sign in</button>
+                    <div style="height: 2px; margin-top: 6px;"></div>
+                  </div>
+                </sc-if>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; align-items: center;">
+                  <button onClick="{{ goForgot }}" style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 1px; cursor: pointer;" style-hover="color: #8A6512;">I have forgotten my password</button>
+                  <sc-if value="{{ hasFormError }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ clearError }}" style="margin-left: auto; background: none; border: 1px dashed #B9C2D1; border-radius: 4px; color: #5B6472; font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 6px 10px; cursor: pointer;">clear the failed state</button>
+                  </sc-if>
+                  <sc-if value="{{ noFormError }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ demoError }}" style="margin-left: auto; background: none; border: 1px dashed #B9C2D1; border-radius: 4px; color: #5B6472; font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 6px 10px; cursor: pointer;">preview the failed state</button>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="border-top: 1px solid #E2E6EC; padding: 14px 32px; background: #FBF8F2;">
+            <div style="font-size: 12px; line-height: 1.65; color: #3A4A66;">Two-factor authentication is required for every administrator. Sessions are held in an HTTP-only cookie, sign-in attempts are rate limited, and every sign-in is written to the audit log.</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTwoFactor }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+          <div data-card-pad="1" style="padding: 32px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Step 3 of 3 · required</div>
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Enter the code from your authenticator</h1>
+            <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 52ch;">Six digits, from the app you enrolled. You can paste it — the field takes the whole code at once.</p>
+
+            <sc-if value="{{ codeBad }}" hint-placeholder-val="{{ false }}">
+              <div data-err="1" tabindex="-1" style="background: #F8ECEA; border: 1px solid #E8C9C4; border-radius: 4px; padding: 14px 16px; margin-bottom: 20px;">
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.6" style="flex: none; margin-top: 2px;"><path d="M8 2.8 14.4 13.6H1.6z" stroke-linejoin="round"></path><path d="M8 6.6v3" stroke-linecap="round"></path></svg>
+                  <div>
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 3px;">That code did not match</div>
+                    <div style="font-size: 14px; line-height: 1.6;">Your code is still in the field so you can correct a digit rather than retype all six. Codes change every 30 seconds — if yours has just rolled over, use the new one. Two attempts remain before a short lockout.</div>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+            <label for="au-code" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;">Six-digit code</label>
+            <div style="position: relative; margin-bottom: 4px;">
+              <input id="au-code" value="{{ code }}" onChange="{{ onCode }}" inputmode="numeric" autocomplete="one-time-code" maxlength="6" style="width: 100%; border: 1px solid {{ codeBorder }}; border-radius: 2px; padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 26px; letter-spacing: 0.42em; min-height: 60px; background: #FFFFFF; font-variant-numeric: tabular-nums;">
+            </div>
+            <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+              <sc-for list="{{ codeSlots }}" as="s" hint-placeholder-count="6">
+                <div style="flex: 1; height: 2px; background: {{ s.colour }};"></div>
+              </sc-for>
+            </div>
+            <div style="min-height: 40px; padding-top: 6px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline;">
+              <div style="font-size: 13px; line-height: 1.5; color: #5B6472;">{{ codeCountLabel }}</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8A6512; font-variant-numeric: tabular-nums;">expires in {{ codeExpiry }}</div>
+            </div>
+
+            <sc-if value="{{ codeComplete }}" hint-placeholder-val="{{ false }}">
+              <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Verify and sign in</button>
+            </sc-if>
+            <sc-if value="{{ codeIncomplete }}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                <button aria-disabled="true" style="flex: 1 1 200px; background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: not-allowed;">Verify and sign in</button>
+                <div style="font-size: 13px; line-height: 1.5; color: #5B6472; flex: 1 1 160px;">{{ codeNeedLabel }}</div>
+              </div>
+            </sc-if>
+
+            <div style="border-top: 1px solid #E2E6EC; margin-top: 20px; padding-top: 16px; display: grid; gap: 10px;">
+              <button onClick="{{ goBackup }}" style="text-align: left; background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; font-weight: 500; padding: 4px 1px; cursor: pointer; width: fit-content;" style-hover="color: #8A6512;">Use a backup code instead</button>
+              <div style="font-size: 13px; line-height: 1.55; color: #5B6472; max-width: 56ch;">A backup code works exactly the same way and is single use. It is not a lesser route — use it if your phone is not with you.</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isBackup }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+          <div data-card-pad="1" style="padding: 32px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Backup code</div>
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Enter one of your backup codes</h1>
+            <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 52ch;">Ten codes were issued when you enrolled. Each works once. Hyphens are optional.</p>
+            <label for="au-backup" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Backup code</label>
+            <input id="au-backup" value="" placeholder="" autocomplete="off" spellcheck="false" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 13px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 20px; letter-spacing: 0.12em; min-height: 52px; background: #FFFFFF; font-variant-numeric: tabular-nums;">
+            <div style="min-height: 40px; padding-top: 6px;">
+              <div style="font-size: 13px; line-height: 1.5; color: #5B6472;">Eleven characters, in the form 4f9c-22a1-8b. Seven of your ten codes remain unused.</div>
+            </div>
+            <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Verify and sign in</button>
+            <div style="border-top: 1px solid #E2E6EC; margin-top: 20px; padding-top: 16px;">
+              <button onClick="{{ go2fa }}" style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 1px; cursor: pointer;" style-hover="color: #8A6512;">Back to the authenticator code</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isEnrol }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="display: grid; gap: 16px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Required before first use</div>
+              <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Set up two-factor authentication</h1>
+              <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 52ch;">The case register holds clients' family and asset information, so two-factor is not optional for staff accounts.</p>
+              <div data-two="1" style="display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 24px; align-items: start;">
+                <div style="width: 168px; height: 168px; background: repeating-linear-gradient(45deg, #F1EDE4, #F1EDE4 5px, #FBF8F2 5px, #FBF8F2 10px); border: 1px solid #E4DDCE; display: grid; place-items: center; padding: 12px;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; line-height: 1.7; color: #5B6472; text-align: center;">QR code<br>rendered<br>server-side</div>
+                </div>
+                <div>
+                  <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Scan with your authenticator app</div>
+                  <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">Any TOTP app works — 1Password, Authy, Google Authenticator.</p>
+                  <div style="font-size: 13px; font-weight: 500; margin-bottom: 5px;">Or enter this key by hand</div>
+                  <div style="background: #FBF8F2; border: 1px solid #E2E6EC; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.06em; word-break: break-all;">JBSW Y3DP EHPK 3PXP 4F9C</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+            <div data-card-pad="1" style="padding: 32px;">
+              <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 8px;">Save your backup codes</h2>
+              <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 56ch;">Ten single-use codes. Keep them somewhere that is not your phone — a password manager, or printed and locked away. They are shown once.</p>
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; border: 1px solid #E2E6EC; background: #FBF8F2; padding: 14px 16px; margin-bottom: 16px;">
+                <sc-for list="{{ backupCodes }}" as="c" hint-placeholder-count="10">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.06em; font-variant-numeric: tabular-nums;">{{ c }}</div>
+                </sc-for>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+                <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;">Copy all codes</button>
+                <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;">Download as a text file</button>
+              </div>
+              <div style="border-top: 1px solid #E2E6EC; padding-top: 16px;">
+                <div style="display: flex; gap: 11px; align-items: flex-start; margin-bottom: 16px;">
+                  <input type="checkbox" checked="{{ savedCodes }}" onChange="{{ toggleSaved }}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F; flex: none;">
+                  <div style="font-size: 15px; line-height: 1.65;">I have saved these codes somewhere I can reach without this device.</div>
+                </div>
+                <sc-if value="{{ savedCodes }}" hint-placeholder-val="{{ false }}">
+                  <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Finish setting up</button>
+                </sc-if>
+                <sc-if value="{{ notSavedCodes }}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                    <button aria-disabled="true" style="flex: 1 1 200px; background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: not-allowed;">Finish setting up</button>
+                    <div style="font-size: 13px; line-height: 1.5; color: #5B6472; flex: 1 1 200px;">Confirm you have saved the codes. They cannot be shown again.</div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="display: grid; gap: 16px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Password reset · step 1</div>
+              <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Request a reset link</h1>
+              <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 52ch;">We send a single-use link that is valid for one hour.</p>
+              <label for="au-forgot" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Work email address</label>
+              <input id="au-forgot" value="m.raouf@summitlegal.ae" inputmode="email" autocomplete="username" spellcheck="false" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+              <div style="min-height: 40px; padding-top: 6px;"><div style="font-size: 13px; line-height: 1.5; color: #5B6472;">The link goes to this address only. We cannot send it anywhere else.</div></div>
+              <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Send the reset link</button>
+            </div>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Step 2 · after sending</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 10px;">Check that inbox</h2>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 56ch;">If an administrator account exists for that address, a reset link is on its way. It is valid for one hour and can be used once.</p>
+              <p style="font-size: 14px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px; max-width: 56ch;">We do not say whether an account exists for a given address. That is deliberate — confirming it would let anyone test which staff addresses are real.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                <button aria-disabled="true" style="background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: not-allowed;">Send it again</button>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums;">available in 0:48</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Step 3 · from the link</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 20px;">Set a new password</h2>
+              <label for="au-new" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">New password</label>
+              <input id="au-new" type="password" value="••••••••••••••••••" autocomplete="new-password" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+              <div style="display: flex; gap: 4px; margin-top: 8px;">
+                <div style="height: 3px; flex: 1; background: #2E6A4E;"></div>
+                <div style="height: 3px; flex: 1; background: #2E6A4E;"></div>
+                <div style="height: 3px; flex: 1; background: #2E6A4E;"></div>
+                <div style="height: 3px; flex: 1; background: #2E6A4E;"></div>
+              </div>
+              <div style="min-height: 40px; padding-top: 6px;">
+                <div style="display: flex; gap: 7px; align-items: flex-start;">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.7" style="flex: none; margin-top: 2px;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <div style="font-size: 13px; line-height: 1.5;"><strong style="font-weight: 600;">Strong.</strong> Around 78 bits of entropy — long enough that guessing it is not realistic.</div>
+                </div>
+              </div>
+              <div style="background: #F7F0DF; border: 1px solid #E6D5A8; padding: 12px 14px; margin-bottom: 16px;">
+                <div style="font-size: 13px; line-height: 1.6; color: #12233F;">Setting a new password signs out every other session on your account, including your phone.</div>
+              </div>
+              <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Save and sign in</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isLocked }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="display: grid; gap: 16px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+            <div data-card-pad="1" style="padding: 32px;">
+              <span style="display: inline-flex; align-items: center; gap: 8px; background: #F8ECEA; border: 1px solid #E8C9C4; border-radius: 999px; padding: 5px 12px; margin-bottom: 16px; white-space: nowrap;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.6"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                <span style="font-size: 12px; font-weight: 500; color: #8C2F2F;">Sign-in paused</span>
+              </span>
+              <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Five attempts failed, so sign-in is paused</h1>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 20px; max-width: 56ch;">This protects the case register from someone guessing a password. Your account is not disabled and nothing has been lost.</p>
+              <div style="background: #FBF8F2; border: 1px solid #E2E6EC; padding: 20px; margin-bottom: 20px;">
+                <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 10px;">Next attempt permitted in</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 40px; font-weight: 500; line-height: 1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums;">{{ lockClock }}</div>
+                <div style="height: 2px; background: #E4DDCE; margin-top: 14px;"><div style="height: 2px; width: {{ lockPct }}; background: #AD8A46;"></div></div>
+                <div style="font-size: 13px; line-height: 1.55; color: #3A4A66; margin-top: 10px;">The wait doubles with each further failed attempt, to a maximum of one hour.</div>
+              </div>
+              <div style="border-top: 1px solid #E2E6EC; padding-top: 16px;">
+                <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">If you cannot wait</div>
+                <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 14px; max-width: 56ch;">Either administrator can clear the lock immediately. Send them your email address and the time you tried — they will find the attempt in the audit log.</p>
+                <div style="display: grid; gap: 8px;">
+                  <a href="mailto:info@uaeexpatwills.com" style="font-family: 'IBM Plex Mono', monospace; font-size: 14px;">info@uaeexpatwills.com</a>
+                  <a href="https://wa.me/971524666191" style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-variant-numeric: tabular-nums;">+971 52 466 6191</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">A different case</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 10px;">This account has been disabled</h2>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 56ch;">Ahmed Mohammedi disabled this account on 16 August 2026. Sign-in will not succeed until it is re-enabled, and the reason is recorded in the audit log rather than shown here.</p>
+              <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 14px; max-width: 56ch;">If you believe this is a mistake, contact Ahmed Mohammedi directly. A password reset will not help.</p>
+              <a href="mailto:info@uaeexpatwills.com" style="font-family: 'IBM Plex Mono', monospace; font-size: 14px;">info@uaeexpatwills.com</a>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSession }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="display: grid; gap: 16px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+            <div data-card-pad="1" style="padding: 32px;">
+              <span style="display: inline-flex; align-items: center; gap: 8px; background: #F7F0DF; border: 1px solid #E6D5A8; border-radius: 999px; padding: 5px 12px; margin-bottom: 16px; white-space: nowrap;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                <span style="font-size: 12px; font-weight: 500; color: #8A6512;">Before it expires</span>
+              </span>
+              <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">You will be signed out in two minutes</h1>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 8px; max-width: 56ch;">Unsaved note text on the case you have open is kept and will still be there when you sign back in.</p>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 32px; font-weight: 500; line-height: 1; margin: 16px 0; font-variant-numeric: tabular-nums;">1:57</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Stay signed in</button>
+                <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;">Sign out now</button>
+              </div>
+            </div>
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #5B6472; margin-bottom: 14px;">After it expires</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 10px;">Your session has ended</h2>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 16px; max-width: 56ch;">You were signed out after 30 minutes without activity. Sign in again and you will return to the case you had open — SLC-2026-04418.</p>
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Sign in again</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCCreate }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+          <div style="border-bottom: 1px solid #E2E6EC; padding: 16px 32px; background: #FBF8F2;">
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 8px;">
+              <span style="display: inline-flex; align-items: center; gap: 8px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 4px 10px; white-space: nowrap;">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.7"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                <span style="font-size: 12px; font-weight: 500; color: #2E6A4E;">Assessment completed</span>
+              </span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums;">SLC-2026-04418</span>
+            </div>
+            <div style="font-size: 14px; line-height: 1.6; color: #12233F;">You may continue through our online service. This account picks up where the assessment left off — your nine answers are already saved against it.</div>
+          </div>
+          <div data-card-pad="1" style="padding: 32px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Step 1 of 4</div>
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Finish opening your matter</h1>
+            <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 28px; max-width: 52ch;">You are not starting again. This gives your answers and documents somewhere secure to live, and lets you leave and return.</p>
+
+            <div style="display: grid; gap: 20px;">
+              <div>
+                <label for="cu-name" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Full legal name, as printed on your passport</label>
+                <input id="cu-name" value="" autocomplete="name" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+                <div style="min-height: 40px; padding-top: 6px;"><div style="font-size: 13px; line-height: 1.5; color: #5B6472;">Middle names included. An authority will return an application where this differs from the passport.</div></div>
+              </div>
+              <div>
+                <label for="cu-email" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Email address</label>
+                <input id="cu-email" value="" inputmode="email" autocomplete="email" spellcheck="false" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+                <div style="min-height: 40px; padding-top: 6px;"><div style="font-size: 13px; line-height: 1.5; color: #5B6472;">Your draft Will and every update go here. Use an address only you read.</div></div>
+              </div>
+              <div>
+                <label for="cu-tel" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Mobile number</label>
+                <input id="cu-tel" value="" inputmode="tel" autocomplete="tel" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; min-height: 46px; background: #FFFFFF; font-variant-numeric: tabular-nums;">
+                <div style="min-height: 40px; padding-top: 6px;"><div style="font-size: 13px; line-height: 1.5; color: #5B6472;">For WhatsApp updates about your matter. Never for marketing.</div></div>
+              </div>
+
+              <div>
+                <label for="cu-pass" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Password</label>
+                <input id="cu-pass" type="password" value="" autocomplete="new-password" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+                <div style="display: flex; gap: 4px; margin-top: 8px;">
+                  <sc-for list="{{ pwBars }}" as="b" hint-placeholder-count="4">
+                    <div style="height: 3px; flex: 1; background: {{ b.colour }};"></div>
+                  </sc-for>
+                </div>
+                <div style="min-height: 52px; padding-top: 7px;">
+                  <sc-if value="{{ pwHasLabel }}" hint-placeholder-val="{{ true }}">
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline;">
+                      <div style="font-size: 13px; line-height: 1.5; flex: 1 1 260px;"><strong style="font-weight: 600; color: {{ pwFg }};">{{ pwLabel }}</strong> {{ pwBody }}</div>
+                      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ pwEntropyLabel }}</div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ pwNoLabel }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size: 13px; line-height: 1.5; color: #5B6472;">{{ pwBody }}</div>
+                  </sc-if>
+                </div>
+                <div style="border-top: 1px solid #E2E6EC; padding-top: 12px;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 8px;">preview the meter — try each</div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    <sc-for list="{{ pwLevels }}" as="l" hint-placeholder-count="4">
+                      <div>
+                        <sc-if value="{{ l.on }}" hint-placeholder-val="{{ false }}">
+                          <button onClick="{{ l.pick }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 6px 11px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer; white-space: nowrap;">{{ l.label }}</button>
+                        </sc-if>
+                        <sc-if value="{{ l.off }}" hint-placeholder-val="{{ true }}">
+                          <button onClick="{{ l.pick }}" style="background: #FFFFFF; color: #3A4A66; border: 1px solid #DCDFE4; border-radius: 4px; padding: 6px 11px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #8C93A1;">{{ l.label }}</button>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+
+              <div style="border-top: 1px solid #E2E6EC; padding-top: 20px; display: flex; gap: 11px; align-items: flex-start;">
+                <input type="checkbox" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F; flex: none;">
+                <div style="font-size: 15px; line-height: 1.65;">I have read the <a href="PublicPages.dc.html">Privacy Policy</a> and understand how my information is handled.</div>
+              </div>
+              <div>
+                <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Open my matter</button>
+                <div style="font-size: 13px; line-height: 1.6; color: #5B6472; margin-top: 10px;">Nothing is charged at this step, and no engagement begins until Summit accepts your matter.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCVerify }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+          <div data-card-pad="1" style="padding: 32px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Step 2 of 4</div>
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Confirm your email address</h1>
+            <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 54ch;">We have sent a confirmation link to <strong style="font-weight: 600;">j.whitfield@example.com</strong>. It is valid for 24 hours and can be used once.</p>
+            <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 54ch;">This matters more here than on most sites: your draft Will is sent to this address, so we confirm it before anything is drafted.</p>
+            <div style="background: #FBF8F2; border: 1px solid #E2E6EC; padding: 16px; margin-bottom: 20px;">
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 6px;">Nothing arrived?</div>
+              <div style="font-size: 14px; line-height: 1.65; color: #3A4A66;">Check the spam folder — it comes from noreply@uaeexpatwills.com. If the address above is wrong, correct it and we will send a new link.</div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+              <button aria-disabled="true" style="background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 12px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: not-allowed;">Send it again</button>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums;">available in 0:36</div>
+              <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 1px; cursor: pointer;" style-hover="color: #8A6512;">Change my email address</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCSignin }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="display: grid; gap: 16px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Client sign in</div>
+              <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Open your matter</h1>
+              <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 52ch;">Two ways in, and neither is the lesser one. Choose whichever suits where you are.</p>
+
+              <div style="display: grid; gap: 20px;">
+                <div>
+                  <label for="cs-email" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Email address</label>
+                  <input id="cs-email" value="j.whitfield@example.com" inputmode="email" autocomplete="username" spellcheck="false" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #F2EAD8;">
+                  <div style="min-height: 40px; padding-top: 6px;">
+                    <div style="display: flex; gap: 7px; align-items: flex-start;">
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6" style="flex: none; margin-top: 2px;"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 7.2v4" stroke-linecap="round"></path><circle cx="8" cy="4.9" r="0.6" fill="#8A6512" stroke="none"></circle></svg>
+                      <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">Filled by your password manager. The warm tint is the autofilled state — it is deliberate, not an error.</div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 6px;">
+                    <label for="cs-pass" style="font-size: 14px; font-weight: 500;">Password</label>
+                    <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 13px; padding: 3px 1px; cursor: pointer;" style-hover="color: #8A6512;">Show password</button>
+                  </div>
+                  <input id="cs-pass" type="password" value="••••••••••••" autocomplete="current-password" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #F2EAD8;">
+                  <div style="min-height: 40px; padding-top: 6px;"><div style="font-size: 13px; line-height: 1.5; color: #5B6472;">You will stay signed in for one day, or 30 minutes without activity.</div></div>
+                </div>
+                <div>
+                  <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Sign in</button>
+                  <div style="margin-top: 14px;">
+                    <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 1px; cursor: pointer;" style-hover="color: #8A6512;">I have forgotten my password</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+                <div style="height: 1px; flex: 1; background: #E4DDCE;"></div>
+                <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Or</div>
+                <div style="height: 1px; flex: 1; background: #E4DDCE;"></div>
+              </div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 10px;">Send me a sign-in link instead</h2>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 20px; max-width: 54ch;">No password to remember. We email a link that signs you in once and expires after 24 hours — the same mechanism that releases your detailed questionnaire.</p>
+              <label for="cs-magic" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Email address</label>
+              <input id="cs-magic" value="" inputmode="email" autocomplete="email" spellcheck="false" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+              <div style="min-height: 40px; padding-top: 6px;"><div style="font-size: 13px; line-height: 1.5; color: #5B6472;">The link only works in the same browser you request it from.</div></div>
+              <button style="width: 100%; background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #F6F1E7;">Email me a sign-in link</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCLink }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1">
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+            <sc-for list="{{ linkStates }}" as="l" hint-placeholder-count="4">
+              <div>
+                <sc-if value="{{ l.on }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ l.pick }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 7px 12px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ l.label }}</button>
+                </sc-if>
+                <sc-if value="{{ l.off }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ l.pick }}" style="background: #FFFFFF; color: #3A4A66; border: 1px solid #DCDFE4; border-radius: 4px; padding: 7px 12px; font-size: 13px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #8C93A1;">{{ l.label }}</button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+            <div data-card-pad="1" style="padding: 32px;">
+              <sc-if value="{{ linkSent }}" hint-placeholder-val="{{ true }}">
+                <div>
+                  <span style="display: inline-flex; align-items: center; gap: 8px; background: #E9EFF8; border: 1px solid #C3D4EA; border-radius: 999px; padding: 5px 12px; margin-bottom: 16px; white-space: nowrap;">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                    <span style="font-size: 12px; font-weight: 500; color: #2A4E86;">Link sent</span>
+                  </span>
+                  <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Your sign-in link is on its way</h1>
+                  <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 54ch;">Open it on this device, in this browser. It works once and expires in 24 hours.</p>
+                  <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 54ch;">You can close this tab. The link does not need this page to stay open.</p>
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                    <button aria-disabled="true" style="background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 12px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: not-allowed;">Send another link</button>
+                    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums;">available in 0:41</div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ linkExpired }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <span style="display: inline-flex; align-items: center; gap: 8px; background: #F7F0DF; border: 1px solid #E6D5A8; border-radius: 999px; padding: 5px 12px; margin-bottom: 16px; white-space: nowrap;">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                    <span style="font-size: 12px; font-weight: 500; color: #8A6512;">Expired</span>
+                  </span>
+                  <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">That link has expired</h1>
+                  <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 54ch;">It was sent on 16 August and links last 24 hours. Nothing is wrong with your account, and nothing in your matter has changed.</p>
+                  <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 54ch;">Request a new one and it will arrive within a minute.</p>
+                  <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Send me a new link</button>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ linkUsed }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <span style="display: inline-flex; align-items: center; gap: 8px; background: #F1F2F4; border: 1px solid #DCDFE4; border-radius: 999px; padding: 5px 12px; margin-bottom: 16px; white-space: nowrap;">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.7"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                    <span style="font-size: 12px; font-weight: 500; color: #5B6472;">Already used</span>
+                  </span>
+                  <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">That link has already been used</h1>
+                  <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 54ch;">Sign-in links work once, which is what keeps a forwarded email from opening your matter. It was used on 17 August at 09:14 from Sharjah.</p>
+                  <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 54ch;">If that was you, you may already be signed in on another tab. If it was not, contact us and we will revoke every session on your account.</p>
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Send me a new link</button>
+                    <a href="mailto:info@uaeexpatwills.com" style="border-bottom: none; display: inline-flex; align-items: center; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500;">This was not me</a>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ linkRevoked }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <span style="display: inline-flex; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 5px 12px; margin-bottom: 16px; white-space: nowrap;">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.6"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+                    <span style="font-size: 12px; font-weight: 500; color: #63467F;">Revoked</span>
+                  </span>
+                  <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">That link was cancelled</h1>
+                  <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 54ch;">A newer link was requested for your account on 18 August, which cancels every earlier one. Only the most recent link works.</p>
+                  <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 54ch;">Check your inbox for the newest email, or request another.</p>
+                  <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Send me a new link</button>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCReset }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="display: grid; gap: 16px;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Password reset · step 1</div>
+              <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Reset your password</h1>
+              <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 52ch;">We send a single-use link valid for one hour. Your matter and your documents are untouched by this.</p>
+              <label for="cr-email" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Email address</label>
+              <input id="cr-email" value="j.whitfield@example.com" inputmode="email" autocomplete="username" spellcheck="false" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+              <div style="min-height: 40px; padding-top: 6px;"><div style="font-size: 13px; line-height: 1.5; color: #5B6472;">The link goes to this address only. We cannot send it anywhere else.</div></div>
+              <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Send the reset link</button>
+              <div style="margin-top: 14px;">
+                <button onClick="{{ goCSignin }}" style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 4px 1px; cursor: pointer;" style-hover="color: #8A6512;">Send me a sign-in link instead — no password needed</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Step 2 · after sending</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 10px;">Check that inbox</h2>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 56ch;">If an account exists for that address, a reset link is on its way from noreply@uaeexpatwills.com. It is valid for one hour and can be used once.</p>
+              <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 56ch;">We do not say whether an account exists for a given address. Confirming it would let anyone test whether a person is a client of ours, which is information about you we should not give away.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                <button aria-disabled="true" style="background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: not-allowed;">Send it again</button>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums;">available in 0:52</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+            <div data-card-pad="1" style="padding: 32px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Step 3 · from the link</div>
+              <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 20px;">Set a new password</h2>
+              <label for="cr-new" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">New password</label>
+              <input id="cr-new" type="password" value="" autocomplete="new-password" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 46px; background: #FFFFFF;">
+              <div style="display: flex; gap: 4px; margin-top: 8px;">
+                <sc-for list="{{ pwBars }}" as="b" hint-placeholder-count="4">
+                  <div style="height: 3px; flex: 1; background: {{ b.colour }};"></div>
+                </sc-for>
+              </div>
+              <div style="min-height: 52px; padding-top: 7px;">
+                <sc-if value="{{ pwHasLabel }}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline;">
+                    <div style="font-size: 13px; line-height: 1.5; flex: 1 1 260px;"><strong style="font-weight: 600; color: {{ pwFg }};">{{ pwLabel }}</strong> {{ pwBody }}</div>
+                    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ pwEntropyLabel }}</div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ pwNoLabel }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size: 13px; line-height: 1.5; color: #5B6472;">{{ pwBody }}</div>
+                </sc-if>
+              </div>
+              <div style="border-top: 1px solid #E2E6EC; padding-top: 12px; margin-bottom: 16px;">
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-bottom: 8px;">preview the meter — try each</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  <sc-for list="{{ pwLevels }}" as="l" hint-placeholder-count="4">
+                    <div>
+                      <sc-if value="{{ l.on }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ l.pick }}" style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 6px 11px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer; white-space: nowrap;">{{ l.label }}</button>
+                      </sc-if>
+                      <sc-if value="{{ l.off }}" hint-placeholder-val="{{ true }}">
+                        <button onClick="{{ l.pick }}" style="background: #FFFFFF; color: #3A4A66; border: 1px solid #DCDFE4; border-radius: 4px; padding: 6px 11px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #8C93A1;">{{ l.label }}</button>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="background: #F7F0DF; border: 1px solid #E6D5A8; padding: 12px 14px; margin-bottom: 16px;">
+                <div style="font-size: 13px; line-height: 1.6; color: #12233F;">Setting a new password signs out every other session on your account. Any draft you were reading stays where it is.</div>
+              </div>
+              <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Save and open my matter</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCDevice }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+          <div data-card-pad="1" style="padding: 32px;">
+            <span style="display: inline-flex; align-items: center; gap: 8px; background: #E9EFF8; border: 1px solid #C3D4EA; border-radius: 999px; padding: 5px 12px; margin-bottom: 16px; white-space: nowrap;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 7.2v4" stroke-linecap="round"></path><circle cx="8" cy="4.9" r="0.6" fill="#2A4E86" stroke="none"></circle></svg>
+              <span style="font-size: 12px; font-weight: 500; color: #2A4E86;">You are signed in</span>
+            </span>
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">This is a device we have not seen before</h1>
+            <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 54ch;">You are signed in — we are not blocking you. We are telling you because your matter contains information you would want to know had been opened.</p>
+            <div style="background: #FBF8F2; border: 1px solid #E2E6EC; padding: 16px; margin: 0 0 20px;">
+              <div style="display: grid; gap: 8px; font-size: 14px;">
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Device</span><span>Chrome on Windows</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Location</span><span>Dubai, United Arab Emirates</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Signed in</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">18 Aug 2026 · 21:07</span></div>
+              </div>
+            </div>
+            <p style="font-size: 14px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 54ch;">We have emailed the same details to j.whitfield@example.com, so it is on record even if you close this.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">This was me — continue</button>
+              <button style="background: transparent; border: 1px solid #8C2F2F; color: #8C2F2F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #8C2F2F; color: #FFFFFF;">This was not me</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDevices }}" hint-placeholder-val="{{ false }}">
+        <div data-card="1" data-step="1" style="width: 100%; max-width: none;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; box-shadow: 0 1px 2px rgba(18,35,63,.05), 0 1px 1px rgba(18,35,63,.04);">
+            <div data-card-pad="1" style="padding: 32px 32px 24px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">Security</div>
+              <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.14; letter-spacing: -0.02em; margin: 0 0 10px;">Where your account is signed in</h1>
+              <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 56ch;">Revoking a session signs that device out immediately. Every revocation is written to the audit log.</p>
+            </div>
+            <sc-for list="{{ devices }}" as="d" hint-placeholder-count="4">
+              <div style="border-top: 1px solid #E2E6EC; padding: 16px 32px; display: grid; grid-template-columns: minmax(0, 1fr) 176px 108px; gap: 16px; align-items: center;">
+                <div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 3px;">
+                    <span style="font-size: 15px; font-weight: 500;">{{ d.device }}</span>
+                    <sc-if value="{{ d.current }}" hint-placeholder-val="{{ false }}">
+                      <span style="display: inline-flex; align-items: center; gap: 6px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 3px 9px; white-space: nowrap;">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                        <span style="font-size: 11px; font-weight: 500; color: #2E6A4E;">This device</span>
+                      </span>
+                    </sc-if>
+                  </div>
+                  <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">{{ d.where }}</div>
+                </div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ d.seen }}</div>
+                <div style="text-align: right;">
+                  <sc-if value="{{ d.revocable }}" hint-placeholder-val="{{ true }}">
+                    <button style="background: none; border: none; border-bottom: 1px solid #8C2F2F; color: #8C2F2F; font-size: 14px; font-weight: 500; padding: 4px 1px; cursor: pointer;" style-hover="color: #12233F; border-bottom-color: #12233F;">Revoke</button>
+                  </sc-if>
+                  <sc-if value="{{ d.current }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size: 13px; color: #5B6472;">—</span>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+            <div style="border-top: 1px solid #E2E6EC; padding: 20px 32px; background: #FBF8F2; display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+              <div style="flex: 1 1 280px;">
+                <div style="font-size: 15px; font-weight: 600; margin-bottom: 3px;">Sign out everywhere else</div>
+                <div style="font-size: 14px; line-height: 1.6; color: #3A4A66;">Revokes all three other sessions. You stay signed in on this device.</div>
+              </div>
+              <button style="flex: none; background: transparent; border: 1px solid #8C2F2F; color: #8C2F2F; border-radius: 4px; padding: 12px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #8C2F2F; color: #FFFFFF;">Revoke all other sessions</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;signin&quot;,&quot;2fa&quot;,&quot;backup&quot;,&quot;enrol&quot;,&quot;forgot&quot;,&quot;locked&quot;,&quot;session&quot;,&quot;devices&quot;],&quot;default&quot;:&quot;signin&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Auth&quot;}}">
+const SESSION_OPTS = [
+  { id: "hour", label: "This visit only", note: "Signed out when the browser closes. Use this on a shared machine." },
+  { id: "day", label: "One working day", note: "Signed out after 8 hours, or 30 minutes of inactivity." },
+  { id: "week", label: "One week on this device", note: "Only for a device only you use. Inactivity timeout still applies." },
+];
+
+const DEVICES = [
+  { device: "Chrome on macOS", where: "Sharjah, United Arab Emirates · 94.200.18.x", seen: "now", current: true },
+  { device: "Safari on iPhone", where: "Sharjah, United Arab Emirates · 94.200.18.x", seen: "2 hours ago" },
+  { device: "Chrome on Windows", where: "Dubai, United Arab Emirates · 5.32.140.x", seen: "yesterday, 17:42" },
+  { device: "Firefox on Windows", where: "Unrecognised location · 41.63.7.x", seen: "12 Aug 2026, 02:18" },
+];
+
+const BACKUP_CODES = ["4f9c-22a1-8b", "71de-04c7-3a", "9b02-ee15-6c", "2c48-b931-0f", "e5a7-16d2-94", "8d13-7fa0-2e", "0a96-c384-b7", "63f1-2b58-dd", "b874-9e60-15", "3e2b-d1a9-70"];
+
+class Component extends DCLogic {
+  state = {
+    page: "signin", step: "email", dir: "fwd",
+    email: "m.raouf@summitlegal.ae", emailTouched: false,
+    pass: "", revealed: false, caps: false, session: "day",
+    submitting: false, formError: null,
+    code: "", codeError: false, savedCodes: false,
+    pwLevel: "fair", linkState: "sent",
+  };
+
+  renderVals() {
+    const s = this.state;
+    const tabs = [
+      { id: "signin", label: "Admin sign in" },
+      { id: "2fa", label: "Two-factor" },
+      { id: "backup", label: "Backup code" },
+      { id: "enrol", label: "2FA enrolment" },
+      { id: "forgot", label: "Password reset" },
+      { id: "locked", label: "Locked · disabled" },
+      { id: "session", label: "Session" },
+      { id: "devices", label: "Devices" },
+      { id: "c-create", label: "◆ Client sign up" },
+      { id: "c-verify", label: "◆ Verify email" },
+      { id: "c-signin", label: "◆ Client sign in" },
+      { id: "c-link", label: "◆ Magic link states" },
+      { id: "c-reset", label: "◆ Client password reset" },
+      { id: "c-device", label: "◆ New device" },
+      { id: "mobile", label: "390px" },
+    ];
+    const isCustomer = s.page.indexOf("c-") === 0;
+
+    const emailVal = s.email.trim();
+    let emailError = "";
+    if (s.emailTouched && emailVal.length > 0) {
+      if (emailVal.indexOf("@") === -1) emailError = "That address has no @ in it. A work address looks like name@summitlegal.ae.";
+      else if (emailVal.indexOf(" ") > -1) emailError = "There is a space in that address. Remove it and try again.";
+      else if (emailVal.split("@")[1].indexOf(".") === -1) emailError = "The part after the @ has no dot in it, so it cannot be a domain.";
+    }
+    const emailBad = !!emailError;
+
+    const codeDigits = s.code.replace(/[^0-9]/g, "").slice(0, 6);
+    const manifests = {
+      admin: {
+        title: "Case register · staff access",
+        lede: "This account opens the live matter register: clients' family details, asset information and draft Wills. Nothing personal is rendered on this page before you are authenticated.",
+        rows: [
+          { label: "Operated by", value: "Summit Legal Consultancy UAE" },
+          { label: "Trade licence", value: "4429232.01" },
+          { label: "Two-factor", value: "Required" },
+          { label: "Session cookie", value: "HTTP-only" },
+          { label: "Inactivity timeout", value: "30 minutes" },
+          { label: "Failed attempts", value: "5, then paused" },
+          { label: "Sign-ins recorded", value: "Audit log · 10 years" },
+          { label: "Session replay", value: "Disabled here" },
+        ],
+        band: "Staff access to the live matter register. Two-factor authentication is required.",
+      },
+    };
+    manifests.customer = {
+      title: "Your matter · SLC-2026-04418",
+      lede: "This account holds the instructions for your Will — who inherits, who administers your estate, and who you would want to care for your children. Nothing from it is shown on this page until you are signed in.",
+      rows: [
+        { label: "Held by", value: "Summit Legal Consultancy UAE" },
+        { label: "Trade licence", value: "4429232.01" },
+        { label: "Your case reference", value: "SLC-2026-04418" },
+        { label: "Assessment completed", value: "17 Aug 2026" },
+        { label: "Result", value: "Continue online" },
+        { label: "Documents held", value: "None yet" },
+        { label: "Inactivity timeout", value: "30 minutes" },
+        { label: "Session replay", value: "Disabled here" },
+      ],
+      band: "Your Will instructions are held by Summit Legal Consultancy UAE. Nothing is shown until you sign in.",
+    };
+    const m = isCustomer ? manifests.customer : manifests.admin;
+
+    const pwEntropy = { none: 0, weak: 28, fair: 46, strong: 78 }[s.pwLevel] || 0;
+    const pwCopy = {
+      none: { label: "", body: "At least 12 characters. Length matters far more than symbols.", bars: 0, tone: "#E4DDCE", fg: "#5B6472" },
+      weak: { label: "Too weak.", body: "This is a common word with digits after it, which is the first thing guessing software tries. Three unrelated words would be far stronger.", bars: 1, tone: "#8C2F2F", fg: "#8C2F2F" },
+      fair: { label: "Usable.", body: "Adding one more word would take this from hours to centuries of guessing. Symbols would not help much.", bars: 2, tone: "#8A6512", fg: "#8A6512" },
+      strong: { label: "Strong.", body: "Around 78 bits of entropy — long enough that guessing it is not realistic.", bars: 4, tone: "#2E6A4E", fg: "#2E6A4E" },
+    }[s.pwLevel] || {};
+
+    return {
+      tabs: tabs.map(t => ({
+        label: t.label, on: t.id === s.page, off: t.id !== s.page,
+        pick: () => { this.setState({ page: t.id, dir: "fwd" }); window.scrollTo(0, 0); },
+      })),
+      isPhaseTwo: isCustomer,
+      isCCreate: s.page === "c-create",
+      isCVerify: s.page === "c-verify",
+      isCSignin: s.page === "c-signin",
+      isCLink: s.page === "c-link",
+      isCDevice: s.page === "c-device",
+      isCReset: s.page === "c-reset",
+      isMobile: s.page === "mobile",
+      showSplit: s.page !== "mobile",
+      demoError: () => this.setState({ formError: true, step: "password" }),
+      clearError: () => { this._errShown = false; this.setState({ formError: null }); },
+      pwLevels: [
+        { id: "none", label: "Empty" },
+        { id: "weak", label: "summit2026" },
+        { id: "fair", label: "harbour-lantern-9" },
+        { id: "strong", label: "harbour lantern quiet ridge" },
+      ].map(x => ({
+        label: x.label, on: s.pwLevel === x.id, off: s.pwLevel !== x.id,
+        pick: () => this.setState({ pwLevel: x.id }),
+      })),
+      pwBars: [0, 1, 2, 3].map(i => ({ colour: i < pwCopy.bars ? pwCopy.tone : "#E4DDCE" })),
+      pwLabel: pwCopy.label,
+      pwBody: pwCopy.body,
+      pwFg: pwCopy.fg,
+      pwHasLabel: !!pwCopy.label,
+      pwNoLabel: !pwCopy.label,
+      pwEntropyLabel: pwEntropy > 0 ? pwEntropy + " bits" : "—",
+      linkStates: [
+        { id: "sent", label: "Sent" },
+        { id: "expired", label: "Expired" },
+        { id: "used", label: "Already used" },
+        { id: "revoked", label: "Revoked" },
+      ].map(x => ({
+        label: x.label, on: s.linkState === x.id, off: s.linkState !== x.id,
+        pick: () => this.setState({ linkState: x.id }),
+      })),
+      linkSent: s.linkState === "sent",
+      linkExpired: s.linkState === "expired",
+      linkUsed: s.linkState === "used",
+      linkRevoked: s.linkState === "revoked",
+      dir: s.dir,
+      manifestTitle: m.title,
+      manifestLede: m.lede,
+      manifest: m.rows.map((r, i) => ({
+        label: r.label, value: r.value,
+        rule: i === m.rows.length - 1 ? "transparent" : "#1E3252",
+      })),
+      bandLine: m.band,
+
+      isSignin: s.page === "signin",
+      isTwoFactor: s.page === "2fa",
+      isBackup: s.page === "backup",
+      isEnrol: s.page === "enrol",
+      isForgot: s.page === "forgot",
+      isLocked: s.page === "locked",
+      isSession: s.page === "session",
+      isDevices: s.page === "devices",
+
+      atEmail: s.step === "email",
+      atPassword: s.step === "password",
+      stepLabel: s.step === "email" ? "Step 1 of 3" : "Step 2 of 3",
+      signinTitle: s.step === "email" ? "Sign in to the case register" : "Enter your password",
+      signinLede: s.step === "email"
+        ? "Administrator access for Summit Legal Consultancy staff. Client accounts sign in from the client area, not here."
+        : "Two-factor authentication follows on the next step.",
+
+      email: s.email,
+      onEmail: e => this.setState({ email: e.target.value, emailTouched: true }),
+      emailBad: emailBad,
+      emailOk: !emailBad,
+      emailError: emailError,
+      emailBorder: emailBad ? "#8C2F2F" : "#8C93A1",
+      canEmail: emailVal.length > 0 && !emailBad,
+      cannotEmail: emailVal.length === 0 || emailBad,
+      toPassword: () => this.setState({ step: "password", dir: "fwd" }),
+      toEmail: () => this.setState({ step: "email", dir: "back", formError: null }),
+
+      pass: s.pass,
+      onPass: e => this.setState({ pass: e.target.value }),
+      onPassKey: e => {
+        const on = e.getModifierState && e.getModifierState("CapsLock");
+        if (on !== s.caps) this.setState({ caps: !!on });
+      },
+      capsOn: s.caps,
+      capsOff: !s.caps,
+      revealed: s.revealed,
+      passType: s.revealed ? "text" : "password",
+      revealLabel: s.revealed ? "Hide password" : "Show password",
+      toggleReveal: () => this.setState({ revealed: !s.revealed }),
+
+      sessionOpts: SESSION_OPTS.map(o => ({
+        label: o.label, note: o.note,
+        on: s.session === o.id, off: s.session !== o.id,
+        pick: () => this.setState({ session: o.id }),
+      })),
+
+      submitting: s.submitting,
+      notSubmitting: !s.submitting,
+      submit: () => {
+        this.setState({ submitting: true, formError: null });
+        setTimeout(() => this.setState({ submitting: false, page: "2fa", dir: "fwd" }), 900);
+      },
+      hasFormError: !!s.formError,
+      noFormError: !s.formError,
+      errRef: el => {
+        this._errEl = el || null;
+        if (el && this.state.formError && this._errShown !== true) {
+          this._errShown = true;
+          const run = () => { if (this._errEl) this._errEl.focus(); };
+          run();
+          if (window.requestAnimationFrame) window.requestAnimationFrame(run);
+          setTimeout(run, 0);
+        }
+        if (!el) this._errShown = false;
+      },
+      formErrorTitle: "That email address and password do not match",
+      formErrorBody: "Check both, or reset your password. Four attempts remain before sign-in is paused for 15 minutes.",
+      goForgot: () => this.setState({ page: "forgot", dir: "fwd" }),
+      goCSignin: () => this.setState({ page: "c-signin", dir: "back" }),
+
+      code: codeDigits,
+      onCode: e => this.setState({ code: e.target.value.replace(/[^0-9]/g, "").slice(0, 6) }),
+      codeBad: s.codeError,
+      codeBorder: s.codeError ? "#8C2F2F" : "#8C93A1",
+      codeSlots: [0, 1, 2, 3, 4, 5].map(i => ({ colour: i < codeDigits.length ? "#AD8A46" : "#E4DDCE" })),
+      codeCountLabel: codeDigits.length + " of 6 digits entered",
+      codeNeedLabel: (6 - codeDigits.length) + " more digits needed.",
+      codeComplete: codeDigits.length === 6,
+      codeIncomplete: codeDigits.length !== 6,
+      codeExpiry: "0:22",
+      goBackup: () => this.setState({ page: "backup", dir: "fwd" }),
+      go2fa: () => this.setState({ page: "2fa", dir: "back" }),
+
+      backupCodes: BACKUP_CODES,
+      savedCodes: s.savedCodes,
+      notSavedCodes: !s.savedCodes,
+      toggleSaved: () => this.setState({ savedCodes: !s.savedCodes }),
+
+      lockClock: "13:42",
+      lockPct: "38%",
+
+      devices: DEVICES.map(d => ({
+        device: d.device, where: d.where, seen: d.seen,
+        current: !!d.current, revocable: !d.current,
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

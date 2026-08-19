@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  button, input { font: inherit; color: inherit; }
+  @media (max-width: 1080px) {
+    [data-two] { grid-template-columns: minmax(0, 1fr) !important; }
+    [data-span] { grid-column: 1 / -1 !important; }
+  }
+  @media (max-width: 719px) {
+    [data-pad] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-row] { grid-template-columns: minmax(0, 1fr) !important; }
+  }
+</style>
+</helmet>
+
+<div style="background: #63467F; padding: 10px 24px;">
+  <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;">
+    <span style="display: inline-flex; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 4px; padding: 5px 11px; white-space: nowrap;">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.6" style="flex: none;"><rect x="3.6" y="7.2" width="8.8" height="6.4" rx="1"></rect><path d="M5.6 7.2V5.6a2.4 2.4 0 0 1 4.8 0v1.6"></path></svg>
+      <span style="font-size: 12px; font-weight: 600; color: #63467F;">Phase two — pending written approval</span>
+    </span>
+    <div style="font-size: 13px; color: #F0EBF6;">Account, payment and client-area screens. Designed but commercially gated; withhold this file to withhold the phase.</div>
+  </div>
+</div>
+
+<div style="background: #0B1729; border-bottom: 1px solid #1E3252; padding: 10px 24px;">
+  <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C69A; flex: none;">Deliverable 08</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+        <div>
+          <sc-if value="{{ t.on }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ t.pick }}" style="background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 6px 11px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{ t.label }}</button>
+          </sc-if>
+          <sc-if value="{{ t.off }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ t.pick }}" style="background: transparent; color: #B9C2D1; border: 1px solid #1E3252; border-radius: 4px; padding: 6px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;" style-hover="border-color: #AD8A46; color: #F6F1E7;">{{ t.label }}</button>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 32px;">
+
+  <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 32px;">
+        <div style="padding-right: 20px;">
+          <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Your case</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 10px;">SLC-2026-04417</div>
+        </div>
+        <div style="align-self: stretch; background: #D8C69A;"></div>
+        <div style="padding-left: 32px;">
+          <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Good evening, James</h1>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Your instructions are with the legal team. Nothing is required from you until the draft arrives.</p>
+        </div>
+      </div>
+
+      <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start;">
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+          <div style="border-bottom: 1px solid #E2E6EC; padding: 20px 24px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px;">
+              <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0;">James Whitfield</h2>
+              <span style="display: inline-flex; align-items: center; gap: 6px; background: #E9EFF8; border: 1px solid #C3D4EA; border-radius: 999px; padding: 4px 10px; white-space: nowrap;">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                <span style="font-size: 12px; font-weight: 500; color: #2A4E86;">Legal review and drafting</span>
+              </span>
+            </div>
+            <div data-row="1" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+              <div>
+                <div style="font-size: 12px; color: #5B6472; margin-bottom: 3px;">Service</div>
+                <div style="font-size: 15px; line-height: 1.5;">Standard UAE Will · online pathway</div>
+              </div>
+              <div>
+                <div style="font-size: 12px; color: #5B6472; margin-bottom: 3px;">Case reference</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-variant-numeric: tabular-nums;">SLC-2026-04417</div>
+              </div>
+              <div>
+                <div style="font-size: 12px; color: #5B6472; margin-bottom: 3px;">Opened</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-variant-numeric: tabular-nums;">14 Aug 2026</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="border-bottom: 1px solid #E2E6EC; padding: 20px 24px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 14px;">Progress</div>
+            <div style="display: grid; gap: 2px;">
+              <sc-for list="{{ stages }}" as="s" hint-placeholder-count="8">
+                <div style="display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid #F1F2F4;">
+                  <div style="display: grid; place-items: center;">
+                    <sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}">
+                      <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                    </sc-if>
+                    <sc-if value="{{ s.current }}" hint-placeholder-val="{{ true }}">
+                      <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                    </sc-if>
+                    <sc-if value="{{ s.todo }}" hint-placeholder-val="{{ false }}">
+                      <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#B9C2D1" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                    </sc-if>
+                  </div>
+                  <div>
+                    <sc-if value="{{ s.isCurrent }}" hint-placeholder-val="{{ true }}">
+                      <div style="font-size: 15px; font-weight: 600; line-height: 1.4;">{{ s.label }}</div>
+                    </sc-if>
+                    <sc-if value="{{ s.notCurrent }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size: 15px; line-height: 1.4; color: #3A4A66;">{{ s.label }}</div>
+                    </sc-if>
+                  </div>
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ s.at }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="border-bottom: 1px solid #E2E6EC; padding: 20px 24px; background: #FBF8F2;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 10px;">What we need from you</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+              <div style="flex: 1 1 320px;">
+                <div style="font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 4px;">Nothing right now</div>
+                <div style="font-size: 15px; line-height: 1.6; color: #3A4A66;">We will email you when the first draft is ready to read. You do not need to check back.</div>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; font-variant-numeric: tabular-nums;">expected 19 Aug 2026</div>
+            </div>
+          </div>
+
+          <div data-row="1" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0;">
+            <div style="padding: 20px 24px; border-right: 1px solid #E2E6EC;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Outstanding items</div>
+              <div style="display: flex; gap: 9px; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6" style="flex: none; margin-top: 2px;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                <div style="font-size: 15px; line-height: 1.6;">All documents received</div>
+              </div>
+            </div>
+            <div style="padding: 20px 24px;">
+              <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Secure messages</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                <div style="font-size: 15px; line-height: 1.6;">2 messages · none unread</div>
+                <a href="#messages" style="font-size: 14px; font-weight: 500;">Open</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; gap: 24px; align-content: start;">
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 20px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 14px;">Status detail</div>
+            <div style="display: grid; gap: 12px;">
+              <div style="display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 12px; align-items: center;">
+                <div style="font-size: 13px; color: #5B6472;">Payment</div>
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 3px 9px; white-space: nowrap; width: fit-content;">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.8"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <span style="font-size: 11px; font-weight: 500; color: #2E6A4E;">Paid</span>
+                </span>
+              </div>
+              <div style="display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 12px; align-items: center;">
+                <div style="font-size: 13px; color: #5B6472;">Draft</div>
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #E9EFF8; border: 1px solid #C3D4EA; border-radius: 999px; padding: 3px 9px; white-space: nowrap; width: fit-content;">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.8"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                  <span style="font-size: 11px; font-weight: 500; color: #2A4E86;">In preparation</span>
+                </span>
+              </div>
+              <div style="display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 12px; align-items: center;">
+                <div style="font-size: 13px; color: #5B6472;">Registration</div>
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #F1F2F4; border: 1px solid #DCDFE4; border-radius: 999px; padding: 3px 9px; white-space: nowrap; width: fit-content;">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#5B6472" stroke-width="1.8"><circle cx="8" cy="8" r="6.2"></circle><path d="M5.4 8h5.2" stroke-linecap="round"></path></svg>
+                  <span style="font-size: 11px; font-weight: 500; color: #5B6472;">Not started</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 20px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Fee record</div>
+            <div style="display: grid; gap: 8px; font-size: 14px;">
+              <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Professional fee</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">2,199.00</span></div>
+              <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">VAT at 5%</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">109.95</span></div>
+              <div style="display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid #E2E6EC; padding-top: 8px; font-weight: 600;"><span>Paid 14 Aug 2026</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 2,308.95</span></div>
+            </div>
+            <div style="border-top: 1px solid #E2E6EC; margin-top: 12px; padding-top: 12px; font-size: 13px; line-height: 1.6; color: #3A4A66;">Authority charges are separate. We confirm the expected amount before you authorise it.</div>
+          </div>
+
+          <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px;">
+            <p style="font-size: 14px; line-height: 1.65; margin: 0;">Payment and questionnaire completion do not register a Will. Registration is completed by the competent authority under its current requirements.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start;">
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Step 3 of 4</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Engagement terms and payment</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Read what is included, then accept the terms. Payment is the last step and nothing is charged before you press it.</p>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; margin-bottom: 16px;">
+          <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 16px;">Service confirmation</h2>
+          <div style="display: grid; border-top: 1px solid #E2E6EC;">
+            <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid #E2E6EC; font-size: 15px;"><div style="color: #5B6472;">Proposed service</div><div>One standard UAE Will, online pathway</div></div>
+            <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid #E2E6EC; font-size: 15px;"><div style="color: #5B6472;">Includes</div><div>Preparation, human legal review, certified legal translation of the new UAE Will, submission assistance</div></div>
+            <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid #E2E6EC; font-size: 15px;"><div style="color: #5B6472;">Amendment allowance</div><div>Two rounds of amendments after the first draft</div></div>
+            <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid #E2E6EC; font-size: 15px;"><div style="color: #5B6472;">Charged separately</div><div>Government, court, registry, notary, certification, attestation, courier and identity-verification charges</div></div>
+            <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid #E2E6EC; font-size: 15px;"><div style="color: #5B6472;">Not included</div><div>Foreign-law, tax or financial advice; estate administration after death; litigation</div></div>
+            <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 11px 0; font-size: 15px;"><div style="color: #5B6472;">Expected authority charge</div><div>Confirmed after legal review, before you authorise payment to the authority</div></div>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px;">
+          <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 16px;">Accept the terms</h2>
+          <div style="display: grid; gap: 14px;">
+            <div style="display: flex; gap: 11px; align-items: flex-start;">
+              <input type="checkbox" checked="{{ accept0 }}" onChange="{{ toggle0 }}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F; flex: none;">
+              <div style="font-size: 15px; line-height: 1.65;">I have read and accept the <a href="PublicPages.dc.html">Terms and Conditions</a> and the <a href="PublicPages.dc.html">Payment and Refund Policy</a>.</div>
+            </div>
+            <div style="display: flex; gap: 11px; align-items: flex-start;">
+              <input type="checkbox" checked="{{ accept1 }}" onChange="{{ toggle1 }}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F; flex: none;">
+              <div style="font-size: 15px; line-height: 1.65;">I understand that paying this fee does not register a Will, and that registration is completed by the competent authority.</div>
+            </div>
+            <div style="display: flex; gap: 11px; align-items: flex-start;">
+              <input type="checkbox" checked="{{ accept2 }}" onChange="{{ toggle2 }}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F; flex: none;">
+              <div style="font-size: 15px; line-height: 1.65;">I authorise Summit Legal Consultancy UAE to begin work on the service described above.</div>
+            </div>
+          </div>
+          <div style="border-top: 1px solid #E2E6EC; margin-top: 20px; padding-top: 20px;">
+            <sc-if value="{{ canPay }}" hint-placeholder-val="{{ false }}">
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500; min-height: 52px; cursor: pointer; transition: background 140ms ease;" style-hover="background: #0B1729;">Pay AED 2,308.95</button>
+            </sc-if>
+            <sc-if value="{{ cannotPay }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <button aria-disabled="true" style="background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500; min-height: 52px; cursor: not-allowed;">Pay AED 2,308.95</button>
+                <div style="font-size: 13px; line-height: 1.6; color: #5B6472; margin-top: 10px;">Accept all three statements to continue. None is pre-ticked.</div>
+              </div>
+            </sc-if>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; margin-top: 10px; font-variant-numeric: tabular-nums;">{{ acceptCount }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; align-self: start;">
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 16px;">What you will be charged</div>
+        <div style="display: grid; gap: 10px; font-size: 15px;">
+          <div style="display: flex; justify-content: space-between; gap: 12px;"><span>Professional fee</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">2,199.00</span></div>
+          <div style="display: flex; justify-content: space-between; gap: 12px;"><span>VAT at 5%</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">109.95</span></div>
+          <div style="display: flex; justify-content: space-between; gap: 12px; border-top: 1.5px solid #12233F; padding-top: 10px; font-weight: 600; font-size: 17px;"><span>Total today</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 2,308.95</span></div>
+        </div>
+        <div style="border-top: 1px solid #E2E6EC; margin-top: 16px; padding-top: 16px;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Not charged today</div>
+          <div style="display: grid; gap: 6px; font-size: 14px; line-height: 1.6; color: #3A4A66;">
+            <div>Authority registration or notarisation fee</div>
+            <div>Certification, attestation and courier charges</div>
+            <div>Identity-verification charges</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDraft }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: start;">
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Draft 1 · 19 Aug 2026</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Read your draft and tell us what to change</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Nothing is submitted anywhere until you approve the final wording. Two rounds of amendments are included in your service.</p>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; margin-bottom: 16px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-variant-numeric: tabular-nums;">Will_Whitfield_D1.pdf</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5B6472; font-variant-numeric: tabular-nums;">248 KB</div>
+            <div style="margin-left: auto; display: flex; gap: 8px;">
+              <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 10px 14px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;">Download</button>
+              <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 10px 14px; font-size: 14px; font-weight: 500; min-height: 44px; cursor: pointer;">Read in browser</button>
+            </div>
+          </div>
+          <div style="background: #FBF8F2; border: 1px solid #E2E6EC; padding: 20px 24px; max-height: 240px; overflow: hidden;">
+            <div style="font-family: Newsreader, serif; font-size: 15px; line-height: 1.72; color: #3A4A66;">
+              <div style="font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; font-size: 13px; color: #12233F; margin-bottom: 16px;">Last Will and Testament</div>
+              <p style="margin: 0 0 12px;">1. I, James Whitfield, holder of passport number redacted in this preview, being of sound mind, revoke all former Wills and testamentary dispositions previously made by me.</p>
+              <p style="margin: 0 0 12px;">2. I appoint the executor named in Schedule 1 to administer my estate, and where that person is unable or unwilling to act, the alternative named in that Schedule.</p>
+              <p style="margin: 0;">3. Subject to the payment of debts and expenses, I give the assets listed in Schedule 2 to the beneficiaries named there, in the shares stated.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px;">
+          <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 8px;">Request an amendment</h2>
+          <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px;">Quote the clause number and say what should change. Round 1 of 2.</p>
+          <div style="display: grid; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Clause</label>
+              <input value="{{ clause }}" onChange="{{ onClause }}" inputmode="numeric" autocomplete="off" style="width: 96px; border: 1px solid #8C93A1; border-radius: 2px; padding: 11px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; min-height: 44px; font-variant-numeric: tabular-nums;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">What should change</label>
+              <div style="height: 96px; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF;"></div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-top: 5px; text-align: right; font-variant-numeric: tabular-nums;">0 / 500</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;">Send amendment request</button>
+            <div style="font-size: 13px; color: #5B6472;">Or approve the draft as it stands, on the right.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; gap: 24px; align-content: start;">
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Approve the final wording</div>
+          <p style="font-size: 15px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px;">Approval confirms the wording is what you want. It does not register the Will and does not commit any authority.</p>
+          <div style="display: flex; gap: 11px; align-items: flex-start; margin-bottom: 16px;">
+            <input type="checkbox" checked="{{ approve }}" onChange="{{ toggleApprove }}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F; flex: none;">
+            <div style="font-size: 15px; line-height: 1.65;">I have read this draft in full and approve the wording.</div>
+          </div>
+          <sc-if value="{{ canApprove }}" hint-placeholder-val="{{ false }}">
+            <button style="width: 100%; background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer; transition: background 140ms ease;" style-hover="background: #0B1729;">Approve this draft</button>
+          </sc-if>
+          <sc-if value="{{ cannotApprove }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <button aria-disabled="true" style="width: 100%; background: #F1F2F4; color: #5B6472; border: 1px solid #B9C2D1; border-radius: 4px; padding: 14px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: not-allowed;">Approve this draft</button>
+              <div style="font-size: 13px; line-height: 1.6; color: #5B6472; margin-top: 8px;">Confirm you have read the draft to continue.</div>
+            </div>
+          </sc-if>
+        </div>
+        <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px;">
+          <p style="font-size: 14px; line-height: 1.65; margin: 0;">A draft must not be treated as ready for signing or registration until Summit confirms the next step.</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start;">
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Step 1 of 4</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Create your account</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">An account gives your answers and documents somewhere secure to live, and lets you leave and return. Your assessment answers carry across.</p>
+          </div>
+        </div>
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px;">
+          <div style="display: grid; gap: 16px; max-width: 480px;">
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Email address</label>
+              <input value="j.whitfield@example.com" inputmode="email" autocomplete="email" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px;">
+              <div style="font-size: 13px; line-height: 1.5; color: #5B6472; margin-top: 5px;">We send your draft and every update here. Use an address only you read.</div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Password</label>
+              <input type="password" value="••••••••••••" autocomplete="new-password" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px;">
+              <div style="display: flex; gap: 4px; margin-top: 8px;">
+                <div style="height: 3px; flex: 1; background: #2E6A4E;"></div>
+                <div style="height: 3px; flex: 1; background: #2E6A4E;"></div>
+                <div style="height: 3px; flex: 1; background: #2E6A4E;"></div>
+                <div style="height: 3px; flex: 1; background: #E4DDCE;"></div>
+              </div>
+              <div style="font-size: 13px; line-height: 1.5; color: #3A4A66; margin-top: 6px;">At least 12 characters. A passphrase of three unrelated words is stronger than a short complex one.</div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Mobile number</label>
+              <input value="+971 50 118 2240" inputmode="tel" autocomplete="tel" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; min-height: 44px; font-variant-numeric: tabular-nums;">
+              <div style="font-size: 13px; line-height: 1.5; color: #5B6472; margin-top: 5px;">Used for WhatsApp updates about your matter. Never for marketing.</div>
+            </div>
+            <div style="border-top: 1px solid #E2E6EC; padding-top: 16px; display: flex; gap: 11px; align-items: flex-start;">
+              <input type="checkbox" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #12233F; flex: none;">
+              <div style="font-size: 15px; line-height: 1.65;">I have read the <a href="PublicPages.dc.html">Privacy Policy</a> and understand how my information is handled.</div>
+            </div>
+            <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer; width: fit-content;" style-hover="background: #0B1729;">Create my account</button>
+          </div>
+        </div>
+      </div>
+      <div style="display: grid; gap: 16px; align-content: start;">
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 20px;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Carried over from your assessment</div>
+          <div style="display: grid; gap: 8px; font-size: 14px; line-height: 1.5;">
+            <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Service</span><span>Standard UAE Will</span></div>
+            <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Nationality</span><span>United Kingdom</span></div>
+            <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">Answers saved</span><span>9 questions</span></div>
+          </div>
+        </div>
+        <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px;">
+          <p style="font-size: 14px; line-height: 1.65; margin: 0;">Creating an account does not start a professional engagement and does not commit you to paying anything.</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isIdentity }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start;">
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Step 2 of 4</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Your identity details</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">These must match your passport exactly. An authority will reject an application where a name differs, even by a middle name.</p>
+          </div>
+        </div>
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px;">
+          <div style="display: grid; gap: 16px; max-width: 560px;">
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Full legal name, as printed on your passport</label>
+              <input value="James Edward Whitfield" autocomplete="name" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px;">
+            </div>
+            <div data-row="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div>
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Date of birth</label>
+                <input value="14 / 03 / 1984" inputmode="numeric" autocomplete="bday" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; min-height: 44px; font-variant-numeric: tabular-nums;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Passport number</label>
+                <input value="GBR 542118904" autocomplete="off" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; min-height: 44px; font-variant-numeric: tabular-nums;">
+              </div>
+            </div>
+            <div data-row="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div>
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Nationality</label>
+                <input value="United Kingdom" autocomplete="country-name" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Second nationality, if any</label>
+                <input value="" placeholder="" autocomplete="off" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px;">
+                <div style="font-size: 13px; line-height: 1.5; color: #5B6472; margin-top: 5px;">Optional. It can affect which framework applies.</div>
+              </div>
+            </div>
+            <div data-row="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div>
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Emirates ID number</label>
+                <input value="784-1984-2810447-3" inputmode="numeric" autocomplete="off" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; min-height: 44px; font-variant-numeric: tabular-nums;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Emirate of residence</label>
+                <select style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px; background: #FFFFFF;">
+                  <option>Dubai</option><option>Abu Dhabi</option><option>Sharjah</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option><option>I live outside the UAE</option>
+                </select>
+              </div>
+            </div>
+            <div style="border-top: 1px solid #E2E6EC; padding-top: 16px;">
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 14px 20px; font-size: 16px; font-weight: 500; min-height: 48px; cursor: pointer;" style-hover="background: #0B1729;">Save and continue</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px; align-self: start;">
+        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Why we need the exact name</div>
+        <p style="font-size: 14px; line-height: 1.65; margin: 0;">The Will names you as the person making it. A mismatch between the document and your passport is one of the most common reasons an authority returns an application.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isQuestionnaire }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: start;">
+      <div style="display: grid; gap: 16px; align-content: start;">
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+          <div style="border-bottom: 1px solid #E2E6EC; padding: 14px 16px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 6px;">Sections</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; font-variant-numeric: tabular-nums;">{{ qdoneCount }}</div>
+          </div>
+          <sc-for list="{{ qsections }}" as="s" hint-placeholder-count="10">
+            <div>
+              <sc-if value="{{ s.current }}" hint-placeholder-val="{{ true }}">
+                <div style="display: grid; grid-template-columns: 22px 26px minmax(0, 1fr); gap: 8px; align-items: center; padding: 10px 16px; border-bottom: 1px solid #F1F2F4; background: #F6F1E7; border-left: 2px solid #AD8A46;">
+                  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; font-variant-numeric: tabular-nums;">{{ s.n }}</span>
+                  <span style="font-size: 14px; font-weight: 600; line-height: 1.35;">{{ s.label }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}">
+                <div style="display: grid; grid-template-columns: 22px 26px minmax(0, 1fr); gap: 8px; align-items: center; padding: 10px 16px; border-bottom: 1px solid #F1F2F4; border-left: 2px solid transparent;">
+                  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; font-variant-numeric: tabular-nums;">{{ s.n }}</span>
+                  <span style="font-size: 14px; line-height: 1.35; color: #3A4A66;">{{ s.label }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ s.todo }}" hint-placeholder-val="{{ false }}">
+                <div style="display: grid; grid-template-columns: 22px 26px minmax(0, 1fr); gap: 8px; align-items: center; padding: 10px 16px; border-bottom: 1px solid #F1F2F4; border-left: 2px solid transparent;">
+                  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#B9C2D1" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #B9C2D1; font-variant-numeric: tabular-nums;">{{ s.n }}</span>
+                  <span style="font-size: 14px; line-height: 1.35; color: #5B6472;">{{ s.label }}</span>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 16px;">
+          <div style="display: flex; gap: 9px; align-items: flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6" style="flex: none; margin-top: 2px;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+            <div>
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 3px;">Saved a moment ago</div>
+              <div style="font-size: 13px; line-height: 1.55; color: #3A4A66;">Close this and come back whenever you like. Nothing is submitted until you review everything at the end.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Section 04</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Beneficiaries and substitutes</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Who receives your eligible assets, and who receives them instead if your first choice cannot act.</p>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; margin-bottom: 16px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; margin-bottom: 16px;">
+            <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0;">Beneficiary 1</h2>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">of 2</span>
+          </div>
+          <div style="display: grid; gap: 16px; max-width: 560px;">
+            <div data-row="1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div>
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Full legal name</label>
+                <input value="Sarah Louise Whitfield" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Relationship to you</label>
+                <select style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px; background: #FFFFFF;"><option>Spouse</option><option>Child</option><option>Parent</option><option>Sibling</option><option>Unmarried partner</option><option>Other</option></select>
+              </div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Substitute, if this person cannot act</label>
+              <input value="Thomas James Whitfield" style="width: 100%; border: 1px solid #8C93A1; border-radius: 2px; padding: 12px; font-size: 16px; min-height: 44px;">
+              <div style="font-size: 13px; line-height: 1.5; color: #5B6472; margin-top: 5px;">Recommended. Without a substitute, the position is decided by the applicable law rather than by you.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; margin-bottom: 16px;">
+          <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 6px;">Shares</h2>
+          <p style="font-size: 15px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px;">Shares must total exactly 100%. We check this before the legal review, because an unclear share pauses the work.</p>
+          <div style="display: grid; gap: 10px; max-width: 440px;">
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) 108px; gap: 12px; align-items: center;">
+              <div style="font-size: 15px;">Sarah Louise Whitfield</div>
+              <input value="{{ shareA }}" onChange="{{ onShareA }}" inputmode="numeric" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; min-height: 44px; text-align: right; font-variant-numeric: tabular-nums;">
+            </div>
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) 108px; gap: 12px; align-items: center;">
+              <div style="font-size: 15px;">Thomas James Whitfield</div>
+              <input value="{{ shareB }}" onChange="{{ onShareB }}" inputmode="numeric" style="border: 1px solid #8C93A1; border-radius: 2px; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 16px; min-height: 44px; text-align: right; font-variant-numeric: tabular-nums;">
+            </div>
+            <div style="border-top: 1px solid #E2E6EC; padding-top: 10px;">
+              <sc-if value="{{ shareOk }}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; justify-content: space-between; gap: 12px; align-items: center;">
+                  <span style="display: inline-flex; align-items: center; gap: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6" style="flex: none;"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                    <span style="font-size: 15px; font-weight: 500;">Total</span>
+                  </span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 500; color: #2E6A4E; font-variant-numeric: tabular-nums;">{{ shareTotal }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ shareBad }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <div style="display: flex; justify-content: space-between; gap: 12px; align-items: center;">
+                    <span style="display: inline-flex; align-items: center; gap: 8px;">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8C2F2F" stroke-width="1.6" style="flex: none;"><path d="M8 2.8 14.4 13.6H1.6z" stroke-linejoin="round"></path><path d="M8 6.6v3" stroke-linecap="round"></path></svg>
+                      <span style="font-size: 15px; font-weight: 500;">Total</span>
+                    </span>
+                    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 500; color: #8C2F2F; font-variant-numeric: tabular-nums;">{{ shareTotal }}</span>
+                  </div>
+                  <div style="font-size: 14px; line-height: 1.6; color: #12233F; margin-top: 8px;">Shares must total 100%. Adjust one of the figures above — you can save and fix this later, but the drafting cannot start until it balances.</div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #F7F0DF; border: 1px solid #E6D5A8; padding: 16px 20px; margin-bottom: 16px;">
+          <div style="display: flex; gap: 10px; align-items: flex-start;">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.5" style="flex: none; margin-top: 2px;"><path d="M8 2.6 14.2 13.2H1.8z" stroke-linejoin="round"></path><path d="M8 6.6v3.1" stroke-linecap="round"></path></svg>
+            <div>
+              <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px; color: #12233F;">Jointly owned assets</div>
+              <p style="font-size: 14px; line-height: 1.65; margin: 0; color: #12233F; max-width: 64ch;">A jointly held asset may pass outside your Will depending on how the ownership is registered. Tell us in section 08 which assets are jointly held, and the legal review will confirm how each is treated.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+          <button style="background: none; border: 1px solid #8C93A1; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">Back</button>
+          <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Save and continue</button>
+          <div style="font-size: 14px; color: #5B6472;">Section 05 · Distribution instructions</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isUpload }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start;">
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Documents</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Your documents</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Each item says what it is for. We ask only for what your route requires — please do not upload anything beyond it.</p>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; margin-bottom: 16px;">
+          <div style="border: 1px dashed #8C93A1; border-radius: 4px; padding: 24px; background: #FBF8F2; text-align: left;">
+            <div style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">Add a document</div>
+            <p style="font-size: 15px; line-height: 1.6; color: #3A4A66; margin: 0 0 16px; max-width: 56ch;">PDF, JPG or PNG, up to 10 MB each. A photograph taken on your phone is fine as long as every corner and all text is readable.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 12px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Choose a file</button>
+              <button style="display: flex; align-items: center; gap: 9px; background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 12px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;">
+                <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" style="flex: none;"><rect x="2" y="5" width="14" height="10" rx="1.5"></rect><circle cx="9" cy="10" r="2.8"></circle><path d="M6.6 5 7.6 3.2h2.8L11.4 5"></path></svg>
+                Take a photo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+          <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">What we have</div>
+          <sc-for list="{{ uploads }}" as="u" hint-placeholder-count="5">
+            <div style="border-bottom: 1px solid #E2E6EC; padding: 14px 16px; display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 12px; align-items: center;">
+              <sc-if value="{{ u.present }}" hint-placeholder-val="{{ true }}">
+                <svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="#5B6472" stroke-width="1.4"><path d="M5.5 3h6l3.5 3.5v10.5h-9.5z" stroke-linejoin="round"></path><path d="M11.5 3v3.5H15" stroke-linejoin="round"></path></svg>
+              </sc-if>
+              <sc-if value="{{ u.missing }}" hint-placeholder-val="{{ false }}">
+                <svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="#8A6512" stroke-width="1.4"><path d="M5.5 3h6l3.5 3.5v10.5h-9.5z" stroke-linejoin="round" stroke-dasharray="2.5 2"></path></svg>
+              </sc-if>
+              <div>
+                <div style="font-size: 15px; font-weight: 500; line-height: 1.4; margin-bottom: 3px;">{{ u.name }}</div>
+                <div style="font-size: 13px; line-height: 1.5; color: #3A4A66;">{{ u.why }}</div>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: flex-end;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">{{ u.size }}</span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; white-space: nowrap; background: {{ u.bg }}; border: 1px solid {{ u.border }};">
+                  <span style="width: 13px; height: 13px; display: grid; place-items: center; color: {{ u.fg }};">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                  </span>
+                  <span style="font-size: 12px; font-weight: 500; color: {{ u.fg }};">{{ u.state }}</span>
+                </span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: grid; gap: 16px; align-content: start;">
+        <div style="background: #F8ECEA; border: 1px solid #E8C9C4; padding: 16px 20px;">
+          <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #12233F;">One document was rejected</div>
+          <p style="font-size: 14px; line-height: 1.65; margin: 0 0 10px; color: #12233F;">The title deed scan is unreadable at the corners, so the property reference cannot be confirmed. Photograph it flat in daylight, with all four corners visible, and upload it again.</p>
+          <button style="background: transparent; border: 1px solid #12233F; border-radius: 4px; padding: 10px 14px; font-size: 14px; font-weight: 500; min-height: 40px; cursor: pointer;">Replace this file</button>
+        </div>
+        <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px;">
+          <p style="font-size: 14px; line-height: 1.65; margin: 0;">We never ask for a password, a card number or a crypto seed phrase. If a message appears to come from us and asks for one, it is not from us.</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isMoreInfo }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start;">
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">One thing needed</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <span style="display: inline-flex; align-items: center; gap: 8px; background: #F7F0DF; border: 1px solid #E6D5A8; border-radius: 999px; padding: 5px 12px; margin-bottom: 14px; white-space: nowrap;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8A6512" stroke-width="1.6"><path d="M8 2.8 14.4 13.6H1.6z" stroke-linejoin="round"></path><path d="M8 6.6v3" stroke-linecap="round"></path></svg>
+              <span style="font-size: 12px; font-weight: 500; color: #8A6512;">Information needed</span>
+            </span>
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Dr. Raouf needs one clarification</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Your matter is not at risk and nothing further is payable. Drafting continues as soon as this is answered.</p>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; margin-bottom: 16px;">
+          <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 20px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8A6512; padding-right: 16px; font-variant-numeric: tabular-nums;">Section 08<br>Assets</div>
+            <div style="align-self: stretch; background: #E4DDCE;"></div>
+            <div style="padding-left: 24px;">
+              <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">Is the JVC apartment held in your sole name, or jointly?</h2>
+              <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 62ch;">The title deed names two parties, but section 08 records the property as solely owned. How the ownership is registered affects whether the property passes under your Will, so the wording depends on the answer.</p>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; font-variant-numeric: tabular-nums;">Asked 18 Aug 2026 · Dr. Mohamed Raouf</div>
+            </div>
+          </div>
+          <div style="border-top: 1px solid #E2E6EC; padding-top: 20px;">
+            <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;">Your answer</label>
+            <div style="display: grid; gap: 6px; margin-bottom: 16px; max-width: 520px;">
+              <div style="border: 1px solid #8C93A1; border-radius: 4px; padding: 13px 14px; font-size: 15px; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">Sole name — the second party is the developer</div>
+              <div style="border: 1px solid #8C93A1; border-radius: 4px; padding: 13px 14px; font-size: 15px; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">Jointly held with my spouse</div>
+              <div style="border: 1px solid #8C93A1; border-radius: 4px; padding: 13px 14px; font-size: 15px; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">Jointly held with someone else</div>
+              <div style="border: 1px solid #8C93A1; border-radius: 4px; padding: 13px 14px; font-size: 15px; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">I am not certain — please check the deed</div>
+            </div>
+            <div style="margin-bottom: 16px; max-width: 520px;">
+              <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px;">Anything else that would help <span style="font-weight: 400; color: #5B6472;">(optional)</span></label>
+              <div style="height: 84px; border: 1px solid #8C93A1; border-radius: 2px; background: #FFFFFF;"></div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+              <button style="background: #12233F; color: #F6F1E7; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="background: #0B1729;">Send this to Dr. Raouf</button>
+              <button style="background: none; border: 1px solid #8C93A1; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500; min-height: 44px; cursor: pointer;" style-hover="border-color: #12233F;">Attach the deed instead</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px; align-self: start;">
+        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">What happens next</div>
+        <p style="font-size: 14px; line-height: 1.65; margin: 0 0 10px;">Your answer goes straight to the consultant reviewing your Will. Drafting resumes the same working day in most cases.</p>
+        <p style="font-size: 14px; line-height: 1.65; margin: 0;">Your case status stays “Legal review and drafting” while this is open. It has not been paused or reopened.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isRegistration }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start;">
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Registration</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 10px;">ADJD Civil Wills</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Your application is with the authority</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">Each step below names who acts. The authority sets its own timing, so we do not give you a date it has not given us.</p>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px;">
+          <sc-for list="{{ regsteps }}" as="s" hint-placeholder-count="6">
+            <div style="border-bottom: 1px solid #E2E6EC; padding: 14px 20px; display: grid; grid-template-columns: 24px minmax(0, 1fr) 168px 128px; gap: 14px; align-items: center;">
+              <div style="display: grid; place-items: center;">
+                <sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}">
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                </sc-if>
+                <sc-if value="{{ s.current }}" hint-placeholder-val="{{ true }}">
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#2A4E86" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle><path d="M8 4.8v3.4l2.4 1.4" stroke-linecap="round"></path></svg>
+                </sc-if>
+                <sc-if value="{{ s.todo }}" hint-placeholder-val="{{ false }}">
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#B9C2D1" stroke-width="1.6"><circle cx="8" cy="8" r="6.2"></circle></svg>
+                </sc-if>
+              </div>
+              <div>
+                <sc-if value="{{ s.isCurrent }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size: 16px; font-weight: 600; line-height: 1.4;">{{ s.label }}</div>
+                </sc-if>
+                <sc-if value="{{ s.notCurrent }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size: 16px; line-height: 1.4; color: #3A4A66;">{{ s.label }}</div>
+                </sc-if>
+              </div>
+              <div style="font-size: 14px; line-height: 1.4; color: #5B6472;">{{ s.who }}</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3A4A66; text-align: right; font-variant-numeric: tabular-nums;">{{ s.at }}</div>
+            </div>
+          </sc-for>
+          <div style="padding: 16px 20px; background: #FBF8F2;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A6512; margin-bottom: 10px;">What we need from you</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+              <div style="flex: 1 1 320px;">
+                <div style="font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 4px;">Attend your identity check and signing</div>
+                <div style="font-size: 15px; line-height: 1.6; color: #3A4A66;">The authority will offer appointment times once the application is accepted for processing. We pass them to you the day we receive them.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display: grid; gap: 16px; align-content: start;">
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 20px;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66; margin-bottom: 12px;">Authority charge</div>
+          <div style="display: grid; gap: 8px; font-size: 14px;">
+            <div style="display: flex; justify-content: space-between; gap: 12px;"><span style="color: #5B6472;">ADJD Civil Will, one regular Will</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">950.00</span></div>
+            <div style="display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid #E2E6EC; padding-top: 8px; font-weight: 600;"><span>Authorised 24 Aug 2026</span><span style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 950.00</span></div>
+          </div>
+          <div style="border-top: 1px solid #E2E6EC; margin-top: 12px; padding-top: 12px; font-size: 13px; line-height: 1.6; color: #3A4A66;">Paid to the authority, not to Summit, and subject to its current schedule.</div>
+        </div>
+        <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px;">
+          <p style="font-size: 14px; line-height: 1.65; margin: 0;">Lodging an application does not mean it has been accepted. The authority applies its own requirements and decides whether to register the Will.</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDocuments }}" hint-placeholder-val="{{ false }}">
+    <div data-two="1" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start;">
+      <div>
+        <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 24px;">
+          <div style="padding-right: 20px;">
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Completed</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 10px;">02 Sep 2026</div>
+          </div>
+          <div style="align-self: stretch; background: #D8C69A;"></div>
+          <div style="padding-left: 32px;">
+            <span style="display: inline-flex; align-items: center; gap: 8px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 5px 12px; margin-bottom: 14px; white-space: nowrap;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.7"><polyline points="3.6,8.4 6.4,11.2 12.4,4.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+              <span style="font-size: 12px; font-weight: 500; color: #2E6A4E;">Registered and delivered</span>
+            </span>
+            <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">Your Will is registered</h1>
+            <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 60ch;">The authority accepted the application on 2 September 2026 and issued the receipt below. Keep a copy somewhere your executor can find it.</p>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC;">
+          <div style="border-bottom: 1px solid #E2E6EC; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #3A4A66;">Your documents</div>
+          <sc-for list="{{ finaldocs }}" as="d" hint-placeholder-count="4">
+            <div style="border-bottom: 1px solid #E2E6EC; padding: 14px 16px; display: grid; grid-template-columns: 24px minmax(0, 1fr) 96px 132px; gap: 14px; align-items: center;">
+              <svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="#5B6472" stroke-width="1.4"><path d="M5.5 3h6l3.5 3.5v10.5h-9.5z" stroke-linejoin="round"></path><path d="M11.5 3v3.5H15" stroke-linejoin="round"></path></svg>
+              <div>
+                <div style="font-size: 15px; font-weight: 500; line-height: 1.4; margin-bottom: 3px;">{{ d.name }}</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472;">{{ d.file }}</div>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6472; text-align: right; font-variant-numeric: tabular-nums;">{{ d.size }}</div>
+              <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3A4A66; font-variant-numeric: tabular-nums;">{{ d.at }}</span>
+                <button style="background: none; border: none; border-bottom: 1px solid #8A6512; color: #12233F; font-size: 14px; padding: 2px 1px; cursor: pointer;" style-hover="color: #8A6512;">Download</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 24px; margin-top: 16px;">
+          <h2 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">Keeping it current</h2>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 62ch;">A Will should be reviewed after any significant change — marriage, divorce or separation, a birth or adoption, the death or incapacity of someone you named, or acquiring or disposing of a significant asset.</p>
+          <div style="display: grid; border-top: 1px solid #E2E6EC; max-width: 62ch;">
+            <div style="padding: 12px 0; border-bottom: 1px solid #E2E6EC; font-size: 15px; line-height: 1.6;">Tell your executor where the registered Will is kept</div>
+            <div style="padding: 12px 0; border-bottom: 1px solid #E2E6EC; font-size: 15px; line-height: 1.6;">A registered Will can normally be replaced or revoked, subject to the authority's process</div>
+            <div style="padding: 12px 0; font-size: 15px; line-height: 1.6;">Contact us and we will explain the route for an update</div>
+          </div>
+          <div style="margin-top: 16px;">
+            <a href="PublicPages.dc.html" style="border-bottom: none; display: inline-block; background: transparent; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500;">Request a review of my Will</a>
+          </div>
+        </div>
+      </div>
+      <div style="background: #F6F1E7; border: 1px solid #E4DDCE; padding: 16px 20px; align-self: start;">
+        <p style="font-size: 14px; line-height: 1.65; margin: 0 0 10px;">Registration is an authority process. It does not guarantee future validity, enforcement or any particular outcome after death.</p>
+        <p style="font-size: 14px; line-height: 1.65; margin: 0;">Your documents stay available in this account. Ask us any time for further copies.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isRest }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 32px;">
+        <div style="padding-right: 20px;">
+          <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Remaining screens</div>
+        </div>
+        <div style="align-self: stretch; background: #D8C69A;"></div>
+        <div style="padding-left: 32px;">
+          <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px;">The rest of the phase, at structure level</h1>
+          <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 62ch;">Account creation, identity, questionnaire, upload, further information, registration progress and final documents. Each states its own primary action and its compliance constraint.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px;">
+        <sc-for list="{{ screens }}" as="s" hint-placeholder-count="7">
+          <div data-span="1" style="grid-column: {{ s.span }}; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 20px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; margin-bottom: 10px; font-variant-numeric: tabular-nums;">{{ s.n }}</div>
+            <h2 style="font-size: 18px; font-weight: 600; line-height: 1.35; margin: 0 0 8px;">{{ s.title }}</h2>
+            <p style="font-size: 15px; line-height: 1.6; color: #3A4A66; margin: 0 0 12px;">{{ s.body }}</p>
+            <div style="border-top: 1px solid #E2E6EC; padding-top: 10px; display: grid; gap: 6px;">
+              <div style="display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; font-size: 13px; line-height: 1.5;">
+                <div style="color: #5B6472;">Action</div><div style="font-weight: 500;">{{ s.action }}</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; font-size: 13px; line-height: 1.5;">
+                <div style="color: #5B6472;">Constraint</div><div>{{ s.rule }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dashboard&quot;,&quot;checkout&quot;,&quot;draft&quot;,&quot;rest&quot;],&quot;default&quot;:&quot;dashboard&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Client area&quot;}}">
+const STAGES = [
+  { label: "Assessment completed", at: "14 Aug", state: "done" },
+  { label: "Accepted — terms and payment", at: "14 Aug", state: "done" },
+  { label: "Questionnaire completed", at: "16 Aug", state: "done" },
+  { label: "Documents received", at: "16 Aug", state: "done" },
+  { label: "Legal review and drafting", at: "in progress", state: "current" },
+  { label: "Draft review, amendments or approval", at: "", state: "todo" },
+  { label: "Registration preparation or in progress", at: "", state: "todo" },
+  { label: "Completed", at: "", state: "todo" },
+];
+
+const SCREENS = [
+  { n: "01", span: "1 / span 4", title: "Create your account", body: "Email, a password and nothing else. The account exists so your answers and documents have somewhere secure to live.", action: "Create account", rule: "No marketing consent bundled into account creation." },
+  { n: "02", span: "5 / span 4", title: "Identity details", body: "Full legal name as it appears on your passport, date of birth, nationality, residency and contact details.", action: "Save and continue", rule: "inputmode and autocomplete set correctly on every field." },
+  { n: "03", span: "9 / span 4", title: "Detailed questionnaire", body: "Beneficiaries, executors, guardianship wishes where the route permits, assets and existing documents. Saves as you go.", action: "Continue", rule: "Progress by section, never a promised question count." },
+  { n: "04", span: "1 / span 6", title: "Document upload", body: "Passport, Emirates ID and anything relevant to the accepted scope. Camera capture on mobile, with a per-file state for uploading, uploaded and rejected.", action: "Upload documents", rule: "Never requests card details, passwords or seed phrases. Says what each document is for." },
+  { n: "05", span: "7 / span 6", title: "Further information requested", body: "When the legal team needs something specific, the request names the clause it affects and what would resolve it. Attention state, not an error.", action: "Send the information", rule: "Uses attention, never critical. The matter is not at risk." },
+  { n: "06", span: "1 / span 6", title: "Registration progress", body: "Submission prepared, authority charge confirmed, appointment or virtual step, outcome recorded. Each step names who acts.", action: "Authorise the authority charge", rule: "No guaranteed date. The authority sets its own timing." },
+  { n: "07", span: "7 / span 6", title: "Final documents", body: "The registered Will, its certified translation and the authority's receipt, each downloadable with a date stamp.", action: "Download", rule: "Live text alongside every document. Nothing legal exists only inside a PDF." },
+];
+
+const PILL = {
+  positive: { fg: "#2E6A4E", bg: "#EAF2ED", border: "#C4DCD0" },
+  progress: { fg: "#2A4E86", bg: "#E9EFF8", border: "#C3D4EA" },
+  attention: { fg: "#8A6512", bg: "#F7F0DF", border: "#E6D5A8" },
+  held: { fg: "#63467F", bg: "#F0EBF6", border: "#D6C9E5" },
+  critical: { fg: "#8C2F2F", bg: "#F8ECEA", border: "#E8C9C4" },
+  neutral: { fg: "#5B6472", bg: "#F1F2F4", border: "#DCDFE4" },
+};
+
+const QSECTIONS = [
+  { id: "personal", label: "Your details", done: true, n: "01", note: "Name as it appears on your passport, date of birth, nationality, residency and contact details." },
+  { id: "spouse", label: "Spouse or partner", done: true, n: "02", note: "Shown because you told us you are married." },
+  { id: "children", label: "Children and dependants", done: true, n: "03", note: "Names, dates of birth and who they live with." },
+  { id: "beneficiaries", label: "Beneficiaries and substitutes", done: false, current: true, n: "04", note: "Who receives what, and who receives it if a first choice cannot act." },
+  { id: "distribution", label: "Distribution instructions", done: false, n: "05", note: "Shares must total 100%. We check the arithmetic before the legal review." },
+  { id: "executor", label: "Executor and alternate", done: false, n: "06", note: "" },
+  { id: "guardians", label: "Guardians", done: false, n: "07", note: "Shown because a child under 18 is recorded in section 03." },
+  { id: "assets", label: "Assets", done: false, n: "08", note: "Categories and locations. Values are not required." },
+  { id: "existing", label: "Existing Wills", done: false, n: "09", note: "Shown because you recorded a Will outside the UAE." },
+  { id: "wishes", label: "Special wishes", done: false, n: "10", note: "Optional. Funeral wishes, letters, anything else you want recorded." },
+];
+
+const UPLOADS = [
+  { name: "passport-whitfield.pdf", size: "1.8 MB", state: "Uploaded", tone: "positive", why: "Identity, required by every authority" },
+  { name: "emirates-id-front.jpg", size: "820 KB", state: "Uploaded", tone: "positive", why: "Residency confirmation" },
+  { name: "emirates-id-back.jpg", size: "—", state: "Uploading", tone: "progress", why: "Residency confirmation" },
+  { name: "title-deed-jvc.pdf", size: "3.1 MB", state: "Rejected — unreadable scan", tone: "critical", why: "Property listed in section 08" },
+  { name: "", size: "", state: "Not provided", tone: "attention", why: "Existing Will outside the UAE, from section 09" },
+];
+
+const REGSTEPS = [
+  { label: "Translation completed", at: "22 Aug 2026", who: "Summit", state: "done" },
+  { label: "Submission pack prepared", at: "23 Aug 2026", who: "Summit", state: "done" },
+  { label: "Authority charge confirmed", at: "24 Aug 2026", who: "Summit · you authorise", state: "done" },
+  { label: "Application lodged with the authority", at: "in progress", who: "Summit", state: "current" },
+  { label: "Identity check and signing", at: "", who: "You · at the authority", state: "todo" },
+  { label: "Outcome recorded", at: "", who: "The authority decides", state: "todo" },
+];
+
+const FINALDOCS = [
+  { name: "Registered Will — English", file: "Will_Whitfield_registered_EN.pdf", size: "266 KB", at: "02 Sep 2026" },
+  { name: "Certified legal translation — Arabic", file: "Will_Whitfield_registered_AR.pdf", size: "271 KB", at: "02 Sep 2026" },
+  { name: "Authority receipt", file: "ADJD_receipt_8841.pdf", size: "94 KB", at: "02 Sep 2026" },
+  { name: "VAT invoice", file: "Invoice_SLC-2026-04417.pdf", size: "48 KB", at: "14 Aug 2026" },
+];
+
+class Component extends DCLogic {
+  state = { page: "dashboard", accept: [false, false, false], approve: false, clause: "3", shareA: "60", shareB: "40" };
+
+  renderVals() {
+    const p = this.state.page;
+    const tabs = [
+      { id: "account", label: "Create account" },
+      { id: "identity", label: "Identity details" },
+      { id: "checkout", label: "Terms and checkout" },
+      { id: "questionnaire", label: "Will questionnaire" },
+      { id: "upload", label: "Documents" },
+      { id: "moreinfo", label: "Further information" },
+      { id: "dashboard", label: "Client dashboard" },
+      { id: "draft", label: "Draft review" },
+      { id: "registration", label: "Registration progress" },
+      { id: "documents", label: "Final documents" },
+    ];
+    return {
+      tabs: tabs.map(t => ({
+        label: t.label, on: t.id === p, off: t.id !== p,
+        pick: () => { this.setState({ page: t.id }); window.scrollTo(0, 0); },
+      })),
+      isDashboard: p === "dashboard",
+      isCheckout: p === "checkout",
+      isDraft: p === "draft",
+      isAccount: p === "account",
+      isIdentity: p === "identity",
+      isQuestionnaire: p === "questionnaire",
+      isUpload: p === "upload",
+      isMoreInfo: p === "moreinfo",
+      isRegistration: p === "registration",
+      isDocuments: p === "documents",
+      qsections: QSECTIONS.map(s => ({
+        n: s.n, label: s.label, note: s.note,
+        hasNote: !!s.note,
+        done: !!s.done, current: !!s.current, todo: !s.done && !s.current,
+        conditional: s.note.indexOf("Shown because") === 0,
+      })),
+      qdoneCount: QSECTIONS.filter(s => s.done).length + " of 10 sections complete",
+      shareA: this.state.shareA,
+      shareB: this.state.shareB,
+      onShareA: e => this.setState({ shareA: e.target.value.replace(/[^0-9]/g, "").slice(0, 3) }),
+      onShareB: e => this.setState({ shareB: e.target.value.replace(/[^0-9]/g, "").slice(0, 3) }),
+      shareTotal: (Number(this.state.shareA || 0) + Number(this.state.shareB || 0)) + "%",
+      shareOk: Number(this.state.shareA || 0) + Number(this.state.shareB || 0) === 100,
+      shareBad: Number(this.state.shareA || 0) + Number(this.state.shareB || 0) !== 100,
+      uploads: UPLOADS.map(u => {
+        const t = PILL[u.tone];
+        return {
+          name: u.name || "No file yet", size: u.size, state: u.state, why: u.why,
+          fg: t.fg, bg: t.bg, border: t.border,
+          missing: !u.name, present: !!u.name,
+        };
+      }),
+      regsteps: REGSTEPS.map(s => ({
+        label: s.label, at: s.at, who: s.who,
+        done: s.state === "done", current: s.state === "current", todo: s.state === "todo",
+        isCurrent: s.state === "current", notCurrent: s.state !== "current",
+      })),
+      finaldocs: FINALDOCS,
+      accept0: this.state.accept[0],
+      accept1: this.state.accept[1],
+      accept2: this.state.accept[2],
+      toggle0: () => { const n = this.state.accept.slice(); n[0] = !n[0]; this.setState({ accept: n }); },
+      toggle1: () => { const n = this.state.accept.slice(); n[1] = !n[1]; this.setState({ accept: n }); },
+      toggle2: () => { const n = this.state.accept.slice(); n[2] = !n[2]; this.setState({ accept: n }); },
+      acceptCount: this.state.accept.filter(Boolean).length + " of 3 accepted",
+      canPay: this.state.accept.every(Boolean),
+      cannotPay: !this.state.accept.every(Boolean),
+      approve: this.state.approve,
+      toggleApprove: () => this.setState({ approve: !this.state.approve }),
+      canApprove: this.state.approve,
+      cannotApprove: !this.state.approve,
+      clause: this.state.clause,
+      onClause: e => this.setState({ clause: e.target.value.replace(/[^0-9]/g, "").slice(0, 3) }),
+      stages: STAGES.map(s => ({
+        label: s.label, at: s.at,
+        done: s.state === "done", current: s.state === "current", todo: s.state === "todo",
+        isCurrent: s.state === "current", notCurrent: s.state !== "current",
+      })),
+      screens: SCREENS,
+    };
+  }
+}
+</script>
+</body>
+</html>

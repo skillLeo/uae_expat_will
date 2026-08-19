@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  th, td { text-align: left; }
+  @media (max-width: 1080px) {
+    [data-span] { grid-column: 1 / -1 !important; }
+    [data-margincol] { grid-template-columns: 120px 1px minmax(0, 1fr) !important; }
+  }
+  @media (max-width: 719px) {
+    [data-pad] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-margincol] { grid-template-columns: 1px minmax(0, 1fr) !important; }
+    [data-margincol] > [data-annot] { display: none !important; }
+    [data-wide-table] { display: none !important; }
+    [data-card-table] { display: grid !important; }
+  }
+</style>
+</helmet>
+
+<dc-import name="SiteHeader" active="pricing" hint-size="100%,80px"></dc-import>
+
+<section style="background: #F7F4EE; padding: 72px 0 64px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+    <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+      <div data-annot="1" style="padding-right: 20px;">
+        <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">Pricing</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">Home → Pricing</div>
+      </div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">Clear professional fees, with authority charges kept separate</h1>
+        <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 62ch;">You should know what you are paying for before work begins. Our standard professional fee covers the preparation and legal review of one accepted standard UAE Will, its certified legal translation and assistance with submission to the competent authority.</p>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 62ch;">Government, court, registry, notary and other third-party charges are separate because they are set by the relevant authority or provider and may depend on the registration route confirmed after legal review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 0 0 96px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+
+    <div data-span="1" style="grid-column: 1 / span 7; background: #FFFFFF; border: 1px solid #E2E6EC; border-top: 2px solid #AD8A46; border-radius: 8px; padding: 32px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 16px;">Standard UAE Will · online pathway</div>
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; margin-bottom: 8px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 40px; font-weight: 500; line-height: 1.05; letter-spacing: -0.015em; font-variant-numeric: tabular-nums;">AED 2,199</div>
+        <div style="font-size: 16px; color: #3A4A66;">plus VAT</div>
+      </div>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 24px; max-width: 56ch;">The professional fee for one accepted standard Will proceeding through the online pathway.</p>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+        <div>
+          <div style="font-size: 14px; font-weight: 600; padding-bottom: 10px; border-bottom: 1.5px solid #12233F; margin-bottom: 4px;">Included in the professional fee</div>
+          <div style="display: grid;">
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">The free preliminary assessment</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Secure account creation and the detailed Will questionnaire</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Review of the information and documents required for the accepted scope</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Preparation of a tailored Will draft</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Human legal review by Summit's legal team</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Certified legal translation of the new UAE Will</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">The amendment allowance stated in the Service Confirmation shown before payment</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Confirmation of the recommended registration route after legal review</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Assistance preparing and submitting the application to the competent authority</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0;">Guidance on the next authority steps and the final document after registration</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 14px; font-weight: 600; padding-bottom: 10px; border-bottom: 1.5px solid #12233F; margin-bottom: 4px;">Not included unless expressly stated</div>
+          <div style="display: grid;">
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Government, court or registry fees</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Notary, certification or attestation charges</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Courier, identity-verification or other third-party charges</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Legalisation, recognition or translation of a separate foreign document</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Foreign-law, tax, accounting, investment or financial advice</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Litigation, probate, succession proceedings or estate administration after death</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E2E6EC;">Trust, foundation, company restructuring or matrimonial work</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0;">Materially different or additional work outside the Service Confirmation</div>
+          </div>
+          <p style="font-size: 15px; line-height: 1.72; font-weight: 600; margin: 16px 0 0;">No additional professional fee is charged without your express approval.</p>
+        </div>
+      </div>
+      <div style="border-top: 1px solid #E2E6EC; margin-top: 24px; padding-top: 20px;">
+        <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 64ch;">For an accepted standard matter, we aim to send the first draft within <strong style="font-weight: 600;">2 business days</strong> after receiving complete, usable instructions and all required documents. A matter requiring specialist analysis, further clarification or additional documents may take longer.</p>
+      </div>
+    </div>
+
+    <div data-span="1" style="grid-column: 8 / span 5; background: #FFFFFF; border: 1px solid #E2E6EC; border-radius: 8px; padding: 32px; align-self: start;">
+      <div style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 6px 12px; margin-bottom: 16px; white-space: nowrap;">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.5"><circle cx="7.2" cy="7.2" r="4.6"></circle><path d="M10.6 10.6 13.8 13.8" stroke-linecap="round"></path></svg>
+        <span style="font-size: 12px; font-weight: 500; color: #63467F;">Quoted individually</span>
+      </div>
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 12px;">DIFC Will service</div>
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; margin-bottom: 16px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 30px; font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums;">From AED 3,999</div>
+        <div style="font-size: 15px; color: #3A4A66;">plus VAT</div>
+      </div>
+      <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0 0 12px;">DIFC engagements are quoted individually because DIFC Wills have specific eligibility, drafting, professional and registration requirements, and the appropriate scope depends on the Will type and circumstances.</p>
+      <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0 0 12px;">A DIFC request is held for direct contact before checkout. Summit confirms whether it can accept the matter, explains the proposed scope and provides the quotation before any DIFC payment or work begins.</p>
+      <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0 0 20px;">If the standard fee has already been paid and later legal review determines that a DIFC Will is required, the matter is paused and the full standard fee already paid is credited against the agreed DIFC professional fee. If you decline, the unused balance is refunded after deducting only a reasonable, documented amount for substantive work already completed.</p>
+      <a href="#contact" style="display: inline-block; border-bottom: none; color: #12233F; border: 1px solid #12233F; border-radius: 4px; padding: 13px 18px; font-size: 15px; font-weight: 500;">Contact our team</a>
+      <p style="font-size: 13px; line-height: 1.6; color: #5B6472; margin: 16px 0 0;">This is never shown as a fixed purchasable price, and no DIFC matter can be paid for online.</p>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 0 0 96px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" style="grid-column: 1 / span 6;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; margin: 0;">Why court fees are shown separately</h2>
+    </div>
+    <p data-span="1" style="grid-column: 7 / span 6; font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0; align-self: end;">The authority — not UAE Expat Wills — sets and collects its registration or notarisation fee. The amount can change and may depend on the selected service, document or registration route.</p>
+
+    <div data-span="1" data-wide-table="1" style="grid-column: 1 / -1; margin-top: 40px; background: #FFFFFF; border: 1px solid #E2E6EC;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px;">Possible route</th>
+            <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px; text-align: right;">Current expected authority charge</th>
+            <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px;">Important note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #E2E6EC;">
+            <td style="padding: 14px 16px; font-size: 15px; font-weight: 500;">ADJD Civil Will</td>
+            <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; text-align: right; font-variant-numeric: tabular-nums;">AED 950.00</td>
+            <td style="padding: 14px 16px; font-size: 14px; color: #3A4A66;">For one regular Will, subject to ADJD's current service, eligibility and fee schedule</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #E2E6EC;">
+            <td style="padding: 14px 16px; font-size: 15px; font-weight: 500;">Dubai Courts Will</td>
+            <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; text-align: right; font-variant-numeric: tabular-nums;">≈ AED 2,100.00</td>
+            <td style="padding: 14px 16px; font-size: 14px; color: #3A4A66;">For one Will, subject to the service and fee confirmed by Dubai Courts for the matter</td>
+          </tr>
+          <tr>
+            <td style="padding: 14px 16px; font-size: 15px; font-weight: 500;">DIFC Courts Will</td>
+            <td style="padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; text-align: right; color: #5B6472;">varies by Will type</td>
+            <td style="padding: 14px 16px; font-size: 14px; color: #3A4A66;">Confirmed from the current DIFC fee schedule with the individual quotation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div data-span="1" data-card-table="1" style="grid-column: 1 / -1; margin-top: 32px; display: none; gap: 8px;">
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+        <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">ADJD Civil Will</div>
+        <div style="display: grid; grid-template-columns: 128px 1fr; gap: 8px 12px; font-size: 14px;">
+          <div style="color: #5B6472;">Authority charge</div><div style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">AED 950.00</div>
+          <div style="color: #5B6472;">Note</div><div>For one regular Will, subject to ADJD's current schedule</div>
+        </div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+        <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Dubai Courts Will</div>
+        <div style="display: grid; grid-template-columns: 128px 1fr; gap: 8px 12px; font-size: 14px;">
+          <div style="color: #5B6472;">Authority charge</div><div style="font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">≈ AED 2,100.00</div>
+          <div style="color: #5B6472;">Note</div><div>Subject to the service and fee confirmed by Dubai Courts</div>
+        </div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px;">
+        <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">DIFC Courts Will</div>
+        <div style="display: grid; grid-template-columns: 128px 1fr; gap: 8px 12px; font-size: 14px;">
+          <div style="color: #5B6472;">Authority charge</div><div>Varies by Will type</div>
+          <div style="color: #5B6472;">Note</div><div>Confirmed with the individual quotation</div>
+        </div>
+      </div>
+    </div>
+
+    <div data-span="1" style="grid-column: 1 / span 8; margin-top: 24px; background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px;">
+      <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">These figures are not part of the AED 2,199 professional fee and are not a promise that a particular route will apply. Before payment of our professional fee we identify the known categories and the current estimates available. After legal review confirms the recommended route, we explain the then-current authority fee before asking you to authorise or make that payment.</p>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 0 0 96px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" style="grid-column: 1 / span 4;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 16px;"></div>
+      <h3 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">Each person has a separate Will</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0;">A couple does not share one Will. Each person gives and approves their own instructions, and each Will is a separate document and authority registration. The total professional fee and any package treatment is shown in the Service Confirmation or quotation before payment. Authority fees normally apply separately to each Will unless the authority expressly provides otherwise.</p>
+    </div>
+    <div data-span="1" style="grid-column: 5 / span 4;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 16px;"></div>
+      <h3 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">We explain any change before charging it</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0;">Further work may be required if the detailed information reveals a different service, a foreign-law issue, a trust or company structure, a materially changed distribution plan, undisclosed litigation, or another issue outside the accepted scope. Summit pauses the affected work, explains what has changed and provides the proposed scope and fee. You may accept or decline; refunds are handled under the <a href="#refund">Payment and Refund Policy</a>.</p>
+    </div>
+    <div data-span="1" style="grid-column: 9 / span 4;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 16px;"></div>
+      <h3 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0 0 12px;">What you will see before you pay</h3>
+      <div style="display: grid; border-top: 1px solid #E4DDCE;">
+        <div style="font-size: 15px; line-height: 1.5; padding: 9px 0; border-bottom: 1px solid #E4DDCE;">The proposed service</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 9px 0; border-bottom: 1px solid #E4DDCE;">The professional fee and VAT</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 9px 0; border-bottom: 1px solid #E4DDCE;">What the fee includes</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 9px 0; border-bottom: 1px solid #E4DDCE;">The amendment allowance</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 9px 0; border-bottom: 1px solid #E4DDCE;">Known material exclusions</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 9px 0; border-bottom: 1px solid #E4DDCE;">Separate charge categories and available estimates</div>
+        <div style="font-size: 15px; line-height: 1.5; padding: 9px 0;">Links to the Terms and Conditions and Payment and Refund Policy</div>
+      </div>
+      <p style="font-size: 15px; line-height: 1.72; font-weight: 600; margin: 16px 0 0;">Completing payment does not register the Will.</p>
+    </div>
+  </div>
+</section>
+
+<section style="background: #12233F; padding: 96px 0;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" style="grid-column: 1 / span 7;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 24px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; color: #F6F1E7; margin: 0 0 20px; max-width: 20ch;">Start with a free assessment</h2>
+      <p style="font-size: 18px; line-height: 1.65; color: #B9C2D1; margin: 0 0 32px; max-width: 58ch;">The assessment takes a few minutes and helps identify whether you can continue through the standard online pathway or should speak with the team first. No account or payment is required to complete it.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center;">
+        <a href="Assessment.dc.html" style="border-bottom: none; background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500;">Start the assessment</a>
+        <a href="#contact" style="font-size: 15px; font-weight: 500; color: #F6F1E7;">Contact our team →</a>
+      </div>
+    </div>
+    <p data-span="1" style="grid-column: 9 / span 4; font-size: 15px; line-height: 1.72; color: #B9C2D1; margin: 0;">Every accepted matter receives human legal review, you must approve the final draft, and registration or notarisation is completed only through the competent authority under its current requirements.</p>
+  </div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+</x-dc>
+</body>
+</html>

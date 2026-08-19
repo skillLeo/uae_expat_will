@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Libre+Caslon+Display&family=Prata&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+</style>
+</helmet>
+
+<section style="padding: 72px 32px 128px;">
+  <div style="max-width: 1216px; margin: 0 auto;">
+    <div style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start; margin-bottom: 64px;">
+      <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; padding-right: 20px;">Typographic identity · no pictorial mark</div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">Three wordmark directions, and the component that switches them</h1>
+        <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 62ch;">Each direction is built on a construction rather than a typeface, so the idea survives a change of face: a deed's title block, a filing's margin, and the meeting of two registers. Every specimen below is rendered by the same swappable component the live pages use — nothing here is hand-drawn, so what you approve is literally what ships.</p>
+        <p style="font-size: 15px; line-height: 1.6; color: #5B6472; margin: 0; max-width: 62ch;">1b is carried forward in Newsreader. Switching the whole product to 1a or 1c is one prop value. The Summit shield appears only where the firm itself is named, never as site furniture.</p>
+      </div>
+    </div>
+
+    <div style="display: grid; gap: 64px;">
+      <sc-for list="{{ directions }}" as="d" hint-placeholder-count="3">
+        <div>
+          <div style="display: flex; align-items: baseline; gap: 12px; padding-bottom: 12px; border-bottom: 1.5px solid #12233F; margin-bottom: 24px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: #8A6512;">{{ d.id }}</span>
+            <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.2; letter-spacing: -0.01em; margin: 0;">{{ d.name }}</h2>
+            <sc-if value="{{ d.live }}" hint-placeholder-val="{{ false }}">
+              <span style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #EAF2ED; border: 1px solid #C4DCD0; border-radius: 999px; padding: 5px 12px; white-space: nowrap; margin-left: auto;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2E6A4E" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"></circle><polyline points="5.2,8.3 7.2,10.2 10.9,5.9" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                <span style="font-size: 12px; font-weight: 500; color: #2E6A4E;">Carried forward</span>
+              </span>
+            </sc-if>
+          </div>
+
+          <div style="display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 32px; align-items: start;">
+            <div>
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px;">
+                <div style="background: #F6F1E7; border: 1px solid #E4DDCE; min-height: 150px; display: grid; place-items: center; padding: 24px 16px;">
+                  <dc-import name="Wordmark" direction="{{ d.key }}" context="lockup" ground="paper" hint-size="300px,90px"></dc-import>
+                </div>
+                <div style="background: #0B1729; border: 1px solid #1E3252; min-height: 150px; display: grid; place-items: center; padding: 24px 16px;">
+                  <dc-import name="Wordmark" direction="{{ d.key }}" context="lockup" ground="ink" hint-size="300px,90px"></dc-import>
+                </div>
+              </div>
+              <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 16px 20px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+                <dc-import name="Wordmark" direction="{{ d.key }}" context="header" ground="paper" hint-size="170px,30px"></dc-import>
+                <div style="flex: 1; min-width: 160px; display: flex; gap: 16px; font-size: 13px; color: #3A4A66; white-space: nowrap;">
+                  <span>How It Works</span>
+                  <span>Pricing</span>
+                  <span>FAQs</span>
+                </div>
+                <div style="width: 96px; height: 24px; flex: none; border: 1px dashed #B9C2D1; display: grid; place-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #5B6472;">utility slot</div>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5B6472; margin-top: 8px;">header at actual size · the slot is reserved so Client Login lands later without relayout</div>
+            </div>
+
+            <div>
+              <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px;">{{ d.idea }}</p>
+              <div style="border-top: 1px solid #E4DDCE;">
+                <div style="display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; padding: 10px 0; border-bottom: 1px solid #E4DDCE; font-size: 14px; line-height: 1.6;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512;">UAE</div>
+                  <div>{{ d.uae }}</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; padding: 10px 0; border-bottom: 1px solid #E4DDCE; font-size: 14px; line-height: 1.6;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512;">on ink</div>
+                  <div>{{ d.ink }}</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; padding: 10px 0; border-bottom: 1px solid #E4DDCE; font-size: 14px; line-height: 1.6;">
+                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512;">cost</div>
+                  <div>{{ d.cost }}</div>
+                </div>
+              </div>
+              <div style="margin-top: 16px; background: #FFFFFF; border: 1px solid #E2E6EC; padding: 14px 16px; width: 320px; max-width: 100%;">
+                <dc-import name="Wordmark" direction="{{ d.key }}" context="header" ground="paper" hint-size="150px,28px"></dc-import>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5B6472; margin-top: 8px;">320px check</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 96px; display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+      <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; padding-right: 20px;">Typeface note</div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 62ch;">The three directions were reviewed in Newsreader, Libre Caslon Display and Prata. Newsreader was chosen: it carries real display optical sizes at 44–72px and stays humane in a paragraph, which the product needs because the display face also sets page titles and pull quotes. Prata is the most fashionable of the three and its single weight limits the system later.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: baseline;">
+          <div style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; letter-spacing: -0.015em;">Newsreader</div>
+          <div style="font-family: 'Libre Caslon Display', serif; font-size: 32px; letter-spacing: -0.012em; color: #5B6472;">Libre Caslon Display</div>
+          <div style="font-family: Prata, serif; font-size: 30px; letter-spacing: -0.01em; color: #5B6472;">Prata</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const DIRECTIONS = [
+  {
+    id: "1a", key: "engrossment", name: "The Engrossment",
+    idea: "The name is set the way a deed's title block is set: fitted to a defined measure, tracked open until it fills that measure exactly, a hairline above and a heavier rule below. The measure is the idea — it is not centred on the page but centred within an instrument's width, which is a different and older convention.",
+    uae: "Bound into one block by the two rules, with tracking uniform across the line, so it cannot read as a separate brand.",
+    ink: "Rule weights invert, tracking unchanged. #F6F1E7 at 15.96:1.",
+    cost: "The widest of the three and the least distinctive at small sizes.",
+  },
+  {
+    id: "1b", key: "margin", name: "The Margin", live: true,
+    idea: "UAE sits where a clause number sits — small, gold, in the margin, its baseline aligned to the first baseline of the text block beside it, separated by the margin rule of a court filing. The lockup is a piece of page geography rather than a line of type, which is why the same construction becomes the page grid: it now carries the hero's ownership line, the fee and the named consultants, the clause numbers on the legal pages and the step numbers on How It Works.",
+    uae: "Positioned as an annotation rather than a word in the name's line, so the eye reads it as a reference.",
+    ink: "UAE moves to #D8C69A at 10.66:1 on #0B1729; the rule stays #AD8A46.",
+    cost: "The margin rule must never be mistakable for a divider — resolved in the foundations as a three-line system differing on orientation, colour and weight at once.",
+  },
+  {
+    id: "1c", key: "registers", name: "The Two Registers",
+    idea: "One line, two voices. UAE is set in the tightly tracked grotesque the interface speaks in — jurisdiction, administration, the form to be filed. Expat Wills is set in the display serif the document speaks in — the family, the wishes, the person. They meet on a shared baseline with no rule between them, and UAE's cap height is matched to the serif's x-height rather than its cap height.",
+    uae: "Optically subordinate: smaller than the serif's x-height line and in the same colour family, so it functions as a qualifier.",
+    ink: "UAE moves to #B9C2D1 at 10.01:1 on #0B1729.",
+    cost: "Closest of the three to a conventional two-tone lockup, so it leans hardest on the optical detail.",
+  },
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      directions: DIRECTIONS.map(d => ({
+        id: d.id, key: d.key, name: d.name, idea: d.idea,
+        uae: d.uae, ink: d.ink, cost: d.cost, live: !!d.live,
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

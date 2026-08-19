@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  [data-marker] { background: #F7F4EE; border: 1px solid #E4DDCE; transition: background 160ms ease, border-color 160ms ease; }
+  [data-marker][data-on="1"] { background: #F2EAD8; border-color: #AD8A46; }
+  [data-marker] span { color: #5B6472; transition: color 160ms ease; }
+  [data-marker][data-on="1"] span { color: #8A6512; }
+  @media (prefers-reduced-motion: reduce) {
+    [data-rail-fill] { transform: none !important; }
+    [data-marker] { transition: none; }
+  }
+  @media (max-width: 1080px) {
+    [data-span] { grid-column: 1 / -1 !important; }
+    [data-margincol] { grid-template-columns: 120px 1px minmax(0, 1fr) !important; }
+  }
+  @media (max-width: 719px) {
+    [data-pad] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-margincol] { grid-template-columns: 1px minmax(0, 1fr) !important; }
+    [data-margincol] > [data-annot] { display: none !important; }
+    [data-resp-table] { display: none !important; }
+    [data-resp-cards] { display: grid !important; }
+  }
+</style>
+</helmet>
+
+<dc-import name="SiteHeader" active="how" hint-size="100%,80px"></dc-import>
+
+<section style="background: #F7F4EE; padding: 72px 0 64px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+    <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+      <div data-annot="1" style="padding-right: 20px;">
+        <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">How it works</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">Home → How It Works</div>
+      </div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">From free assessment to registration assistance</h1>
+        <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0; max-width: 62ch;">Nine steps. Each one states who acts — you, Summit's legal team, or the competent authority — because the difference matters and most services blur it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 0 0 96px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: start;">
+
+    <div data-span="1" style="grid-column: 1 / span 3; position: sticky; top: 112px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">On this page</div>
+      <div style="display: grid; border-left: 1px solid #E4DDCE;">
+        <sc-for list="{{ anchors }}" as="a" hint-placeholder-count="9">
+          <a href="{{ a.href }}" style="border-bottom: none; padding: 8px 0 8px 16px; margin-left: -1px; border-left: 2px solid transparent; font-size: 14px; line-height: 1.4; color: #3A4A66;" style-hover="color: #8A6512; border-left-color: #AD8A46;">{{ a.label }}</a>
+        </sc-for>
+      </div>
+    </div>
+
+    <div data-span="1" style="grid-column: 4 / span 9;">
+      <div data-rail="1" style="position: relative; display: grid;">
+        <div style="position: absolute; left: 19px; top: 0; bottom: 0; width: 1px; background: #E4DDCE;"></div>
+        <div data-rail-fill="1" style="position: absolute; left: 19px; top: 0; bottom: 0; width: 1px; background: #AD8A46; transform: scaleY(0); transform-origin: top;"></div>
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="9">
+          <div id="{{ s.id }}" style="position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 24px; padding-bottom: 40px; align-items: start;">
+            <div data-marker="1" data-step="{{ s.n }}" data-on="0" style="width: 40px; height: 40px; border-radius: 999px; display: grid; place-items: center; position: relative; z-index: 1;">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums;">{{ s.n }}</span>
+            </div>
+            <div style="padding-top: 6px;">
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; margin-bottom: 8px;">
+                <h2 style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.008em; margin: 0;">{{ s.title }}</h2>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #5B6472; border: 1px solid #E4DDCE; border-radius: 2px; padding: 3px 7px; white-space: nowrap;">{{ s.actor }}</span>
+              </div>
+              <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 10px; max-width: 62ch;">{{ s.body }}</p>
+              <sc-if value="{{ s.hasNote }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size: 15px; line-height: 1.72; color: #12233F; margin: 0; max-width: 62ch; border-left: 2px solid #AD8A46; padding-left: 14px;">{{ s.note }}</p>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="responsibilities" style="background: #12233F; padding: 96px 0;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" style="grid-column: 1 / span 5;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 20px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 34px; line-height: 1.14; letter-spacing: -0.015em; color: #F6F1E7; margin: 0;">Who is responsible for what</h2>
+    </div>
+    <p data-span="1" style="grid-column: 7 / span 6; font-size: 16px; line-height: 1.65; color: #B9C2D1; margin: 0; align-self: end;">Three parties, three sets of obligations. The authority column is the one most services leave out, and it is the reason no timetable can be guaranteed.</p>
+
+    <div data-span="1" data-resp-table="1" style="grid-column: 1 / -1; margin-top: 40px; border-top: 1.5px solid #F6F1E7;">
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; padding: 16px 0 20px;">
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D8C69A;">Summit Legal Consultancy</div>
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D8C69A;">You</div>
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D8C69A;">The competent authority</div>
+      </div>
+      <sc-for list="{{ respRows }}" as="r" hint-placeholder-count="5">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; padding: 16px 0; border-top: 1px solid #1E3252;">
+          <div style="font-size: 15px; line-height: 1.6; color: #F6F1E7;">{{ r.summit }}</div>
+          <div style="font-size: 15px; line-height: 1.6; color: #F6F1E7;">{{ r.you }}</div>
+          <div style="font-size: 15px; line-height: 1.6; color: #F6F1E7;">{{ r.authority }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div data-span="1" data-resp-cards="1" style="grid-column: 1 / -1; margin-top: 32px; display: none; gap: 16px;">
+      <div style="border: 1px solid #1E3252; padding: 20px 16px;">
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D8C69A; margin-bottom: 12px;">Summit Legal Consultancy</div>
+        <div style="display: grid; gap: 10px;">
+          <sc-for list="{{ respRows }}" as="r" hint-placeholder-count="5">
+            <div style="font-size: 15px; line-height: 1.6; color: #F6F1E7; padding-bottom: 10px; border-bottom: 1px solid #1E3252;">{{ r.summit }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border: 1px solid #1E3252; padding: 20px 16px;">
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D8C69A; margin-bottom: 12px;">You</div>
+        <div style="display: grid; gap: 10px;">
+          <sc-for list="{{ respRows }}" as="r" hint-placeholder-count="5">
+            <div style="font-size: 15px; line-height: 1.6; color: #F6F1E7; padding-bottom: 10px; border-bottom: 1px solid #1E3252;">{{ r.you }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border: 1px solid #1E3252; padding: 20px 16px;">
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D8C69A; margin-bottom: 12px;">The competent authority</div>
+        <div style="display: grid; gap: 10px;">
+          <sc-for list="{{ respRows }}" as="r" hint-placeholder-count="5">
+            <div style="font-size: 15px; line-height: 1.6; color: #F6F1E7; padding-bottom: 10px; border-bottom: 1px solid #1E3252;">{{ r.authority }}</div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 96px 0;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" style="grid-column: 1 / span 7; background: #F6F1E7; border: 1px solid #E4DDCE; padding: 24px;">
+      <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">About timing</h3>
+      <p style="font-size: 15px; line-height: 1.72; margin: 0 0 10px; max-width: 64ch;">For an accepted standard matter we aim to send the first draft within 2 business days after receiving complete, usable instructions and all required documents. A matter requiring specialist analysis, further clarification or additional documents may take longer, and we will tell you if that applies.</p>
+      <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">Registration timing is set by the competent authority. We cannot guarantee that any authority will accept a Will or complete registration within a particular period.</p>
+    </div>
+    <div data-span="1" style="grid-column: 9 / span 4; align-self: start;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 16px;"></div>
+      <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0;">Related: the five registration routes and how they differ are set out on <a href="WillOptions.dc.html">UAE Will options</a>, and every charge is itemised on <a href="Pricing.dc.html">pricing</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section style="background: #12233F; padding: 96px 0;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" style="grid-column: 1 / span 7;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 24px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; color: #F6F1E7; margin: 0 0 20px; max-width: 20ch;">Begin at step one</h2>
+      <p style="font-size: 18px; line-height: 1.65; color: #B9C2D1; margin: 0 0 32px; max-width: 58ch;">The free assessment identifies the likely next step. No account or payment is required to complete it.</p>
+      <a href="Assessment.dc.html" style="display: inline-block; border-bottom: none; background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500;">Start the assessment</a>
+    </div>
+  </div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const STEPS = [
+  { n: "01", id: "step-1", actor: "You", title: "Complete the free assessment", body: "Answer a short set of questions about your connection to the UAE, your family and the general nature of your assets. No account is needed and no payment is taken." },
+  { n: "02", id: "step-2", actor: "Platform", title: "Receive your preliminary result", body: "The result indicates whether your circumstances may suit the standard online pathway, or whether the legal team should review the matter first.", note: "The result is preliminary guidance. It is not a legal opinion and it is not a decision by any registration authority." },
+  { n: "03", id: "step-3", actor: "You", title: "Create your account and accept the engagement terms", body: "You are shown the proposed service, the professional fee and VAT, what the fee includes, the amendment allowance, known exclusions and the separate charge categories before you commit to anything." },
+  { n: "04", id: "step-4", actor: "You", title: "Pay the professional fee", body: "AED 2,199 plus VAT for one accepted standard Will. Payment starts the work; it does not register a Will and it is not an acceptance by any authority." },
+  { n: "05", id: "step-5", actor: "You", title: "Complete the detailed questionnaire", body: "Beneficiaries, executors, guardianship wishes where the route permits, assets and any existing documents. You can save and return; the questionnaire adapts to your answers." },
+  { n: "06", id: "step-6", actor: "You", title: "Upload your documents", body: "Passport, Emirates ID and any document relevant to the accepted scope. On a phone you can photograph them directly." },
+  { n: "07", id: "step-7", actor: "Summit", title: "Human legal review and drafting", body: "A legal professional reviews your instructions, confirms the appropriate wording and the recommended registration route, and prepares your draft.", note: "Every Will receives human legal review before it is treated as ready for your approval. There is no exception, and no automated draft is released." },
+  { n: "08", id: "step-8", actor: "You and Summit", title: "Review, amend and approve", body: "You read the draft, request the amendments included in your service and personally approve the final wording. Nothing is submitted anywhere until you have approved it." },
+  { n: "09", id: "step-9", actor: "The authority", title: "Registration preparation and submission", body: "We prepare and submit the application and explain the authority's requirements and its charge before you authorise payment to it. Identity verification, signing and attendance remain personal steps, and the authority completes registration under its current rules." },
+];
+
+const RESP = [
+  { summit: "Reviews your instructions and drafts the Will", you: "Gives complete and accurate instructions", authority: "Sets its own eligibility and document requirements" },
+  { summit: "Confirms the recommended registration route", you: "Approves the final wording personally", authority: "Decides whether to accept a Will for registration" },
+  { summit: "Arranges certified legal translation of the new Will", you: "Provides identity documents in usable form", authority: "Sets and collects its registration or notarisation fee" },
+  { summit: "Prepares and submits the application", you: "Attends in person where the authority requires it", authority: "Sets its own processing times" },
+  { summit: "Explains the authority charge before you authorise it", you: "Tells us when your circumstances change", authority: "Issues the registered document" },
+];
+
+class Component extends DCLogic {
+  componentDidMount() {
+    const fill = document.querySelector("[data-rail-fill]");
+    const rail = document.querySelector("[data-rail]");
+    if (!fill || !rail) return;
+    const markers = Array.from(document.querySelectorAll("[data-marker]"));
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      fill.style.transform = "none";
+      markers.forEach(m => m.setAttribute("data-on", "1"));
+      return;
+    }
+    const tick = () => {
+      const r = rail.getBoundingClientRect();
+      const vh = window.innerHeight || 800;
+      const line = vh * 0.62;
+      const p = Math.max(0, Math.min(1, (line - r.top) / Math.max(1, r.height)));
+      fill.style.transform = "scaleY(" + p + ")";
+      markers.forEach(m => {
+        const mr = m.getBoundingClientRect();
+        if (mr.top + mr.height / 2 <= line) m.setAttribute("data-on", "1");
+      });
+    };
+    tick();
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => { this._raf = 0; tick(); });
+    };
+    window.addEventListener("scroll", this._onScroll, { passive: true });
+    window.addEventListener("resize", this._onScroll);
+  }
+
+  componentWillUnmount() {
+    if (this._onScroll) {
+      window.removeEventListener("scroll", this._onScroll);
+      window.removeEventListener("resize", this._onScroll);
+    }
+  }
+
+  renderVals() {
+    if (this._vals) return this._vals;
+    this._vals = {
+      steps: STEPS.map(s => ({
+        n: s.n, id: s.id, actor: s.actor, title: s.title, body: s.body,
+        note: s.note || "", hasNote: !!s.note,
+      })),
+      anchors: STEPS.map(s => ({ href: "#" + s.id, label: s.n + " · " + s.title })),
+      respRows: RESP,
+    };
+    return this._vals;
+  }
+}
+</script>
+</body>
+</html>

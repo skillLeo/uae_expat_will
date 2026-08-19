@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F7F4EE; }
+  body { font-family: "Instrument Sans", system-ui, sans-serif; color: #12233F; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12233F; text-decoration: none; border-bottom: 1px solid #AD8A46; }
+  a:hover { color: #8A6512; border-bottom-color: #8A6512; }
+  th, td { text-align: left; vertical-align: top; }
+  @media (max-width: 1080px) {
+    [data-span] { grid-column: 1 / -1 !important; }
+    [data-margincol] { grid-template-columns: 120px 1px minmax(0, 1fr) !important; }
+  }
+  @media (max-width: 900px) {
+    [data-route-table] { display: none !important; }
+    [data-route-cards] { display: grid !important; }
+  }
+  @media (max-width: 719px) {
+    [data-pad] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-margincol] { grid-template-columns: 1px minmax(0, 1fr) !important; }
+    [data-margincol] > [data-annot] { display: none !important; }
+  }
+</style>
+</helmet>
+
+<dc-import name="SiteHeader" active="options" hint-size="100%,80px"></dc-import>
+
+<section style="background: #F7F4EE; padding: 72px 0 56px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px;">
+    <div data-margincol="1" style="display: grid; grid-template-columns: 176px 1px minmax(0, 1fr); align-items: start;">
+      <div data-annot="1" style="padding-right: 20px;">
+        <div style="font-size: 11px; font-weight: 600; line-height: 1.7; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512;">UAE Will options</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; color: #5B6472; margin-top: 12px;">Home → UAE Will Options</div>
+      </div>
+      <div style="align-self: stretch; background: #D8C69A;"></div>
+      <div style="padding-left: 32px;">
+        <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 20px; max-width: 26ch;">The main UAE Will pathways at a glance</h1>
+        <p style="font-size: 18px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 62ch;">This comparison is a practical starting point, not a final eligibility or legal-effect decision. You do not choose the route yourself — the assessment and the legal review identify it.</p>
+        <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">The assessment provides a preliminary pathway only. It does not confirm final authority eligibility, create a final Will or complete registration.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 0 0 80px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" data-route-table="1" style="grid-column: 1 / -1; background: #FFFFFF; border: 1px solid #E2E6EC;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px; width: 18%;">Route</th>
+            <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px; width: 28%;">Who it may be relevant for</th>
+            <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px; width: 30%;">Main features</th>
+            <th style="background: #FBF8F2; border-bottom: 1.5px solid #12233F; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3A4A66; padding: 12px 16px; width: 24%;">How it is handled</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ routes }}" as="r" hint-placeholder-count="5">
+            <tr style="border-bottom: 1px solid #E2E6EC;">
+              <td style="padding: 16px; font-size: 15px; font-weight: 600; line-height: 1.4;">{{ r.name }}</td>
+              <td style="padding: 16px; font-size: 14px; line-height: 1.6; color: #3A4A66;">{{ r.who }}</td>
+              <td style="padding: 16px; font-size: 14px; line-height: 1.6; color: #3A4A66;">{{ r.features }}</td>
+              <td style="padding: 16px; font-size: 14px; line-height: 1.6; color: #3A4A66;">{{ r.handled }}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+
+    <div data-span="1" data-route-cards="1" style="grid-column: 1 / -1; display: none; gap: 12px;">
+      <sc-for list="{{ routes }}" as="r" hint-placeholder-count="5">
+        <div style="background: #FFFFFF; border: 1px solid #E2E6EC; padding: 20px 16px;">
+          <div style="font-size: 17px; font-weight: 600; line-height: 1.35; margin-bottom: 14px;">{{ r.name }}</div>
+          <div style="display: grid; gap: 12px;">
+            <div>
+              <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; margin-bottom: 4px;">Who it may be relevant for</div>
+              <div style="font-size: 15px; line-height: 1.6;">{{ r.who }}</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; margin-bottom: 4px;">Main features</div>
+              <div style="font-size: 15px; line-height: 1.6;">{{ r.features }}</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6472; margin-bottom: 4px;">How it is handled</div>
+              <div style="font-size: 15px; line-height: 1.6;">{{ r.handled }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div data-span="1" style="grid-column: 1 / span 6; margin-top: 32px;">
+      <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">Beyond registration</h3>
+      <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0;">Route selection should consider what happens after death as well as the registration appointment. The chosen framework can affect the court dealing with probate or implementation, document language, enforcement steps, asset-transfer procedures and the work required from the executor or family.</p>
+    </div>
+    <div data-span="1" style="grid-column: 7 / span 6; margin-top: 32px; background: #F6F1E7; border: 1px solid #E4DDCE; padding: 20px 24px;">
+      <h3 style="font-size: 20px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;">What the comparison does not decide</h3>
+      <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">It does not confirm that an authority will accept a particular Will, that every asset falls within the document, that a registered Will avoids probate, or that one document will operate automatically in every country.</p>
+    </div>
+  </div>
+</section>
+
+<section style="background: #F7F4EE; padding: 0 0 96px;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px; align-items: start;">
+    <div data-span="1" style="grid-column: 1 / span 3; position: sticky; top: 112px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6512; margin-bottom: 14px;">On this page</div>
+      <div style="display: grid; border-left: 1px solid #E4DDCE;">
+        <sc-for list="{{ anchors }}" as="a" hint-placeholder-count="6">
+          <a href="{{ a.href }}" style="border-bottom: none; padding: 8px 0 8px 16px; margin-left: -1px; border-left: 2px solid transparent; font-size: 14px; line-height: 1.4; color: #3A4A66;" style-hover="color: #8A6512; border-left-color: #AD8A46;">{{ a.label }}</a>
+        </sc-for>
+      </div>
+    </div>
+
+    <div data-span="1" style="grid-column: 4 / span 9;">
+      <div id="difc" style="padding-bottom: 40px; border-bottom: 1px solid #E4DDCE; margin-bottom: 40px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; margin-bottom: 12px;">
+          <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.2; letter-spacing: -0.015em; margin: 0;">DIFC Courts Wills</h2>
+          <span style="display: inline-flex; flex: none; align-items: center; gap: 8px; background: #F0EBF6; border: 1px solid #D6C9E5; border-radius: 999px; padding: 5px 12px; white-space: nowrap;">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#63467F" stroke-width="1.5"><circle cx="7.2" cy="7.2" r="4.6"></circle><path d="M10.6 10.6 13.8 13.8" stroke-linecap="round"></path></svg>
+            <span style="font-size: 12px; font-weight: 500; color: #63467F;">Reviewed before payment</span>
+          </span>
+        </div>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 16px; max-width: 64ch;">A specialist route operating under the DIFC Wills and Probate Registry Rules and Dubai's framework for non-Muslim Wills. Because DIFC has its own eligibility rules and its own professional-registration requirement for drafting assistance, DIFC matters are not processed through the standard online checkout. Engagements are quoted individually and currently start from AED 3,999 plus VAT.</p>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+          <div>
+            <div style="font-size: 14px; font-weight: 600; padding-bottom: 10px; border-bottom: 1.5px solid #12233F;">Current DIFC eligibility, per its published FAQ</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E4DDCE;">Not Muslim, and never having been Muslim</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E4DDCE;">At least 18 years old</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E4DDCE;">UAE assets, or qualifying minor children residing with the testator in the UAE</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0;">A UAE residence visa is not required, and virtual registration is currently permitted</div>
+          </div>
+          <div>
+            <div style="font-size: 14px; font-weight: 600; padding-bottom: 10px; border-bottom: 1.5px solid #12233F;">Will types currently presented by DIFC</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E4DDCE;">Full — movable and immovable assets, with guardianship where applicable</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E4DDCE;">Property — up to five qualifying UAE properties or shares in them</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E4DDCE;">Business Owners — up to five qualifying UAE shareholdings</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E4DDCE;">Financial Assets — up to ten qualifying UAE bank or brokerage accounts</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0; border-bottom: 1px solid #E4DDCE;">Guardianship — appointments without asset distribution under that Will type</div>
+            <div style="font-size: 15px; line-height: 1.5; padding: 10px 0;">Digital Assets — a specialist option connected to the supported DIFC wallet</div>
+          </div>
+        </div>
+        <p style="font-size: 14px; line-height: 1.6; color: #5B6472; margin: 16px 0 0;">The available route, scope and portal requirements must be checked at the time of engagement.</p>
+      </div>
+
+      <div id="adjd" style="padding-bottom: 40px; border-bottom: 1px solid #E4DDCE; margin-bottom: 40px;">
+        <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 12px;">Abu Dhabi Civil Wills — ADJD</h2>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px; max-width: 64ch;">ADJD states that its Civil Wills Office is available to a person who is not a UAE citizen, and that religion does not prevent access. Its current process provides a standard bilingual template as well as special or customised registration routes.</p>
+        <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">Handled through the standard online pathway at AED 2,199 plus VAT, with human legal review by Summit's legal team after payment to confirm the correct wording and structure.</p>
+      </div>
+
+      <div id="dubai" style="padding-bottom: 40px; border-bottom: 1px solid #E4DDCE; margin-bottom: 40px;">
+        <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 12px;">Dubai Courts Wills</h2>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px; max-width: 64ch;">Dubai Law No. 15 of 2017 establishes a Dubai Courts register for the Wills of non-Muslims and sets rules on registration, implementation and estate administration.</p>
+        <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">The current service channel, document, language and procedural requirements are confirmed for each proposed application as part of the standard service.</p>
+      </div>
+
+      <div id="muslim" style="padding-bottom: 40px; border-bottom: 1px solid #E4DDCE; margin-bottom: 40px;">
+        <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 12px;">Muslim Will pathway</h2>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px; max-width: 64ch;">For Muslim residents, investors or asset owners who wish to make a Will within the rules applicable to them. A Will may record permitted gifts and appointments under the applicable Personal Status framework, and ADJD registration may be available to a person who is not a UAE citizen.</p>
+        <p style="font-size: 15px; line-height: 1.72; margin: 0 0 12px; max-width: 64ch;">Muslim clients use the same online process as everyone else: complete the instructions, pay the professional fee, and Summit's legal team applies the applicable rules during review and selects the registration authority.</p>
+        <p style="font-size: 15px; line-height: 1.72; color: #3A4A66; margin: 0; max-width: 64ch;">We do not state that any single framework applies automatically to every person. What applies depends on the individual circumstances and the authority's own requirements.</p>
+      </div>
+
+      <div id="foreign" style="padding-bottom: 40px; border-bottom: 1px solid #E4DDCE; margin-bottom: 40px;">
+        <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 12px;">Foreign Will involving UAE assets</h2>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 12px; max-width: 64ch;">A Will already made in another country may remain relevant and form part of a coordinated international estate plan. It is reviewed alongside the new document through the standard online pathway.</p>
+        <p style="font-size: 15px; line-height: 1.72; margin: 0; max-width: 64ch;">One document does not operate automatically in every country. Where a foreign Will exists, the review considers how the two documents sit together and whether anything needs revoking or amending.</p>
+      </div>
+
+      <div id="identify">
+        <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 12px;">How a route is identified</h2>
+        <p style="font-size: 16px; line-height: 1.65; color: #3A4A66; margin: 0 0 20px; max-width: 64ch;">Nationality, religion, residency, family circumstances, asset type and location, existing Wills and international connections may all affect the analysis. The assessment produces a preliminary indication; the legal review confirms it.</p>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; border-top: 1px solid #E4DDCE; padding-top: 20px;">
+          <div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; margin-bottom: 8px;">01</div>
+            <div style="font-size: 15px; line-height: 1.6;">The free assessment indicates a likely pathway from your answers.</div>
+          </div>
+          <div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; margin-bottom: 8px;">02</div>
+            <div style="font-size: 15px; line-height: 1.6;">Human legal review examines the detail and confirms the recommended authority.</div>
+          </div>
+          <div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A6512; margin-bottom: 8px;">03</div>
+            <div style="font-size: 15px; line-height: 1.6;">The authority applies its own current requirements and decides.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background: #12233F; padding: 96px 0;">
+  <div data-pad="1" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px;">
+    <div data-span="1" style="grid-column: 1 / span 7;">
+      <div style="width: 44px; height: 2px; background: #AD8A46; margin-bottom: 24px;"></div>
+      <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; color: #F6F1E7; margin: 0 0 20px; max-width: 22ch;">You do not have to pick the route</h2>
+      <p style="font-size: 18px; line-height: 1.65; color: #B9C2D1; margin: 0 0 32px; max-width: 58ch;">Answer the assessment and the legal team identifies the appropriate framework. No account or payment is required to complete it.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center;">
+        <a href="Assessment.dc.html" style="border-bottom: none; background: #F6F1E7; color: #12233F; border: 1px solid #F6F1E7; border-radius: 4px; padding: 16px 24px; font-size: 16px; font-weight: 500;">Start the assessment</a>
+        <a href="HowItWorks.dc.html" style="font-size: 15px; font-weight: 500; color: #F6F1E7;">See how the service works →</a>
+      </div>
+    </div>
+    <p data-span="1" style="grid-column: 9 / span 4; font-size: 15px; line-height: 1.72; color: #B9C2D1; margin: 0;">This is the only call to action on the page. The five route sections above carry none, so nothing pressures a decision while you are still reading.</p>
+  </div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const ROUTES = [
+  { name: "DIFC Courts Wills Service", who: "A person who is not Muslim and has never been Muslim, is at least 18 years old, and has qualifying UAE assets and/or qualifying minor children under the applicable guardianship requirements", features: "Specialist DIFC rules; its general FAQ lists five standard Will types and its service page also presents a Digital Assets Will option; virtual registration is currently available; UAE residence is not required", handled: "Direct contact with Summit before payment where DIFC is identified at assessment; engagements start from AED 3,999 plus VAT" },
+  { name: "ADJD Civil Wills", who: "A person who is not a UAE citizen; ADJD states that religion does not prevent access to its Civil Wills Office", features: "ADJD Civil Wills Section; standard bilingual template and special or customised registration routes are available under its current process", handled: "Standard online pathway — AED 2,199 plus VAT, reviewed by Summit's legal team after payment" },
+  { name: "Dubai Courts Wills", who: "Non-Muslim testators whose Will and estate fall within Dubai's statutory framework", features: "Dubai Law No. 15 of 2017 establishes a Dubai Courts register for non-Muslim Wills and rules on registration, implementation and estate administration", handled: "Standard online pathway — AED 2,199 plus VAT, reviewed by Summit's legal team after payment" },
+  { name: "Muslim Will pathway", who: "Muslim residents, investors or asset owners who wish to make a Will within the rules applicable to them", features: "May record permitted gifts and appointments under the applicable Personal Status framework; ADJD registration may be available to a person who is not a UAE citizen", handled: "Standard online pathway — Muslim clients pay and complete the questionnaire like any other client, and Summit's legal team applies the applicable rules during review" },
+  { name: "Foreign Will involving UAE assets", who: "A person who has or plans a Will in another country", features: "May remain relevant and form part of a coordinated international estate plan", handled: "Standard online pathway, reviewed alongside the existing document" },
+];
+
+const ANCHORS = [
+  { href: "#difc", label: "DIFC Courts Wills" },
+  { href: "#adjd", label: "Abu Dhabi Civil Wills — ADJD" },
+  { href: "#dubai", label: "Dubai Courts Wills" },
+  { href: "#muslim", label: "Muslim Will pathway" },
+  { href: "#foreign", label: "Foreign Wills and UAE assets" },
+  { href: "#identify", label: "How a route is identified" },
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    if (this._vals) return this._vals;
+    this._vals = { routes: ROUTES, anchors: ANCHORS };
+    return this._vals;
+  }
+}
+</script>
+</body>
+</html>
