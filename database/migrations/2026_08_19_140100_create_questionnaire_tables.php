@@ -144,7 +144,10 @@ return new class extends Migration
             $table->json('extra')->nullable();
             $table->timestamps();
 
-            $table->unique(['questionnaire_version_id', 'outcome']);
+            // Explicit name: the auto-generated one is 68 characters, and MySQL
+            // caps identifiers at 64. It passes silently on SQLite and fails on
+            // the production database, which is the worst place to find out.
+            $table->unique(['questionnaire_version_id', 'outcome'], 'qrs_version_outcome_unique');
         });
     }
 
