@@ -122,13 +122,35 @@ and is not a deploy failure.
 
 ```bash
 curl -sI https://will.skillleo.com/ | grep -i x-powered-by          # PHP/8.4.21
-curl -s  https://will.skillleo.com/ | grep -c "Without a Will"      # >0 = SSR is up
+curl -s  https://will.skillleo.com/ | grep -c 'data-server-rendered' # 1 = SSR is up
 curl -sI https://will.skillleo.com/.env | head -1                   # 403
 curl -sI https://will.skillleo.com/composer.json | head -1          # 404
 ```
 
-If the homepage returns HTML but the `grep` finds nothing, SSR is down and the page is
-client-rendering. Check `storage/logs/ssr.log` and run `./ssr-watchdog.sh`.
+### How to check SSR, and how NOT to
+
+`data-server-rendered="true"` on the `#app` div is the only reliable signal. Grepping the
+page for a phrase is **not** — every string also appears inside the Inertia JSON payload,
+so a grep passes whether or not anything was rendered. That false positive cost real time
+here: SSR looked fine for hours while nothing was being checked.
+
+To inspect the rendered markup, take the document from `data-server-rendered` onwards and
+look at that. Stripping `<script>` tags with a regex is unreliable on a page this size.
+
+```bash
+# Genuinely rendered markup, not the JSON payload
+curl -s https://will.skillleo.com/ | sed -n '/data-server-rendered/,$p' | grep -c '<h1'
+```
+
+If `data-server-rendered` is absent, SSR is down and the page is client-rendering. Run
+`./ssr-watchdog.sh` and check `storage/logs/ssr.log`.
+
+### The stale-SSR trap
+
+A stale SSR process is more dangerous than a dead one: it keeps answering, so every health
+check passes, while silently serving the **previous** build. `ssr-watchdog.sh` compares the
+bundle's mtime against the process start time and recycles it when the bundle is newer.
+Always run the watchdog after a build rather than assuming a running process is current.
 
 ---
 
