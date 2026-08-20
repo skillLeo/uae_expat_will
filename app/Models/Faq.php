@@ -36,4 +36,15 @@ class Faq extends Model
     {
         return $query->where('is_published', true);
     }
+
+    /**
+     * Scope to a locale, defaulting to the active one.
+     *
+     * Without this a second language would render English answers under
+     * translated category headings, which is worse than no translation at all.
+     */
+    public function scopeForLocale(Builder $query, ?string $locale = null): Builder
+    {
+        return $query->where('locale', $locale ?? app()->getLocale());
+    }
 }

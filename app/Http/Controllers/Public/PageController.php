@@ -118,16 +118,19 @@ class PageController extends Controller
             'home' => [
                 // The homepage carries a short teaser set, not all 57.
                 'faqs' => Faq::published()
+                    ->forLocale()
                     ->where('category_key', 'platform')
                     ->orderBy('order')
                     ->limit(5)
                     ->get(['id', 'question', 'answer', 'anchor']),
             ],
             'faqs' => [
-                'categories' => FaqCategory::orderBy('order')->get(['key', 'label']),
+                'categories' => FaqCategory::where('locale', app()->getLocale())
+                    ->orderBy('order')->get(['key', 'label']),
                 // Every answer is sent, so all 57 are in the server-rendered HTML
                 // even when collapsed. No pagination — a written client rule.
                 'faqs' => Faq::published()
+                    ->forLocale()
                     ->orderBy('category_key')
                     ->orderBy('order')
                     ->get(['id', 'category_key', 'question', 'answer', 'anchor']),

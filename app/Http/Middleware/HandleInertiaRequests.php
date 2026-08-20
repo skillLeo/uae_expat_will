@@ -70,6 +70,12 @@ class HandleInertiaRequests extends Middleware
             ],
 
             'locale' => fn () => app()->getLocale(),
+            'supportedLocales' => fn () => config('app.supported_locales', ['en']),
+
+            // The interface strings. Page content is NOT here — it comes from
+            // the database with its own locale column, so Summit edits it and a
+            // second language is a second row rather than a second deployment.
+            'translations' => fn () => trans('ui'),
         ]);
     }
 }

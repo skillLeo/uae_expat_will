@@ -80,6 +80,16 @@ return [
 
     'locale' => env('APP_LOCALE', 'en'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Supported locales
+    |--------------------------------------------------------------------------
+    | English only at launch. Adding one here, translating lang/<code>/ui.php
+    | and seeding the content rows with that locale is the whole job — no
+    | component changes.
+    */
+    'supported_locales' => ['en'],
+
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),

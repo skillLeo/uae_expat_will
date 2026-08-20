@@ -8,10 +8,13 @@ use App\Http\Controllers\Admin\CaseActionController;
 use App\Http\Controllers\Admin\CaseController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DocumentController;
+use App\Http\Controllers\Admin\DraftController;
 use App\Http\Controllers\Admin\NotificationTemplateController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\QuestionnaireController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SavedViewController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +64,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('cases/{case}', [CaseController::class, 'show'])->name('cases.show');
             });
 
+            Route::middleware('permission:cases.view.all|cases.view.assigned')->group(function () {
+                Route::post('saved-views', [SavedViewController::class, 'store'])->name('saved-views.store');
+                Route::delete('saved-views/{savedView}', [SavedViewController::class, 'destroy'])->name('saved-views.destroy');
+            });
+
             Route::middleware('permission:cases.update')->group(function () {
                 Route::post('cases/{case}/status', [CaseActionController::class, 'changeStatus'])->name('cases.status');
                 Route::post('cases/{case}/stage', [CaseActionController::class, 'recordStage'])->name('cases.stage');
@@ -74,6 +82,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 ->middleware('permission:notes.create')->name('cases.notes');
             Route::post('cases/{case}/contacts', [CaseActionController::class, 'logContact'])
                 ->middleware('permission:contacts.log')->name('cases.contacts');
+
+            // ------------------------------------------- drafts and documents
+            Route::middleware('permission:drafts.view')->group(function () {
+                Route::get('drafts/{draft}/download', [DraftController::class, 'download'])->name('drafts.download');
+            });
+
+            Route::middleware('permission:drafts.send')->group(function () {
+                Route::post('cases/{case}/drafts', [DraftController::class, 'store'])->name('drafts.store');
+                Route::post('drafts/{draft}/send', [DraftController::class, 'send'])->name('drafts.send');
+                Route::post('amendments/{amendment}/resolve', [DraftController::class, 'resolveAmendment'])->name('drafts.amendments.resolve');
+            });
+
+            Route::middleware('permission:documents.view')->group(function () {
+                Route::get('documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
+            });
+
+            Route::middleware('permission:documents.upload')->group(function () {
+                Route::post('documents/{document}/review', [DocumentController::class, 'review'])->name('documents.review');
+                Route::post('cases/{case}/documents', [DocumentController::class, 'store'])->name('documents.store');
+            });
 
             // ---------------------------------------------------- payments
             Route::middleware('permission:payments.view')->group(function () {

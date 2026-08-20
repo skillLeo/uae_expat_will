@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Domain\Assessment\Actions\RecordAnswer;
 use App\Domain\Assessment\Enums\QuestionType;
 use App\Domain\Cases\Actions\ChangeCaseStatus;
+use App\Domain\Cases\Enums\CaseStage;
 use App\Domain\Cases\Enums\InternalStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Assessment;
@@ -30,6 +31,7 @@ class QuestionnaireController extends Controller
     public function show(Request $request, LegalCase $case): Response|RedirectResponse
     {
         $this->authoriseCase($request, $case);
+        $this->assertPaid($case);
 
         $assessment = $this->detailedAssessment($case);
 
@@ -91,6 +93,7 @@ class QuestionnaireController extends Controller
     public function answer(Request $request, LegalCase $case): RedirectResponse
     {
         $this->authoriseCase($request, $case);
+        $this->assertPaid($case);
 
         $validated = $request->validate([
             'question_key' => 'required|string|max:40',
@@ -108,6 +111,7 @@ class QuestionnaireController extends Controller
     public function back(Request $request, LegalCase $case): RedirectResponse
     {
         $this->authoriseCase($request, $case);
+        $this->assertPaid($case);
 
         $assessment = $this->detailedAssessment($case);
         abort_if($assessment === null, 404);
@@ -126,6 +130,7 @@ class QuestionnaireController extends Controller
     public function submit(Request $request, LegalCase $case): RedirectResponse
     {
         $this->authoriseCase($request, $case);
+        $this->assertPaid($case);
 
         $assessment = $this->detailedAssessment($case);
         abort_if($assessment === null, 404);
@@ -165,5 +170,20 @@ class QuestionnaireController extends Controller
     private function authoriseCase(Request $request, LegalCase $case): void
     {
         abort_unless($case->customer?->user_id === $request->user()->id, 403);
+    }
+
+    /**
+     * The specification is explicit: do not open the detailed questionnaire
+     * before acceptance, engagement and payment. Payment is the observable
+     * one, and it is recorded as a stage timestamp — the same evidence the
+     * refund engine reads, so the two can never disagree.
+     */
+    private function assertPaid(LegalCase $case): void
+    {
+        abort_unless(
+            $case->hasReachedStage(CaseStage::Payment),
+            403,
+            'The detailed questionnaire opens once your matter has been accepted and the professional fee is paid.',
+        );
     }
 }

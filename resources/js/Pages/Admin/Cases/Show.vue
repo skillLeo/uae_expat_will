@@ -22,6 +22,8 @@ const props = defineProps({
     notes: { type: Array, default: () => [] },
     contacts: { type: Array, default: () => [] },
     payments: { type: Array, default: () => [] },
+    drafts: { type: Array, default: () => [] },
+    documents: { type: Array, default: () => [] },
     stages: { type: Array, default: () => [] },
     staff: { type: Array, default: () => [] },
     internalStatuses: { type: Array, default: () => [] },
@@ -41,6 +43,48 @@ const linkForm = reactive({ amount: props.record.quoted_amount ?? '', stage_labe
 const manualForm = reactive({ amount: props.record.quoted_amount ?? '', method: 'bank_transfer', stage_label: 'Professional fee', reference: '' });
 
 const post = (url, data) => router.post(url, data, { preserveScroll: true, onSuccess: () => { sheet.value = null; } });
+
+const draftFile = ref(null);
+const docFile = ref(null);
+const docCategory = ref('other');
+const reviewing = ref(null);
+const reviewNote = ref('');
+
+function uploadDraft(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    router.post(`/admin/cases/${props.record.id}/drafts`, { file }, {
+        preserveScroll: true, forceFormData: true,
+        onFinish: () => { if (draftFile.value) draftFile.value.value = ''; },
+    });
+}
+
+function uploadDocument(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    router.post(`/admin/cases/${props.record.id}/documents`, { file, category: docCategory.value }, {
+        preserveScroll: true, forceFormData: true,
+        onFinish: () => { if (docFile.value) docFile.value.value = ''; },
+    });
+}
+
+const sendDraft = (d) => confirm(`Send draft ${d.version_number} to the customer? This records the first-draft stage, which moves the refund band.`)
+    && post(`/admin/drafts/${d.id}/send`, {});
+
+const reviewDocument = (status) => router.post(`/admin/documents/${reviewing.value.id}/review`, {
+    status, review_note: reviewNote.value || null,
+}, {
+    preserveScroll: true,
+    onSuccess: () => { reviewing.value = null; reviewNote.value = ''; },
+});
+
+const resolveAmendment = (a) => post(`/admin/amendments/${a.id}/resolve`, {});
+
+const draftTone = (status) => ({
+    draft: 'neutral', sent: 'progress', amendments_requested: 'attention', approved: 'positive',
+}[status] ?? 'neutral');
+
+const docTone = (status) => ({ pending: 'attention', accepted: 'positive', rejected: 'critical' }[status] ?? 'neutral');
 </script>
 
 <template>
@@ -203,6 +247,85 @@ const post = (url, data) => router.post(url, data, { preserveScroll: true, onSuc
             </aside>
         </div>
 
+        <!-- Drafts and documents -->
+        <div v-if="readable" class="mt-6 grid grid-cols-2 gap-6 max-[1080px]:grid-cols-1">
+            <section class="card p-6">
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <h2 class="text-h3 font-semibold text-ink">Drafts</h2>
+                    <label v-if="can('drafts.send')" class="btn btn-sm btn-secondary cursor-pointer">
+                        Upload a draft
+                        <input ref="draftFile" type="file" accept=".pdf,.doc,.docx" class="sr-only" @change="uploadDraft">
+                    </label>
+                </div>
+
+                <p v-if="!drafts.length" class="help">
+                    No draft yet. Uploading one does not release it — you send it separately.
+                </p>
+
+                <article v-for="d in drafts" :key="d.id" class="mb-3 border-b border-rule-cool pb-3 last:mb-0 last:border-0 last:pb-0">
+                    <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-body-s font-medium text-ink">Draft {{ d.version_number }}</span>
+                        <StatusPill :tone="draftTone(d.status)" :label="d.status.replace(/_/g, ' ')" />
+                    </div>
+                    <div class="tabular mb-2 font-mono text-caption text-slate">
+                        <span v-if="d.sent_at">sent {{ new Date(d.sent_at).toLocaleDateString('en-GB') }}</span>
+                        <span v-if="d.approved_at"> · approved {{ new Date(d.approved_at).toLocaleDateString('en-GB') }}</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <a v-if="d.url" :href="d.url" class="btn btn-sm btn-tertiary" target="_blank" rel="noopener">Open</a>
+                        <button
+                            v-if="can('drafts.send') && d.status === 'draft' && d.has_file"
+                            type="button" class="btn btn-sm btn-primary" @click="sendDraft(d)"
+                        >Send to customer</button>
+                    </div>
+
+                    <div v-if="d.amendments.length" class="mt-3 border-t border-rule-cool pt-3">
+                        <div class="eyebrow mb-2">Amendment requests</div>
+                        <div v-for="a in d.amendments" :key="a.id" class="mb-2 last:mb-0">
+                            <p class="whitespace-pre-line text-body-s text-ink">{{ a.body }}</p>
+                            <div class="mt-1 flex flex-wrap items-center gap-2">
+                                <span class="tabular font-mono text-caption text-slate">{{ new Date(a.at).toLocaleDateString('en-GB') }}</span>
+                                <span v-if="!a.within_allowance" class="pill pill-attention">beyond allowance</span>
+                                <span v-if="a.status === 'resolved'" class="pill pill-positive">resolved</span>
+                                <button
+                                    v-else-if="can('drafts.send')" type="button"
+                                    class="text-caption font-medium text-gold-strong" @click="resolveAmendment(a)"
+                                >mark resolved</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="card p-6">
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <h2 class="text-h3 font-semibold text-ink">Documents</h2>
+                    <label v-if="can('documents.upload')" class="btn btn-sm btn-secondary cursor-pointer">
+                        Add a document
+                        <input ref="docFile" type="file" accept=".pdf,.jpg,.jpeg,.png,.heic,.webp,.doc,.docx" class="sr-only" @change="uploadDocument">
+                    </label>
+                </div>
+
+                <p v-if="!documents.length" class="help">Nothing uploaded yet.</p>
+
+                <article v-for="doc in documents" :key="doc.id" class="mb-3 border-b border-rule-cool pb-3 last:mb-0 last:border-0 last:pb-0">
+                    <div class="mb-1 flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-body-s font-medium text-ink">{{ doc.category.replace(/_/g, ' ') }}</span>
+                        <StatusPill :tone="docTone(doc.status)" :label="doc.status" />
+                    </div>
+                    <div class="tabular truncate font-mono text-caption text-slate">{{ doc.filename }}</div>
+                    <p v-if="doc.review_note" class="mt-1 text-caption text-attention">{{ doc.review_note }}</p>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        <a v-if="doc.url" :href="doc.url" class="btn btn-sm btn-tertiary" target="_blank" rel="noopener">Open</a>
+                        <button
+                            v-if="can('documents.upload')" type="button" class="btn btn-sm btn-tertiary"
+                            @click="reviewing = doc; reviewNote = doc.review_note ?? ''"
+                        >Review</button>
+                    </div>
+                </article>
+            </section>
+        </div>
+
         <!-- Notes and contact history -->
         <div v-if="readable" class="mt-6 grid grid-cols-2 gap-6 max-[1080px]:grid-cols-1">
             <section class="card p-6">
@@ -307,6 +430,21 @@ const post = (url, data) => router.post(url, data, { preserveScroll: true, onSuc
             <template #actions>
                 <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/payment-link`, linkForm)">Generate link</button>
                 <button type="button" class="btn btn-tertiary" @click="sheet = null">Cancel</button>
+            </template>
+        </Sheet>
+
+        <Sheet :open="reviewing !== null" title="Review this document" size="sm" @close="reviewing = null">
+            <p class="help mb-4">
+                The note below is shown to the customer. A rejection without one leaves them guessing
+                what to send instead, so it is required.
+            </p>
+            <FormField id="rev-note" label="Note to the customer">
+                <textarea id="rev-note" v-model="reviewNote" class="field min-h-[90px]" placeholder="The passport scan is cut off at the bottom — please resend the full page."></textarea>
+            </FormField>
+            <template #actions>
+                <button type="button" class="btn btn-primary" @click="reviewDocument('accepted')">Accept</button>
+                <button type="button" class="btn btn-destructive" :disabled="!reviewNote.trim()" @click="reviewDocument('rejected')">Reject</button>
+                <button type="button" class="btn btn-tertiary" @click="reviewing = null">Cancel</button>
             </template>
         </Sheet>
 

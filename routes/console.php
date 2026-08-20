@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\ApplyRetentionPolicy;
+use App\Console\Commands\EscalateOverdueCases;
 use Illuminate\Support\Facades\Schedule;
 
 /*
@@ -16,6 +17,14 @@ Schedule::command(ApplyRetentionPolicy::class)
     ->dailyAt('03:00')
     ->timezone('Asia/Dubai')
     ->onOneServer();
+
+// Escalation. Runs every two hours; the command itself decides whether it is
+// inside working hours and whether a case is due another alert.
+Schedule::command(EscalateOverdueCases::class)
+    ->everyTwoHours()
+    ->timezone('Asia/Dubai')
+    ->onOneServer()
+    ->withoutOverlapping();
 
 // Daily backups, with a monitored health check and old-backup cleanup.
 Schedule::command('backup:clean')->dailyAt('02:00')->timezone('Asia/Dubai');

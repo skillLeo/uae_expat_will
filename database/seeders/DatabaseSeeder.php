@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             SettingsSeeder::class,
             FeeAllocationSeeder::class,
             QuestionnaireSeeder::class,
+            DetailedQuestionnaireSeeder::class,
             ContentSeeder::class,
             NotificationTemplateSeeder::class,
             AdminUserSeeder::class,

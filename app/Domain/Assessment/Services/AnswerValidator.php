@@ -35,6 +35,10 @@ class AnswerValidator
             return $value;
         }
 
+        // Extra validation declared on the question itself, so a new rule is a
+        // data edit rather than a code change.
+        $this->applyDeclaredRules($question, $value);
+
         return match ($question->type) {
             QuestionType::SingleSelect => $this->validateSingleSelect($question, $value),
             QuestionType::MultiSelect => $this->validateMultiSelect($question, $value),
@@ -44,6 +48,54 @@ class AnswerValidator
             QuestionType::Date => $this->validateDate($question, $value),
             QuestionType::Text, QuestionType::Textarea => $this->validateText($question, $value),
         };
+    }
+
+    /**
+     * Rules declared in a question's `meta.validate` array.
+     *
+     * Percentage validation is the one the specification calls a legal
+     * requirement: a distribution that does not total exactly 100 cannot be
+     * drafted, and work stops until it is corrected. Catching it here means the
+     * customer fixes it while they still remember what they meant, rather than
+     * a reviewer chasing it days later.
+     *
+     * @throws ValidationException
+     */
+    private function applyDeclaredRules(Question $question, mixed $value): void
+    {
+        $rules = $question->meta['validate'] ?? [];
+
+        if (! is_array($rules) || $this->isBlank($value)) {
+            return;
+        }
+
+        foreach ($rules as $rule) {
+            if ($rule === 'percentages_total_100') {
+                $this->assertPercentagesTotal100($question, (string) $value);
+            }
+        }
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    private function assertPercentagesTotal100(Question $question, string $text): void
+    {
+        preg_match_all('/(\d+(?:\.\d+)?)\s*%/', $text, $matches);
+
+        if ($matches[1] === []) {
+            $this->fail($question, 'Give each beneficiary a percentage, written like "Jordan Whitfield — 50%".');
+        }
+
+        $total = array_sum(array_map('floatval', $matches[1]));
+
+        // A hundredth of a point of tolerance for decimal shares, no more.
+        if (abs($total - 100) > 0.01) {
+            $this->fail($question, sprintf(
+                'The percentages total %s%%, not 100%%. A distribution that does not add up cannot be drafted, so please adjust the shares.',
+                rtrim(rtrim(number_format($total, 2), '0'), '.'),
+            ));
+        }
     }
 
     private function validateSingleSelect(Question $question, mixed $value): string

@@ -8,6 +8,7 @@ use App\Domain\Cases\Enums\CaseStatus;
 use App\Domain\Cases\Enums\InternalStatus;
 use App\Http\Controllers\Controller;
 use App\Models\LegalCase;
+use App\Models\SavedView;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -34,6 +35,14 @@ class CaseController extends Controller
         return Inertia::render('Admin/Cases/Index', [
             'cases' => $cases,
             'filters' => $request->only(['q', 'status', 'overdue']),
+            'savedViews' => SavedView::availableTo($user)->get()
+                ->map(fn ($v) => [
+                    'id' => $v->id,
+                    'name' => $v->name,
+                    'filters' => $v->filters,
+                    'is_shared' => $v->is_shared,
+                    'is_mine' => $v->user_id === $user->id,
+                ]),
             'statuses' => collect(CaseStatus::cases())->map(fn ($s) => [
                 'value' => $s->value, 'label' => $s->label(),
             ])->values(),
@@ -49,7 +58,7 @@ class CaseController extends Controller
         $case->load([
             'customer', 'assignee:id,name', 'assessment',
             'statusHistory.changedBy:id,name', 'notes.author:id,name',
-            'contacts.user:id,name', 'payments', 'stageTimestamps', 'drafts',
+            'contacts.user:id,name', 'payments', 'stageTimestamps', 'drafts.amendments', 'documents.media',
         ]);
 
         return Inertia::render('Admin/Cases/Show', [
@@ -99,6 +108,32 @@ class CaseController extends Controller
                 'paid_at' => $p->paid_at?->toIso8601String(),
                 'refundable' => $p->isRefundable(),
             ]),
+            'drafts' => $case->drafts->map(fn ($d) => [
+                'id' => $d->id,
+                'version_number' => $d->version_number,
+                'status' => $d->status,
+                'sent_at' => $d->sent_at?->toIso8601String(),
+                'approved_at' => $d->approved_at?->toIso8601String(),
+                'has_file' => $d->getFirstMedia('draft') !== null,
+                'url' => DraftController::signedUrl($d),
+                'amendments' => $d->amendments->map(fn ($a) => [
+                    'id' => $a->id,
+                    'body' => $a->body,
+                    'status' => $a->status,
+                    'within_allowance' => $a->is_within_allowance,
+                    'at' => $a->created_at->toIso8601String(),
+                ]),
+            ]),
+            // Documents follow the same redaction rule as the rest of the body.
+            'documents' => $readable ? $case->documents->map(fn ($doc) => [
+                'id' => $doc->id,
+                'category' => $doc->category,
+                'status' => $doc->status,
+                'review_note' => $doc->review_note,
+                'filename' => $doc->file()?->file_name,
+                'uploaded_at' => $doc->created_at->toIso8601String(),
+                'url' => DocumentController::signedUrl($doc),
+            ]) : [],
             'stages' => collect(CaseStage::cases())->map(fn ($stage) => [
                 'value' => $stage->value,
                 'label' => $stage->label(),
