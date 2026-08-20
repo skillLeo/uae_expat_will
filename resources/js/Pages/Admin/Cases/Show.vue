@@ -27,6 +27,7 @@ const props = defineProps({
     stages: { type: Array, default: () => [] },
     staff: { type: Array, default: () => [] },
     internalStatuses: { type: Array, default: () => [] },
+    paymentTypes: { type: Array, default: () => [] },
 });
 
 const page = usePage();
@@ -39,8 +40,16 @@ const assignForm = reactive({ assigned_to: '', reason: '' });
 const statusForm = reactive({ internal_status: props.record.internal_status, reason: '' });
 const noteForm = reactive({ body: '', is_internal: true });
 const contactForm = reactive({ channel: 'phone', direction: 'outbound', summary: '' });
-const linkForm = reactive({ amount: props.record.quoted_amount ?? '', stage_label: 'Professional fee' });
-const manualForm = reactive({ amount: props.record.quoted_amount ?? '', method: 'bank_transfer', stage_label: 'Professional fee', reference: '' });
+// The type is chosen, not typed. Free text was the reason an authority charge
+// and Summit's own fee were indistinguishable to everything downstream.
+const linkForm = reactive({ amount: props.record.quoted_amount ?? '', type: 'professional_fee', stage_label: '' });
+const manualForm = reactive({ amount: props.record.quoted_amount ?? '', method: 'bank_transfer', type: 'professional_fee', stage_label: '', reference: '' });
+
+const describeType = (value) => props.paymentTypes.find((t) => t.value === value)?.description ?? '';
+
+// Only an authority charge needs describing. "Professional fee" says everything
+// there is to say; "authority charge" does not say which authority, or for what.
+const needsDescription = (form) => form.type === 'disbursement';
 
 const post = (url, data) => router.post(url, data, { preserveScroll: true, onSuccess: () => { sheet.value = null; } });
 
@@ -168,8 +177,18 @@ const docTone = (status) => ({ pending: 'attention', accepted: 'positive', rejec
                             <dd class="text-right">{{ record.assignee ?? 'Unassigned' }}</dd>
                         </div>
                         <div v-if="record.quoted_amount" class="flex justify-between gap-3">
-                            <dt class="text-slate">Quoted</dt>
+                            <dt class="text-slate">Professional fee quoted</dt>
                             <dd class="tabular text-right font-mono">{{ record.currency }} {{ record.quoted_amount }}</dd>
+                        </div>
+                        <div class="flex justify-between gap-3">
+                            <dt class="text-slate">Professional fee paid</dt>
+                            <dd class="tabular text-right font-mono">{{ record.currency }} {{ money(record.paid_amount) }}</dd>
+                        </div>
+                        <!-- Kept on its own line. This money is collected for
+                             somebody else and is not measured against the quote. -->
+                        <div v-if="record.disbursements_paid" class="flex justify-between gap-3">
+                            <dt class="text-slate">Authority charges paid</dt>
+                            <dd class="tabular text-right font-mono">{{ record.currency }} {{ money(record.disbursements_paid) }}</dd>
                         </div>
                         <div class="flex justify-between gap-3">
                             <dt class="text-slate">Payment</dt>
@@ -221,6 +240,9 @@ const docTone = (status) => ({ pending: 'attention', accepted: 'positive', rejec
                             <div class="flex items-center justify-between gap-3">
                                 <span class="text-body-s text-ink">{{ p.stage_label }}</span>
                                 <StatusPill :tone="p.tone" :label="p.status_label" />
+                            </div>
+                            <div class="mb-0.5">
+                                <span class="pill" :class="p.type === 'disbursement' ? 'pill-attention' : 'pill-neutral'">{{ p.type_label }}</span>
                             </div>
                             <div class="tabular font-mono text-caption text-slate">{{ p.currency }} {{ money(p.total_amount) }}</div>
                             <a v-if="p.link_url && p.status === 'pending'" :href="p.link_url" target="_blank" rel="noopener" class="text-caption text-gold-strong underline">Open payment link</a>
@@ -425,7 +447,15 @@ const docTone = (status) => ({ pending: 'attention', accepted: 'positive', rejec
             <FormField id="l-amount" label="Amount excluding VAT" required>
                 <input id="l-amount" v-model="linkForm.amount" type="number" step="0.01" class="field" inputmode="decimal">
             </FormField>
-            <FormField id="l-stage" label="Stage" required><input id="l-stage" v-model="linkForm.stage_label" class="field"></FormField>
+            <FormField id="l-type" label="What is this payment for?" required>
+                <select id="l-type" v-model="linkForm.type" class="field">
+                    <option v-for="t in paymentTypes" :key="t.value" :value="t.value">{{ t.label }}</option>
+                </select>
+            </FormField>
+            <p class="help -mt-2 mb-4">{{ describeType(linkForm.type) }}</p>
+            <FormField v-if="needsDescription(linkForm)" id="l-stage" label="Which charge, and to whom?" required>
+                <input id="l-stage" v-model="linkForm.stage_label" class="field" placeholder="DIFC Wills Service Centre registration fee">
+            </FormField>
             <p class="help">VAT is added automatically at the configured rate.</p>
             <template #actions>
                 <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/payment-link`, linkForm)">Generate link</button>
@@ -457,7 +487,18 @@ const docTone = (status) => ({ pending: 'attention', accepted: 'positive', rejec
                     <option value="bank_transfer">Bank transfer</option><option value="cash">Cash</option>
                 </select>
             </FormField>
-            <FormField id="m-stage" label="Stage" required><input id="m-stage" v-model="manualForm.stage_label" class="field"></FormField>
+            <FormField id="m-type" label="What is this payment for?" required>
+                <select id="m-type" v-model="manualForm.type" class="field">
+                    <option v-for="t in paymentTypes" :key="t.value" :value="t.value">{{ t.label }}</option>
+                </select>
+            </FormField>
+            <p class="help -mt-2 mb-4">{{ describeType(manualForm.type) }}</p>
+            <FormField v-if="needsDescription(manualForm)" id="m-stage" label="Which charge, and to whom?" required>
+                <input id="m-stage" v-model="manualForm.stage_label" class="field" placeholder="DIFC Wills Service Centre registration fee">
+            </FormField>
+            <p v-if="needsDescription(manualForm)" class="help -mt-2 mb-4">
+                Recording this marks the third-party cost as committed, which moves the matter into refund band D.
+            </p>
             <FormField id="m-ref" label="Reference"><input id="m-ref" v-model="manualForm.reference" class="field"></FormField>
             <template #actions>
                 <button type="button" class="btn btn-primary" @click="post(`/admin/cases/${record.id}/manual-payment`, manualForm)">Record payment</button>

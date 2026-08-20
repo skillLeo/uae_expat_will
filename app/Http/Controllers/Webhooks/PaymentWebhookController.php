@@ -123,11 +123,37 @@ class PaymentWebhookController extends Controller
         }
 
         $case = $payment->legalCase;
+
+        // Asked before the stage below is written, and asked of the database
+        // rather than a possibly-stale loaded relation.
+        $isFirstPayment = ! $case->stageTimestamps()
+            ->where('stage', CaseStage::Payment->value)
+            ->exists();
+
+        if ($payment->isDisbursement()) {
+            // An authority charge is not Summit's money and is not measured
+            // against the professional fee quote, so it stays out of
+            // paid_amount. Confirming it means the third-party cost is
+            // committed — the stage refund band D turns on. RecordStageTimestamp
+            // is firstOrCreate, so a second disbursement does not re-date it.
+            $this->recordStage->execute($case, CaseStage::ThirdPartyCommitted);
+
+            return;
+        }
+
         $case->increment('paid_amount', (float) $payment->total_amount);
 
         // The stage timestamp is what the refund engine reads. Without it a
         // refund could not be banded at all.
         $this->recordStage->execute($case, CaseStage::Payment);
+
+        // Only the first payment opens the questionnaire. A second payment used
+        // to run this line too, dragging a case that was ready for submission
+        // back to "questionnaire released" in front of the customer. Later
+        // payments record themselves and leave the status where the team put it.
+        if (! $isFirstPayment) {
+            return;
+        }
 
         app(ChangeCaseStatus::class)
             ->execute($case, InternalStatus::QuestionnaireReleased, 'Payment confirmed by the gateway.');

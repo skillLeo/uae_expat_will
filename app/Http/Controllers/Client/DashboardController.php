@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Domain\Cases\Enums\CaseStatus;
+use App\Domain\Payments\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\LegalCase;
 use Illuminate\Http\Request;
@@ -61,7 +62,22 @@ class DashboardController extends Controller
                 },
             ])->values(),
             'quoted_amount' => $case->quoted_amount ? (float) $case->quoted_amount : null,
+            // The professional fee paid, which is what the quote above is for.
             'paid_amount' => (float) $case->paid_amount,
+            // Every settled payment, each saying what it was for. Adding an
+            // authority's charge to the fee total made a fully-paid matter look
+            // like an overpayment, which is alarming to read and untrue.
+            'payments_made' => $case->payments
+                ->where('status', PaymentStatus::Paid)
+                ->sortBy('paid_at')
+                ->map(fn ($p) => [
+                    'what' => $p->type->isDisbursement()
+                        ? $p->stage_label
+                        : 'Professional fee',
+                    'is_disbursement' => $p->type->isDisbursement(),
+                    'amount' => (float) $p->total_amount,
+                    'paid_at' => $p->paid_at?->toIso8601String(),
+                ])->values(),
             'currency' => $case->currency,
             // A held matter shows no payment control at all.
             'allows_payment' => $case->allowsPayment(),

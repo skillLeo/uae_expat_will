@@ -6,6 +6,8 @@ use App\Domain\Audit\Services\AuditLogger;
 use App\Domain\Cases\Enums\CaseStage;
 use App\Domain\Cases\Enums\CaseStatus;
 use App\Domain\Cases\Enums\InternalStatus;
+use App\Domain\Payments\Enums\PaymentStatus;
+use App\Domain\Payments\Enums\PaymentType;
 use App\Http\Controllers\Controller;
 use App\Models\LegalCase;
 use App\Models\SavedView;
@@ -68,7 +70,14 @@ class CaseController extends Controller
                 'internal_status' => $case->internal_status->value,
                 'internal_status_label' => $case->internal_status->label(),
                 'quoted_amount' => $case->quoted_amount,
+                // The professional fee paid, measured against the quote above.
+                // Money collected for an authority is a separate line, because
+                // adding the two made a fully-paid matter look overpaid.
                 'paid_amount' => $case->paid_amount,
+                'disbursements_paid' => (float) $case->payments
+                    ->where('type', PaymentType::Disbursement)
+                    ->where('status', PaymentStatus::Paid)
+                    ->sum('total_amount'),
                 'currency' => $case->currency,
                 'countdown_due_at' => $case->countdown_due_at?->toIso8601String(),
                 'is_overdue' => $case->isOverdue(),
@@ -98,6 +107,8 @@ class CaseController extends Controller
             ]) : [],
             'payments' => $case->payments->map(fn ($p) => [
                 'id' => $p->id,
+                'type' => $p->type->value,
+                'type_label' => $p->type->shortLabel(),
                 'stage_label' => $p->stage_label,
                 'total_amount' => (float) $p->total_amount,
                 'currency' => $p->currency,
@@ -139,6 +150,9 @@ class CaseController extends Controller
                 'label' => $stage->label(),
                 'reached_at' => $case->stageAt($stage)?->occurred_at->toIso8601String(),
             ])->values(),
+            // What a payment can be for. A select, not a text box — the free
+            // text was the reason nothing could tell the two kinds apart.
+            'paymentTypes' => PaymentType::options(),
             'staff' => User::admins()->where('is_active', true)
                 ->orderBy('name')->get(['id', 'name'])
                 ->map(fn ($u) => ['id' => $u->id, 'name' => $u->name]),

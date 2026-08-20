@@ -24,10 +24,15 @@ class ProcessRefund
     public function execute(Payment $payment, ?float $documentedDeduction = null, ?string $reason = null): Refund
     {
         return DB::transaction(function () use ($payment, $documentedDeduction, $reason) {
-            $result = $this->calculator->calculate($payment, $documentedDeduction);
+            // On a disbursement the calculator refuses to guess and throws
+            // unless both the figure and the reason were supplied.
+            $result = $this->calculator->calculate($payment, $documentedDeduction, $reason);
 
             $refund = Refund::create([
                 'payment_id' => $payment->id,
+                // Null for a disbursement: it is not banded, and recording a
+                // band it does not have would make the record say something
+                // untrue about how the figure was reached.
                 'band' => $result['band'],
                 'amount' => $result['refundable'],
                 'deduction_amount' => $result['deduction'],
@@ -43,7 +48,7 @@ class ProcessRefund
             $payment->events()->create([
                 'type' => 'refunded',
                 'source' => 'manual_record',
-                'payload' => ['band' => $result['band']->value, 'amount' => $result['refundable']],
+                'payload' => ['band' => $result['band']?->value, 'amount' => $result['refundable']],
                 'occurred_at' => now(),
             ]);
 
@@ -52,7 +57,8 @@ class ProcessRefund
                 ->causedBy(Auth::guard('admin')->user())
                 ->withProperties([
                     'case' => $payment->legalCase->reference,
-                    'band' => $result['band']->value,
+                    'type' => $payment->type->value,
+                    'band' => $result['band']?->value,
                     'refunded' => $result['refundable'],
                     'deducted' => $result['deduction'],
                 ])

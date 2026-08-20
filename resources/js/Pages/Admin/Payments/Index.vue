@@ -13,6 +13,7 @@ const props = defineProps({
     filters: { type: Object, default: () => ({}) },
     statuses: { type: Array, default: () => [] },
     totals: { type: Object, default: () => ({}) },
+    types: { type: Array, default: () => [] },
 });
 
 const page = usePage();
@@ -30,6 +31,12 @@ const refundTarget = ref(null);
 const refundPreview = ref(null);
 const deduction = ref('');
 const reason = ref('');
+
+// A disbursement has no band. The refund is whatever the authority will
+// actually return, which is a fact a person establishes, not a rule we apply.
+const isDisbursement = () => refundPreview.value?.requires_documented_amount === true;
+const canIssue = () => !!refundPreview.value
+    && (!isDisbursement() || (deduction.value !== '' && reason.value.trim() !== ''));
 
 async function openRefund(payment) {
     refundTarget.value = payment;
@@ -54,7 +61,8 @@ const checkStatus = (p) => router.post(`/admin/payments/${p.id}/check`, {}, { pr
 const columns = [
     { key: 'created_at', label: 'Created' },
     { key: 'reference', label: 'Case' },
-    { key: 'stage_label', label: 'Stage' },
+    { key: 'type', label: 'For' },
+    { key: 'stage_label', label: 'Detail' },
     { key: 'total_amount', label: 'Total', numeric: true },
     { key: 'status', label: 'Status' },
     { key: 'actions', label: '' },
@@ -69,10 +77,19 @@ const columns = [
             :style="{ height: `${Math.max(distance, refreshing ? 40 : 0)}px` }"
         >{{ refreshing ? 'Refreshing…' : 'Pull to refresh' }}</div>
 
-        <div class="mb-6 grid grid-cols-3 gap-4 max-[719px]:grid-cols-1">
-            <div v-for="[label, value, tone] in [['Paid', totals.paid, 'positive'], ['Pending', totals.pending, 'attention'], ['Refunded', totals.refunded, 'neutral']]" :key="label" class="card p-4">
+        <!-- Professional fees are Summit's revenue. Authority charges are
+             collected on somebody else's behalf. Showing one total for both
+             would overstate what the business actually earned. -->
+        <div class="mb-6 grid grid-cols-4 gap-4 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
+            <div v-for="[label, value, note] in [
+                ['Professional fees paid', totals.paid, 'Summit\'s own fees'],
+                ['Authority charges', totals.disbursements, 'collected for third parties'],
+                ['Pending', totals.pending, 'awaiting payment'],
+                ['Refunded', totals.refunded, 'returned to customers'],
+            ]" :key="label" class="card p-4">
                 <div class="eyebrow mb-2">{{ label }}</div>
                 <div class="tabular font-mono text-h2 text-ink">AED {{ money(value) }}</div>
+                <div class="mt-1 text-caption text-slate">{{ note }}</div>
             </div>
         </div>
 
@@ -87,6 +104,9 @@ const columns = [
             <template #cell-created_at="{ row }"><span class="tabular font-mono text-caption">{{ new Date(row.created_at).toLocaleDateString('en-GB') }}</span></template>
             <template #cell-reference="{ row }">
                 <Link :href="`/admin/cases/${row.case_id}`" class="tabular font-mono font-medium text-ink underline decoration-gold underline-offset-4">{{ row.reference }}</Link>
+            </template>
+            <template #cell-type="{ row }">
+                <span class="pill" :class="row.type === 'disbursement' ? 'pill-attention' : 'pill-neutral'">{{ row.type_label }}</span>
             </template>
             <template #cell-total_amount="{ row }">{{ row.currency }} {{ money(row.total_amount) }}</template>
             <template #cell-status="{ row }"><StatusPill :tone="row.tone" :label="row.status_label" /></template>
@@ -110,40 +130,57 @@ const columns = [
         <Sheet :open="refundSheet" title="Issue a refund" @close="refundSheet = false">
             <p v-if="!refundPreview" class="help">Calculating the band…</p>
             <div v-else>
-                <div class="mb-4 rounded-md border border-attention-border bg-attention-bg p-4">
+                <div class="mb-4 rounded-md border p-4" :class="isDisbursement() ? 'border-critical-border bg-critical-bg' : 'border-attention-border bg-attention-bg'">
                     <div class="eyebrow mb-1.5">{{ refundPreview.band_label }}</div>
                     <p class="text-body-s text-ink">{{ refundPreview.band_description }}</p>
                 </div>
 
-                <dl class="mb-4 grid gap-2 text-body-s">
-                    <div class="flex justify-between gap-3"><dt class="text-slate">Total paid</dt><dd class="tabular font-mono">{{ money(refundPreview.calculation.total_paid) }}</dd></div>
-                    <div class="flex justify-between gap-3"><dt class="text-slate">Deduction</dt><dd class="tabular font-mono">{{ money(refundPreview.deduction) }}</dd></div>
-                    <div class="flex justify-between gap-3 border-t border-rule-cool pt-2"><dt class="font-semibold text-ink">Refundable</dt><dd class="tabular font-mono font-medium">{{ money(refundPreview.refundable) }}</dd></div>
-                </dl>
+                <template v-if="isDisbursement()">
+                    <p class="mb-4 text-body-s leading-[1.6] text-ink">{{ refundPreview.reason }}</p>
 
-                <div class="mb-4">
-                    <div class="eyebrow mb-2">Stages reached</div>
-                    <div class="grid gap-1">
-                        <div v-for="s in refundPreview.calculation.stages_reached" :key="s.stage" class="flex justify-between gap-3 text-caption">
-                            <span class="text-ink">{{ s.label }}</span>
-                            <span class="tabular font-mono text-slate">{{ new Date(s.occurred_at).toLocaleDateString('en-GB') }}</span>
+                    <FormField id="r-amount" label="Amount the authority will return" required
+                               help="Often nil once a matter has been lodged. Capped at the amount paid.">
+                        <input id="r-amount" v-model="deduction" type="number" step="0.01" class="field" inputmode="decimal">
+                    </FormField>
+                    <FormField id="r-why" label="Why that amount is recoverable" required
+                               help="Stored with the refund, so the figure can still be explained a year from now.">
+                        <textarea id="r-why" v-model="reason" class="field min-h-[70px]" placeholder="Registration was never lodged; the Wills Service Centre confirmed the fee is returnable in full."></textarea>
+                    </FormField>
+
+                    <p v-if="!canIssue()" class="help">Both are required — a disbursement is never refunded by rule.</p>
+                </template>
+
+                <template v-else>
+                    <dl class="mb-4 grid gap-2 text-body-s">
+                        <div class="flex justify-between gap-3"><dt class="text-slate">Total paid</dt><dd class="tabular font-mono">{{ money(refundPreview.calculation.total_paid) }}</dd></div>
+                        <div class="flex justify-between gap-3"><dt class="text-slate">Deduction</dt><dd class="tabular font-mono">{{ money(refundPreview.deduction) }}</dd></div>
+                        <div class="flex justify-between gap-3 border-t border-rule-cool pt-2"><dt class="font-semibold text-ink">Refundable</dt><dd class="tabular font-mono font-medium">{{ money(refundPreview.refundable) }}</dd></div>
+                    </dl>
+
+                    <div class="mb-4">
+                        <div class="eyebrow mb-2">Stages reached</div>
+                        <div class="grid gap-1">
+                            <div v-for="s in refundPreview.calculation.stages_reached" :key="s.stage" class="flex justify-between gap-3 text-caption">
+                                <span class="text-ink">{{ s.label }}</span>
+                                <span class="tabular font-mono text-slate">{{ new Date(s.occurred_at).toLocaleDateString('en-GB') }}</span>
+                            </div>
+                            <p v-if="!refundPreview.calculation.stages_reached.length" class="help">None recorded — nothing substantive had started.</p>
                         </div>
-                        <p v-if="!refundPreview.calculation.stages_reached.length" class="help">None recorded — nothing substantive had started.</p>
                     </div>
-                </div>
 
-                <FormField id="r-deduction" label="Documented deduction" help="Leave blank to use the fee allocation. Only for band B.">
-                    <input id="r-deduction" v-model="deduction" type="number" step="0.01" class="field" inputmode="decimal">
-                </FormField>
-                <FormField id="r-reason" label="Reason recorded on the refund">
-                    <textarea id="r-reason" v-model="reason" class="field min-h-[70px]" :placeholder="refundPreview.reason"></textarea>
-                </FormField>
+                    <FormField id="r-deduction" label="Documented deduction" help="Leave blank to use the fee allocation. Only for band B.">
+                        <input id="r-deduction" v-model="deduction" type="number" step="0.01" class="field" inputmode="decimal">
+                    </FormField>
+                    <FormField id="r-reason" label="Reason recorded on the refund">
+                        <textarea id="r-reason" v-model="reason" class="field min-h-[70px]" :placeholder="refundPreview.reason"></textarea>
+                    </FormField>
+                </template>
 
                 <p class="help">The full working is stored so this figure can be explained months from now.</p>
             </div>
 
             <template #actions>
-                <button type="button" class="btn btn-destructive" :disabled="!refundPreview" @click="confirmRefund">Issue refund</button>
+                <button type="button" class="btn btn-destructive" :disabled="!canIssue()" @click="confirmRefund">Issue refund</button>
                 <button type="button" class="btn btn-tertiary" @click="refundSheet = false">Cancel</button>
             </template>
         </Sheet>

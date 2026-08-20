@@ -3,7 +3,9 @@
 namespace App\Domain\Payments\Services;
 
 use App\Domain\Cases\Enums\CaseStage;
+use App\Domain\Payments\Enums\PaymentType;
 use App\Domain\Payments\Enums\RefundBand;
+use App\Domain\Payments\Exceptions\DisbursementNeedsDocumentedRefund;
 use App\Models\FeeAllocation;
 use App\Models\LegalCase;
 use App\Models\Payment;
@@ -15,33 +17,42 @@ use App\Models\Payment;
  * which moves back and forth; not from anyone's view of how much work was done.
  * The stage timestamps are the evidence, and the full working is stored on the
  * refund so the figure can still be justified a year later.
+ *
+ * Bands apply to Summit's professional fee and nothing else. A disbursement —
+ * a court, registry or notary charge collected on somebody else's behalf — has
+ * no band at all: it is refundable only to the extent it is actually
+ * recoverable, which is a fact about the third party that no rule here can
+ * know. That path demands a documented figure and a documented reason, and
+ * stores the same working as every other refund.
  */
 class RefundCalculator
 {
     /**
      * @return array{
-     *     band: RefundBand,
+     *     band: RefundBand|null,
      *     refundable: float,
      *     deduction: float,
      *     reason: string,
      *     calculation: array<string, mixed>
      * }
+     *
+     * @throws DisbursementNeedsDocumentedRefund when handed a disbursement with
+     *                                           no documented figure and reason.
      */
-    public function calculate(Payment $payment, ?float $documentedDeduction = null): array
-    {
+    public function calculate(
+        Payment $payment,
+        ?float $documentedDeduction = null,
+        ?string $documentedReason = null,
+    ): array {
+        if ($payment->type === PaymentType::Disbursement) {
+            return $this->disbursement($payment, $documentedDeduction, $documentedReason);
+        }
+
         $case = $payment->legalCase;
         $paid = (float) $payment->total_amount;
         $band = $this->band($case);
 
-        $reached = $case->stageTimestamps
-            ->sortBy(fn ($t) => $t->stage->order())
-            ->map(fn ($t) => [
-                'stage' => $t->stage->value,
-                'label' => $t->stage->label(),
-                'occurred_at' => $t->occurred_at->toIso8601String(),
-            ])
-            ->values()
-            ->all();
+        $reached = $this->stagesReached($case);
 
         [$refundable, $deduction, $reason, $workings] = match ($band) {
             RefundBand::A => [
@@ -70,11 +81,57 @@ class RefundCalculator
             'calculation' => [
                 'band' => $band->value,
                 'band_description' => $band->description(),
+                'payment_type' => PaymentType::ProfessionalFee->value,
                 'total_paid' => $paid,
                 'stages_reached' => $reached,
                 'refundable' => round($refundable, 2),
                 'deduction' => round($deduction, 2),
                 'workings' => $workings,
+                'calculated_at' => now()->toIso8601String(),
+            ],
+        ];
+    }
+
+    /**
+     * A disbursement refund.
+     *
+     * `$recoverable` is what the authority or third party will actually give
+     * back — nil once a registration is lodged, sometimes the whole amount if
+     * nothing was submitted. It is a fact a person has to establish and record,
+     * not something derivable from a stage timestamp.
+     *
+     * @return array{band: null, refundable: float, deduction: float, reason: string, calculation: array<string, mixed>}
+     */
+    private function disbursement(Payment $payment, ?float $recoverable, ?string $reason): array
+    {
+        if ($recoverable === null || trim((string) $reason) === '') {
+            throw DisbursementNeedsDocumentedRefund::make();
+        }
+
+        $paid = (float) $payment->total_amount;
+        $refundable = round(min(max($recoverable, 0.0), $paid), 2);
+
+        return [
+            'band' => null,
+            'refundable' => $refundable,
+            'deduction' => round($paid - $refundable, 2),
+            'reason' => $reason,
+            'calculation' => [
+                'band' => null,
+                'band_description' => 'Not banded. The refund bands describe Summit\'s professional fee; '
+                    .'this payment is a charge collected on behalf of an authority or third party.',
+                'payment_type' => PaymentType::Disbursement->value,
+                'stage_label' => $payment->stage_label,
+                'total_paid' => $paid,
+                'stages_reached' => $this->stagesReached($payment->legalCase),
+                'refundable' => $refundable,
+                'deduction' => round($paid - $refundable, 2),
+                'workings' => [
+                    'source' => 'documented',
+                    'documented_recoverable' => round((float) $recoverable, 2),
+                    'documented_reason' => $reason,
+                    'capped_at_amount_paid' => $recoverable > $paid,
+                ],
                 'calculated_at' => now()->toIso8601String(),
             ],
         ];
@@ -154,6 +211,20 @@ class RefundCalculator
             .'of the fee allocated to stages not yet performed has been refunded.',
             ['unused_percent' => $unusedPercent, 'allocations' => $breakdown],
         ];
+    }
+
+    /** @return array<int, array{stage: string, label: string, occurred_at: string}> */
+    private function stagesReached(LegalCase $case): array
+    {
+        return $case->stageTimestamps
+            ->sortBy(fn ($t) => $t->stage->order())
+            ->map(fn ($t) => [
+                'stage' => $t->stage->value,
+                'label' => $t->stage->label(),
+                'occurred_at' => $t->occurred_at->toIso8601String(),
+            ])
+            ->values()
+            ->all();
     }
 
     private function allocationFor(string $stage, float $paid): float

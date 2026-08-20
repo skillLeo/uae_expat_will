@@ -4,6 +4,7 @@ namespace App\Domain\Payments\Actions;
 
 use App\Domain\Payments\Contracts\PaymentGateway;
 use App\Domain\Payments\Enums\PaymentStatus;
+use App\Domain\Payments\Enums\PaymentType;
 use App\Models\LegalCase;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
@@ -21,8 +22,12 @@ class CreatePaymentLink
 {
     public function __construct(private PaymentGateway $gateway) {}
 
-    public function execute(LegalCase $case, float $amount, string $stageLabel): Payment
-    {
+    public function execute(
+        LegalCase $case,
+        float $amount,
+        string $stageLabel,
+        PaymentType $type = PaymentType::ProfessionalFee,
+    ): Payment {
         // A held matter must never be asked for money. This is the same rule the
         // UI enforces by not rendering the control, restated where it cannot be
         // bypassed by a crafted request.
@@ -30,9 +35,8 @@ class CreatePaymentLink
             throw new RuntimeException('This matter is held for review. No payment may be requested.');
         }
 
-        return DB::transaction(function () use ($case, $amount, $stageLabel) {
-            $vatRate = (float) setting('commercial.vat_rate', 5);
-            $vat = round($amount * $vatRate / 100, 2);
+        return DB::transaction(function () use ($case, $amount, $stageLabel, $type) {
+            $vat = round($amount * $type->vatRate() / 100, 2);
 
             $payment = Payment::create([
                 'case_id' => $case->id,
@@ -41,6 +45,7 @@ class CreatePaymentLink
                 'vat_amount' => $vat,
                 'total_amount' => round($amount + $vat, 2),
                 'currency' => setting('commercial.currency', 'AED'),
+                'type' => $type,
                 'stage_label' => $stageLabel,
                 'status' => PaymentStatus::Pending,
                 'link_token' => bin2hex(random_bytes(24)),
@@ -61,14 +66,14 @@ class CreatePaymentLink
             $payment->events()->create([
                 'type' => 'link_created',
                 'source' => 'manual_record',
-                'payload' => ['stage' => $stageLabel, 'amount' => $amount],
+                'payload' => ['stage' => $stageLabel, 'amount' => $amount, 'type' => $type->value],
                 'occurred_at' => now(),
             ]);
 
             activity('payments')
                 ->performedOn($payment)
                 ->causedBy(Auth::guard('admin')->user())
-                ->withProperties(['case' => $case->reference, 'amount' => $amount])
+                ->withProperties(['case' => $case->reference, 'amount' => $amount, 'type' => $type->value])
                 ->log('Payment link generated');
 
             return $payment->fresh();

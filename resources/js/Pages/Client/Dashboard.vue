@@ -70,6 +70,22 @@ const money = (n) => Number(n ?? 0).toLocaleString('en-US', { minimumFractionDig
                         Card details are entered on the gateway's own page. We never see or store them.
                     </p>
                 </div>
+                <!-- What has been paid, itemised. Summit's fee and a charge
+                     levied by an authority are different things and are never
+                     added into one number. -->
+                <div v-if="c.payments_made?.length" class="card p-5">
+                    <div class="eyebrow mb-3">What you have paid</div>
+                    <dl class="grid gap-2.5">
+                        <div v-for="(p, i) in c.payments_made" :key="i" class="flex items-baseline justify-between gap-3 border-b border-rule-warm pb-2.5 last:border-0 last:pb-0">
+                            <dt class="text-body-s leading-[1.5] text-ink">
+                                {{ p.what }}
+                                <span v-if="p.is_disbursement" class="block text-caption text-slate">Charged by the authority, collected on their behalf</span>
+                            </dt>
+                            <dd class="tabular whitespace-nowrap font-mono text-body-s text-ink">{{ c.currency }} {{ money(p.amount) }}</dd>
+                        </div>
+                    </dl>
+                </div>
+
                 <div v-else-if="!c.allows_payment" class="card p-5">
                     <div class="eyebrow mb-2">Payment</div>
                     <p class="text-body-s leading-[1.6] text-ink">
