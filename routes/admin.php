@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\System\Services\SystemHealth;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\AuditController;
 use App\Http\Controllers\Admin\Auth\LoginController;
@@ -57,6 +58,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::middleware(['admin.2fa', 'admin.2fa.passed'])->group(function () {
 
             Route::get('/', DashboardController::class)->name('dashboard');
+
+            // Re-runs the checks immediately, for when somebody has just fixed
+            // something and does not want to wait out the cache.
+            Route::post('health/refresh', function (SystemHealth $health) {
+                $health->checks(fresh: true);
+
+                return back();
+            })->middleware('permission:settings.view')->name('health.refresh');
 
             // ------------------------------------------------------- cases
             Route::middleware('permission:cases.view.all|cases.view.assigned')->group(function () {

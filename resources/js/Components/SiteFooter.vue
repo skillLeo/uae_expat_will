@@ -7,25 +7,14 @@ const page = usePage();
 const s = computed(() => page.props.settings ?? {});
 const year = new Date().getFullYear();
 
-const pages = [
-    ['How It Works', '/how-it-works'],
-    ['Do You Need a Will?', '/do-you-need-a-uae-will'],
-    ['UAE Will Options', '/uae-will-registration-options'],
-    ['Pricing', '/pricing'],
-    ['FAQs', '/faqs'],
-    ['About Us', '/about-us'],
-    ['Contact', '/contact'],
-];
-
 // UX-01: the design links Terms.dc.html, which does not exist in the design
 // project. These point at the real pages instead.
-const legal = [
-    ['Terms and Conditions', '/terms-and-conditions'],
-    ['Privacy Policy', '/privacy-policy'],
-    ['Payment and Refund Policy', '/payment-and-refund-policy'],
-    ['Legal Disclaimer', '/legal-disclaimer'],
-    ['Cookie Policy', '/cookie-policy'],
-];
+//
+// Both columns come from the server, listing only what is published, so the
+// footer can never offer a link to a page a visitor cannot open. The Cookie
+// Policy is unpublished until the production cookie scan is done, and this is
+// what keeps it out of the footer while it is.
+const nav = computed(() => page.props.navigation ?? { pages: [], legal: [] });
 
 const openCookieSettings = () => window.dispatchEvent(new CustomEvent('cookie-settings:open'));
 </script>
@@ -43,12 +32,12 @@ const openCookieSettings = () => window.dispatchEvent(new CustomEvent('cookie-se
 
             <div class="col-span-3 grid content-start gap-2.5 max-[1080px]:col-span-full">
                 <div class="eyebrow mb-1">Pages</div>
-                <Link v-for="[label, href] in pages" :key="href" :href="href" class="text-body-s text-paper hover:text-gold-soft">{{ label }}</Link>
+                <Link v-for="l in nav.pages" :key="l.href" :href="l.href" class="text-body-s text-paper hover:text-gold-soft">{{ l.label }}</Link>
             </div>
 
             <div class="col-span-3 grid content-start gap-2.5 max-[1080px]:col-span-full">
                 <div class="eyebrow mb-1">Legal</div>
-                <Link v-for="[label, href] in legal" :key="href" :href="href" class="text-body-s text-paper hover:text-gold-soft">{{ label }}</Link>
+                <Link v-for="l in nav.legal" :key="l.href" :href="l.href" class="text-body-s text-paper hover:text-gold-soft">{{ l.label }}</Link>
                 <button type="button" class="text-left text-body-s text-paper hover:text-gold-soft" @click="openCookieSettings">
                     Cookie Settings
                 </button>

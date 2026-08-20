@@ -7,6 +7,7 @@ use App\Http\Middleware\EnsureTwoFactorIsConfirmed;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\TrackDeviceSession;
+use App\Models\Page;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -97,6 +98,8 @@ return Application::configure(basePath: dirname(__DIR__))
                 'features' => ['client_portal_enabled' => feature('client_portal_enabled')],
                 'auth' => ['user' => null, 'permissions' => []],
                 'flash' => ['success' => null, 'error' => null, 'warning' => null],
+                // The error page wears the public layout, footer included.
+                'navigation' => Page::navigation(),
                 // `location` must be present: ZiggyVue falls back to
                 // window.location when it is absent, and window does not exist
                 // in the Node SSR process — which crashed the render and

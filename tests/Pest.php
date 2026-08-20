@@ -3,6 +3,7 @@
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireVersion;
 use App\Models\User;
+use Database\Seeders\ContentSeeder;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\QuestionnaireSeeder;
 use Database\Seeders\SettingsSeeder;
@@ -22,6 +23,12 @@ function seedPlatform(): void
 {
     test()->seed(PermissionSeeder::class);
     test()->seed(SettingsSeeder::class);
+}
+
+/** Pages, sections and FAQs — the public site's content. */
+function seedContent(): void
+{
+    test()->seed(ContentSeeder::class);
 }
 
 function seedQuestionnaire(): QuestionnaireVersion

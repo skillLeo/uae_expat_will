@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Domain\Audit\Services\AuditLogger;
 use App\Models\Assessment;
 use App\Models\LegalCase;
+use App\Models\SystemHeartbeat;
 use Illuminate\Console\Command;
 
 /**
@@ -48,6 +49,12 @@ class ApplyRetentionPolicy extends Command
 
         foreach ($deleted as $what => $count) {
             $this->line(sprintf('  %-26s %s%d', $what, $dryRun ? 'would delete ' : 'deleted ', $count));
+        }
+
+        if (! $dryRun) {
+            // Beat even on a zero-delete run: the health panel is asking
+            // "did retention run", not "did it find anything".
+            SystemHeartbeat::beat('retention', 'ok', $deleted);
         }
 
         if (! $dryRun && array_sum($deleted) > 0) {

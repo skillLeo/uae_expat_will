@@ -56,6 +56,11 @@ class ContentSeeder extends Seeder
             ['cookies', '/cookie-policy', 'Cookie Policy', 'The cookies this site sets, what each category does, and how to change your choices at any time.', 'Cookie Policy', 13],
         ];
 
+        // The Cookie Policy is written and stored, but it stays unpublished
+        // until the production cookie scan confirms the counts it states. Every
+        // other page ships live.
+        $unpublished = ['cookies'];
+
         foreach ($pages as [$key, $slug, $seoTitle, $description, $breadcrumb, $order]) {
             $page = Page::updateOrCreate(
                 ['key' => $key],
@@ -65,8 +70,8 @@ class ContentSeeder extends Seeder
                     'seo_title' => $seoTitle,
                     'meta_description' => $description,
                     'breadcrumb' => $breadcrumb,
-                    'is_published' => true,
-                    'published_at' => now(),
+                    'is_published' => ! in_array($key, $unpublished, true),
+                    'published_at' => in_array($key, $unpublished, true) ? null : now(),
                     'order' => $order,
                     'locale' => 'en',
                 ],

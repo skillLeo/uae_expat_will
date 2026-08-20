@@ -3,6 +3,7 @@
 namespace App\Domain\Notifications\Services;
 
 use App\Domain\Settings\Services\SettingsRepository;
+use App\Models\SystemHeartbeat;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 
@@ -65,8 +66,15 @@ class RuntimeMailer
                 fn ($message) => $message->to($recipient)->subject('Test message — UAE Expat Wills')
             );
 
+            // Recorded so the health panel can report whether email actually
+            // leaves the server. A wrong password is otherwise invisible until
+            // a customer says they never received anything.
+            SystemHeartbeat::beat('mail_test', 'ok', ['recipient' => $recipient]);
+
             return ['ok' => true, 'message' => "Test message sent to {$recipient}."];
         } catch (\Throwable $e) {
+            SystemHeartbeat::beat('mail_test', 'failed', ['error' => $e->getMessage()]);
+
             return ['ok' => false, 'message' => $e->getMessage()];
         }
     }

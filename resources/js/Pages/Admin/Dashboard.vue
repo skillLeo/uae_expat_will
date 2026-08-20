@@ -2,9 +2,11 @@
 import { Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import StatusPill from '@/Components/StatusPill.vue';
+import SystemHealthPanel from '@/Components/SystemHealthPanel.vue';
 
 defineProps({
     stats: { type: Object, required: true },
+    health: { type: Object, default: null },
     pipeline: { type: Array, default: () => [] },
     recent: { type: Array, default: () => [] },
 });
@@ -12,6 +14,9 @@ defineProps({
 
 <template>
     <AdminLayout title="Dashboard">
+        <!-- Only rendered for whoever can act on it. -->
+        <SystemHealthPanel v-if="health" :health="health" />
+
         <div class="grid grid-cols-4 gap-4 max-[900px]:grid-cols-2">
             <div v-for="(value, key) in stats" :key="key" class="card p-4">
                 <div class="eyebrow mb-2">{{ String(key).replace(/_/g, ' ') }}</div>

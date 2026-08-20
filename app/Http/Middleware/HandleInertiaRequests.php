@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Domain\Settings\Services\SettingsRepository;
+use App\Models\Page;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -68,6 +69,9 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+
+            // The footer is built from the pages that are actually published.
+            'navigation' => fn () => Page::navigation(),
 
             'locale' => fn () => app()->getLocale(),
             'supportedLocales' => fn () => config('app.supported_locales', ['en']),

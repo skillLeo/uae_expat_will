@@ -80,7 +80,23 @@ The first drives retention and backups. The second restarts the SSR server if it
 **without it, a crash silently drops the site to client-side rendering**, which loses the
 server-rendered HTML the contract requires. The third drains the notification queue.
 
-Both scripts are already on the server and executable.
+Both scripts are already on the server and executable. They are also version-controlled at
+`scripts/ssr-watchdog.sh` and `scripts/queue-tick.sh`, so a redeploy cannot lose them.
+
+### Confirming the cron entries are actually running
+
+Do not take the hPanel screen's word for it. Open **Admin → Dashboard** as a Super
+Administrator or Administrator and read the **System health** panel, or run:
+
+```bash
+/opt/alt/php84/usr/bin/php artisan system:health
+```
+
+The command exits non-zero when anything is critical, so it works as a deploy gate. The
+scheduler check reads a heartbeat the scheduler itself writes every minute — if that row
+stops advancing, the cron entry is gone, whatever the panel says. When a check first
+crosses into critical the platform emails the configured contact address once. It never
+sends twice for the same state, and the alert contains no case data.
 
 ---
 
@@ -104,6 +120,19 @@ $PHP artisan config:cache && $PHP artisan route:cache && $PHP artisan view:cache
 # Restart SSR so it picks up the new bundle.
 pkill -f "bootstrap/ssr/ssr.js"; ./ssr-watchdog.sh
 ```
+
+---
+
+## The Cookie Policy is deliberately not published
+
+`/cookie-policy` returns a 404 on purpose. The page states cookie counts per category, and
+the specification forbids publishing it until the production cookie scan has verified them.
+The content is written and stored — only the `is_published` flag is off.
+
+To publish it once the scan is done: **Admin → Content → Cookie Policy → Publish**. Nothing
+else needs changing. The footer link is built from whatever is published, so it returns on
+its own. `php artisan content:verify-legal` reports the page as `withheld` and will flag it
+if it ever goes live before someone means it to.
 
 ---
 

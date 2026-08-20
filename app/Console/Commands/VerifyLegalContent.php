@@ -23,14 +23,19 @@ class VerifyLegalContent extends Command
     /**
      * Clause counts from Part 7.9 of the master specification.
      *
-     * @var array<string, array{label: string, clauses: int, note: string|null}>
+     * `published` is what the page's is_published column MUST be. The Cookie
+     * Policy is the one that must be false: it states cookie counts nobody has
+     * verified against the live site yet, so publishing it is a statement about
+     * data collection that may not be true.
+     *
+     * @var array<string, array{label: string, clauses: int, published: bool, note: string|null}>
      */
     private const EXPECTED = [
-        'terms' => ['label' => 'Terms and Conditions', 'clauses' => 25, 'note' => null],
-        'privacy' => ['label' => 'Privacy Policy', 'clauses' => 18, 'note' => 'Dated 6 August — deliberately unchanged.'],
-        'refund' => ['label' => 'Payment and Refund Policy', 'clauses' => 16, 'note' => 'Carries the stage-based refund engine.'],
-        'disclaimer' => ['label' => 'Legal Disclaimer', 'clauses' => 17, 'note' => 'Carries the exact three-outcome customer-facing names.'],
-        'cookies' => ['label' => 'Cookie Policy', 'clauses' => 9, 'note' => 'MUST NOT be published until the production cookie scan is complete.'],
+        'terms' => ['label' => 'Terms and Conditions', 'clauses' => 25, 'published' => true, 'note' => null],
+        'privacy' => ['label' => 'Privacy Policy', 'clauses' => 18, 'published' => true, 'note' => 'Dated 6 August — deliberately unchanged.'],
+        'refund' => ['label' => 'Payment and Refund Policy', 'clauses' => 16, 'published' => true, 'note' => 'Carries the stage-based refund engine.'],
+        'disclaimer' => ['label' => 'Legal Disclaimer', 'clauses' => 17, 'published' => true, 'note' => 'Carries the exact three-outcome customer-facing names.'],
+        'cookies' => ['label' => 'Cookie Policy', 'clauses' => 9, 'published' => false, 'note' => 'Withheld until the production cookie scan is complete. Republish from Content.'],
     ];
 
     public function handle(): int
@@ -42,7 +47,7 @@ class VerifyLegalContent extends Command
             $page = Page::where('key', $key)->first();
 
             if ($page === null) {
-                $rows[] = [$expected['label'], $expected['clauses'], '—', 'PAGE MISSING'];
+                $rows[] = [$expected['label'], $expected['clauses'], '—', '—', 'PAGE MISSING'];
                 $short++;
 
                 continue;
@@ -56,15 +61,27 @@ class VerifyLegalContent extends Command
                 $short++;
             }
 
+            $wrongState = $page->is_published !== $expected['published'];
+
+            if ($wrongState) {
+                $short++;
+            }
+
             $rows[] = [
                 $expected['label'],
                 $expected['clauses'],
                 $actual,
-                $deficit > 0 ? "SHORT BY {$deficit}" : 'complete',
+                $page->is_published ? 'live' : 'withheld',
+                match (true) {
+                    $wrongState && $expected['published'] => 'NOT PUBLISHED',
+                    $wrongState => 'MUST BE WITHHELD',
+                    $deficit > 0 => "SHORT BY {$deficit}",
+                    default => 'complete',
+                },
             ];
         }
 
-        $this->table(['Page', 'Expected clauses', 'Seeded', 'Status'], $rows);
+        $this->table(['Page', 'Expected clauses', 'Seeded', 'On site', 'Status'], $rows);
 
         foreach (self::EXPECTED as $expected) {
             if ($expected['note']) {
@@ -74,7 +91,7 @@ class VerifyLegalContent extends Command
 
         if ($short > 0) {
             $this->newLine();
-            $this->warn("{$short} legal page(s) are short of the specification.");
+            $this->warn("{$short} legal page(s) do not match the specification.");
             $this->line('  The missing wording is Summit\'s to supply. Do not draft or complete it here —');
             $this->line('  the contract forbids altering their legal content.');
 
