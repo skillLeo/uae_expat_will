@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Settings\Services\SettingsRepository;
 use App\Http\Middleware\EnsureClientPortalEnabled;
 use App\Http\Middleware\EnsureTwoFactorChallengePassed;
 use App\Http\Middleware\EnsureTwoFactorIsConfirmed;
@@ -77,16 +78,27 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->respond(function ($response, Throwable $exception, Request $request) {
             $status = $response->getStatusCode();
 
+            // Debug on means a developer wants the stack trace, not a polite
+            // page. Keyed on debug rather than the environment name so a test
+            // can exercise the real rendering path.
             if ($request->expectsJson()
-                || app()->environment('local', 'testing')
+                || config('app.debug')
                 || ! in_array($status, [403, 404, 419, 500, 503], true)) {
                 return $response;
             }
 
-            // Share the props the layout needs. This response is built
-            // outside the Inertia middleware, so nothing is shared onto it
-            // automatically — without this the footer and header render empty.
-            Inertia::share((new HandleInertiaRequests)->share($request));
+            // Share only what the error page's layout needs, built inline.
+            // This response can be rendered for a request that never reached
+            // the web middleware group at all — a 404 matches no route — so
+            // there is no session, no shared props, and no Ziggy. Calling the
+            // Inertia middleware's share() here throws on $request->session().
+            Inertia::share([
+                'settings' => app(SettingsRepository::class)->public(),
+                'features' => ['client_portal_enabled' => feature('client_portal_enabled')],
+                'auth' => ['user' => null, 'permissions' => []],
+                'flash' => ['success' => null, 'error' => null, 'warning' => null],
+                'ziggy' => ['url' => config('app.url'), 'port' => null, 'defaults' => [], 'routes' => []],
+            ]);
 
             return Inertia::render('Error', [
                 'status' => $status,

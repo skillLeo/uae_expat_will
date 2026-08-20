@@ -55,11 +55,14 @@ class HandleInertiaRequests extends Middleware
                 'self_serve_checkout_enabled' => $settings->feature('self_serve_checkout_enabled'),
             ],
 
-            'flash' => [
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
-                'warning' => fn () => $request->session()->get('warning'),
-            ],
+            // Guarded: an error response can be rendered for a request that
+            // never reached the session middleware (a 404 matches no route, so
+            // the web group never runs). Reading the session there throws.
+            'flash' => fn () => $request->hasSession() ? [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+                'warning' => $request->session()->get('warning'),
+            ] : ['success' => null, 'error' => null, 'warning' => null],
 
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
