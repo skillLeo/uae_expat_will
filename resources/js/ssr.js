@@ -36,11 +36,11 @@ createServer((page) =>
             // error page, so the 404 fell back to client-side rendering.
             const ziggy = page.props?.ziggy;
 
-            if (ziggy) {
-                app.use(ZiggyVue, {
-                    ...ziggy,
-                    ...(ziggy.location ? { location: new URL(ziggy.location) } : {}),
-                });
+            // Only install Ziggy when there is a location to give it. Without
+            // one it reaches for window.location, which does not exist in the
+            // Node SSR process, and the whole render throws.
+            if (ziggy?.location) {
+                app.use(ZiggyVue, { ...ziggy, location: new URL(ziggy.location) });
             }
 
             return app;

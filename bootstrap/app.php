@@ -97,7 +97,17 @@ return Application::configure(basePath: dirname(__DIR__))
                 'features' => ['client_portal_enabled' => feature('client_portal_enabled')],
                 'auth' => ['user' => null, 'permissions' => []],
                 'flash' => ['success' => null, 'error' => null, 'warning' => null],
-                'ziggy' => ['url' => config('app.url'), 'port' => null, 'defaults' => [], 'routes' => []],
+                // `location` must be present: ZiggyVue falls back to
+                // window.location when it is absent, and window does not exist
+                // in the Node SSR process — which crashed the render and
+                // silently dropped every error page to client-side rendering.
+                'ziggy' => [
+                    'url' => config('app.url'),
+                    'port' => null,
+                    'defaults' => [],
+                    'routes' => [],
+                    'location' => $request->url(),
+                ],
             ]);
 
             return Inertia::render('Error', [
