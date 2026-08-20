@@ -126,8 +126,8 @@ const toggle = (key) => { expanded.value = expanded.value === key ? null : key; 
                          go digging through a log to see what broke. -->
                     <div v-if="c.detail.recent?.length" class="mt-1.5 grid gap-1.5">
                         <div v-for="(job, i) in c.detail.recent" :key="i" class="border-t border-rule-cool pt-1.5">
-                            <p class="break-words font-mono text-micro leading-[1.5] text-critical">{{ job.error }}</p>
-                            <p class="tabular font-mono text-micro text-slate">{{ job.when }}</p>
+                            <p class="break-words font-mono text-caption leading-[1.5] text-critical">{{ job.error }}</p>
+                            <p class="tabular font-mono text-caption text-slate">{{ job.when }}</p>
                         </div>
                     </div>
                 </dl>
