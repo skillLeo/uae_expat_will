@@ -136,6 +136,56 @@ if it ever goes live before someone means it to.
 
 ---
 
+## One open commercial question: VAT on authority charges
+
+Payments carry a type — `professional_fee` or `disbursement`. Both currently take
+the same VAT rate from commercial settings, so an AED 750 court or registry charge is
+billed to the customer at AED 787.50.
+
+Whether VAT applies to a charge Summit merely collects and passes on is a tax question
+for Summit's accountant, so the behaviour is deliberately unchanged. When the answer
+arrives, exactly one method changes:
+
+```php
+// app/Domain/Payments/Enums/PaymentType.php
+public function vatRate(): float
+{
+    return match ($this) {
+        self::ProfessionalFee => (float) setting('commercial.vat_rate', 5),
+        self::Disbursement => 0.0,   // <- the whole change
+    };
+}
+```
+
+Every call site already asks the type for its rate. Nothing else needs touching, and
+`AuthorityFeePathTest` has a test asserting the current behaviour that will need its
+expectation updated at the same time — deliberately, so the change cannot pass silently.
+
+---
+
+## Deploying: never interrupt the asset build
+
+`npm run build` on this host is the one step that can take the whole account down. Rolldown
+is memory-hungry, and if the SSH session carrying it is killed part-way the orphaned process
+keeps running — which exhausts the CloudLinux entry-process limit, returns **503 on every
+page**, and refuses new SSH connections so you cannot get in to kill it.
+
+If that happens: it usually clears on its own once the limit window resets. If it does not,
+hPanel is the only way back in — the browser Terminal under **Advanced**, or Hostinger
+support, to kill the stray `node` / `rolldown` processes.
+
+To avoid it entirely, run the build detached so an SSH drop cannot take it with it:
+
+```bash
+cd ~/domains/will.skillleo.com/public_html
+export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"
+export RAYON_NUM_THREADS=1 UV_THREADPOOL_SIZE=1
+setsid nohup npm run build > storage/logs/build.log 2>&1 &
+# then poll: tail -f storage/logs/build.log
+```
+
+---
+
 ## Post-deploy checks specific to this build
 
 ```bash
