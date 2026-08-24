@@ -199,12 +199,6 @@ class QuestionnaireSeeder extends Seeder
             'other' => 'Another asset type, or not sure',
         ], help: 'Select everything that applies.');
 
-        $this->ask('q10a', 'uae_assets', QT::SingleSelect, 'Does the registered beneficiary match your wishes?', $order += 10, options: [
-            'matches' => 'Yes, it matches my wishes',
-            'different' => 'I want a different result in my Will',
-            'dont_understand' => 'I do not understand the effect',
-        ], privacy: 'Some assets may pass under the registered nomination or the provider\'s contractual terms rather than under the Will alone. Summit must check for a conflict before drafting.');
-
         $this->ask('q10b', 'uae_assets', QT::SingleSelect, 'How should your digital assets be handled?', $order += 10, options: [
             'residue' => 'Part of the residue, with no special instructions',
             'specific_wallet' => 'A specific wallet to a specific person, or special access instructions',
@@ -249,7 +243,10 @@ class QuestionnaireSeeder extends Seeder
             'other' => 'Another wish not listed',
         ], sensitive: true, help: 'Select everything that applies.');
 
-        $this->ask('q13b', 'wishes', QT::SingleSelect, 'Does any beneficiary need protection?', $order += 10, options: [
+        // More than one of these can be true at once: a beneficiary can be a
+        // minor AND have care needs. One answer made people pick the most
+        // serious and lose the rest.
+        $this->ask('q13b', 'wishes', QT::MultiSelect, 'Does any beneficiary need protection?', $order += 10, options: [
             'no' => 'No',
             'minor' => 'A beneficiary is a minor with no other special needs',
             'disability' => 'A beneficiary has a disability or long-term care needs',
@@ -257,7 +254,7 @@ class QuestionnaireSeeder extends Seeder
             'delay' => 'I want to delay or stage the inheritance',
             'other_protective' => 'Another protective arrangement is required',
             'not_sure' => 'Not sure',
-        ], sensitive: true);
+        ], exclusive: 'no', sensitive: true);
 
         $this->ask('q14', 'executor', QT::SingleSelect, 'Can you appoint an executor?', $order += 10, options: [
             'yes_with_substitute' => 'Yes — a suitable adult and a substitute, with no dispute expected',
@@ -269,21 +266,6 @@ class QuestionnaireSeeder extends Seeder
             'none_suitable' => 'There is no suitable person',
             'not_sure' => 'Not sure about the role or the right person',
         ], help: 'We do not need the person\'s name during the initial assessment. We only need to know whether the role can be arranged clearly.');
-
-        $this->ask('q15a', 'circumstances', QT::MultiSelect, 'Do any of these apply to your debts or circumstances?', $order += 10, options: [
-            'none' => 'None of these',
-            'ordinary_loan' => 'Only an ordinary performing bank loan, mortgage or credit card',
-            'family_dispute' => 'A family dispute concerning money, ownership or inheritance',
-            'court_case' => 'A court case or enforcement proceeding concerning family, custody or ownership',
-            'disputed_debt' => 'A disputed debt, personal guarantee or material business debt',
-            'insolvency' => 'A risk of insolvency or bankruptcy',
-            'foreign_debts' => 'Material obligations or debts outside the UAE',
-            'forgive_debt' => 'I want to forgive a debt owed to me',
-            'possible_claim' => 'A possible family or financial claim against my estate',
-            'urgent' => 'An urgent deadline or serious health circumstance',
-            'not_sure' => 'Not sure about the effect of a debt or dispute',
-        ], exclusive: 'none', sensitive: true,
-            help: 'An ordinary bank loan, mortgage or credit card does not create a complication by itself unless there is a dispute, personal guarantee or insolvency concern.');
 
         // Q15B is the capacity and undue-influence question. Its answer creates a
         // RESTRICTED case. The answer must never be disclosed to the person who
@@ -375,7 +357,6 @@ class QuestionnaireSeeder extends Seeder
             'target_section_key' => 'uae_assets',
         ]);
 
-        $this->showWhen('q10a', 'q10', Op::In, ['registered_beneficiary']);
         $this->showWhen('q10b', 'q10', Op::In, ['crypto']);
         $this->showWhen('q13b', 'q13a', Op::In, ['charity', 'fixed_percentages', 'specific_gift', 'different_percentages']);
     }
@@ -455,9 +436,6 @@ class QuestionnaireSeeder extends Seeder
         $this->rule('R-10 · Business, Trust or complex asset', 100, Outcome::Review,
             conditions: [['q10', Op::In, ['business', 'trust_owned', 'ip', 'other']]]);
 
-        $this->rule('R-10a · Registered nomination conflicts with the Will', 101, Outcome::Review,
-            conditions: [['q10a', Op::In, ['different', 'dont_understand']]]);
-
         $this->rule('R-10b · Digital assets needing special handling', 102, Outcome::Review,
             conditions: [['q10b', Op::In, ['specific_wallet', 'complex', 'not_sure']]]);
 
@@ -517,9 +495,6 @@ class QuestionnaireSeeder extends Seeder
         $this->rule('R-14 · Executor arrangement needs review', 140, Outcome::Review,
             conditions: [['q14', Op::In, ['professional', 'several', 'conflict', 'none_suitable', 'not_sure']]]);
 
-        $this->rule('R-15 · Dispute, guarantee or insolvency concern', 150, Outcome::Review,
-            conditions: [['q15a', Op::In, ['family_dispute', 'court_case', 'disputed_debt', 'insolvency', 'foreign_debts', 'forgive_debt', 'possible_claim', 'urgent', 'not_sure']]]);
-
         // --- Continue, with something recorded on the case -------------------
         $this->rule('F-01 · Expected child', 200, Outcome::ContinueReminder,
             reminder: 'expected_child',
@@ -534,10 +509,6 @@ class QuestionnaireSeeder extends Seeder
             flag: 'guardianship_only',
             conditions: [['q9', Op::Equals, 'guardianship_only']]);
 
-        $this->rule('F-04 · Registered nomination to confirm', 203, Outcome::ContinueFlag,
-            flag: 'confirm_registered_nomination',
-            conditions: [['q10a', Op::Equals, 'matches']]);
-
         $this->rule('F-05 · Digital assets in the residue', 204, Outcome::ContinueFlag,
             flag: 'digital_assets',
             conditions: [['q10b', Op::Equals, 'residue']]);
@@ -549,7 +520,7 @@ class QuestionnaireSeeder extends Seeder
 
         $this->rule('F-07 · Minor beneficiary', 206, Outcome::ContinueFlag,
             flag: 'minor_beneficiary',
-            conditions: [['q13b', Op::Equals, 'minor']]);
+            conditions: [['q13b', Op::In, ['minor']]]);
 
         $this->rule('F-08 · Executor names to follow', 207, Outcome::ContinueReminder,
             reminder: 'executor_names',

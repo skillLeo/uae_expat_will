@@ -180,7 +180,7 @@ it('skips the whole UAE assets section for a guardianship-only matter', function
         ->pluck('key');
 
     expect($visible)->not->toContain('q10')
-        ->and($visible)->not->toContain('q10a')
+        ->and($visible)->not->toContain('q10b')
         ->and($visible)->not->toContain('q11');
 });
 

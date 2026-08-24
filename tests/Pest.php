@@ -73,7 +73,6 @@ function cleanAnswers(array $overrides = []): array
         'q12' => ['none'],
         'q13a' => ['to_family'],
         'q14' => 'yes_with_substitute',
-        'q15a' => ['none'],
         'q15b' => 'yes',
         'q16' => 'yes',
     ], $overrides);

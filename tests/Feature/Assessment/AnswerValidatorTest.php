@@ -19,17 +19,17 @@ it('drops every other option when the exclusive option is selected', function ()
     // The client component does this too, but the client is not a line of
     // defence: a tampered payload must produce the same stored answer.
     $result = $this->validator->validate(
-        question('q15a'),
-        ['none', 'family_dispute', 'insolvency'],
+        question('q13b'),
+        ['no', 'minor', 'disability'],
     );
 
-    expect($result)->toBe(['none']);
+    expect($result)->toBe(['no']);
 });
 
 it('keeps a normal multi-select intact', function () {
-    $result = $this->validator->validate(question('q15a'), ['family_dispute', 'insolvency']);
+    $result = $this->validator->validate(question('q13b'), ['minor', 'disability']);
 
-    expect($result)->toEqualCanonicalizing(['family_dispute', 'insolvency']);
+    expect($result)->toEqualCanonicalizing(['minor', 'disability']);
 });
 
 it('enforces exclusivity on every question that has an exclusive option', function (string $key, string $exclusive, string $other) {
@@ -37,7 +37,7 @@ it('enforces exclusivity on every question that has an exclusive option', functi
 })->with([
     ['q7', 'none', 'adult_only'],
     ['q12', 'none', 'foreign_will'],
-    ['q15a', 'none', 'insolvency'],
+    ['q13b', 'no', 'disability'],
 ]);
 
 it('rejects an option that does not belong to the question', function () {
