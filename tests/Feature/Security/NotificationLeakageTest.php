@@ -77,13 +77,26 @@ it('sends only the reference and the outcome bucket in the internal alert', func
 });
 
 it('names the ordinary outcome for a non-restricted held case', function () {
-    $case = completeAssessment(cleanAnswers(['q12' => ['foreign_will']]));
+    // A DIFC request is the one ordinary outcome still held for review.
+    $case = completeAssessment(cleanAnswers(['q1' => 'difc']));
 
     expect($case->is_restricted)->toBeFalse();
 
     $log = NotificationLog::where('case_id', $case->id)->first();
 
     expect($log->payload['outcome'])->toBe('Held for review');
+});
+
+it('names the outcome plainly for a case that continues to payment', function () {
+    // The alert says the lead can be invoiced, and still says nothing about why
+    // the enhanced review was raised.
+    $case = completeAssessment(cleanAnswers(['q12' => ['foreign_will']]));
+
+    $log = NotificationLog::where('case_id', $case->id)->first();
+
+    expect($case->is_restricted)->toBeFalse()
+        ->and($log->payload)->not->toHaveKey('trigger_reasons')
+        ->and($log->payload['outcome'])->not->toContain('foreign');
 });
 
 it('appends the Summit identity and trade licence to every email it sends', function () {

@@ -45,11 +45,15 @@ it('does not stop for any other nationality', function () {
 
 // ------------------------------------------------- the cross-question rule
 
-it('holds a Muslim customer whose distribution needs the wider route', function (string $wish) {
+it('flags a Muslim customer whose distribution needs the wider route, without stopping them', function (string $wish) {
+    // Summit still gets told. The customer is no longer held: per the approved
+    // handoff the enhanced review is an internal classification and "must not
+    // remove the payment option from an ADJD or Dubai Courts candidate".
     $result = evaluateAnswers(cleanAnswers(['q5' => 'muslim', 'q13a' => [$wish]]));
 
-    expect($result->outcome)->toBe(Outcome::Review)
-        ->and($result->allowsPayment())->toBeFalse();
+    expect($result->outcome)->toBe(Outcome::ContinueFlag)
+        ->and($result->flags)->toContain('enhanced_review')
+        ->and($result->allowsPayment())->toBeTrue();
 })->with(['specific_gift', 'different_percentages', 'gift_to_friend']);
 
 it('lets a non-Muslim customer continue with a route mark for the same wish', function (string $wish) {
@@ -64,8 +68,12 @@ it('applies the same religion split to an unmarried partner inheriting', functio
     $muslim = evaluateAnswers(cleanAnswers(['q5' => 'muslim', 'q6' => 'unmarried_partner', 'q6a' => 'yes_no_competing']));
     $nonMuslim = evaluateAnswers(cleanAnswers(['q5' => 'non_muslim', 'q6' => 'unmarried_partner', 'q6a' => 'yes_no_competing']));
 
-    expect($muslim->outcome)->toBe(Outcome::Review)
-        ->and($nonMuslim->outcome)->toBe(Outcome::ContinueRouteMark);
+    // The split still exists and is still recorded — it just no longer decides
+    // whether the customer may pay.
+    expect($muslim->outcome)->toBe(Outcome::ContinueFlag)
+        ->and($muslim->flags)->toContain('enhanced_review')
+        ->and($nonMuslim->outcome)->toBe(Outcome::ContinueRouteMark)
+        ->and($muslim->allowsPayment())->toBeTrue();
 });
 
 it('does not fire the cross-question rule when the religion answer is absent', function () {
@@ -79,11 +87,31 @@ it('does not fire the cross-question rule when the religion answer is absent', f
 
 // ------------------------------------------------------------- precedence
 
-it('sends the whole case to review when any single answer says review', function () {
-    expect(evaluateAnswers(cleanAnswers(['q12' => ['foreign_will']]))->outcome)->toBe(Outcome::Review);
+it('records an enhanced review without taking the payment option away', function () {
+    $result = evaluateAnswers(cleanAnswers(['q12' => ['foreign_will']]));
+
+    expect($result->outcome)->toBe(Outcome::ContinueFlag)
+        ->and($result->flags)->toContain('enhanced_review')
+        ->and($result->allowsPayment())->toBeTrue();
 });
 
-it('lets urgent review beat an ordinary review', function () {
+it('still keeps a DIFC request away from the standard checkout', function () {
+    // The one review that survives. A DIFC Will needs its own quotation, so it
+    // must never reach the standard payment screen.
+    $result = evaluateAnswers(cleanAnswers(['q1' => 'difc']));
+
+    expect($result->outcome)->toBe(Outcome::Review)
+        ->and($result->allowsPayment())->toBeFalse();
+});
+
+it('sends an amendment to an existing Will straight to the team', function () {
+    $result = evaluateAnswers(cleanAnswers(['q1' => 'review_existing']));
+
+    expect($result->outcome)->toBe(Outcome::StopRefer)
+        ->and($result->allowsPayment())->toBeFalse();
+});
+
+it('lets urgent review beat everything that would otherwise continue', function () {
     $result = evaluateAnswers(cleanAnswers([
         'q12' => ['foreign_will'],
         'q15b' => 'feel_pressured',
@@ -111,17 +139,26 @@ it('marks every capacity or influence answer as urgent and restricted', function
         ->and($result->allowsPayment())->toBeFalse();
 })->with(['health_condition', 'someone_helping', 'feel_pressured', 'no_or_unsure']);
 
-it('does not restrict an ordinary held case', function () {
+it('does not restrict a case merely because an answer was sensitive', function () {
     // Regression: sensitivity is not restriction. Marking every sensitive answer
-    // restricted would hide ordinary held cases from the coordinators who work them.
+    // restricted would hide ordinary cases from the coordinators who work them.
     $result = evaluateAnswers(cleanAnswers(['q5' => 'muslim', 'q13a' => ['different_percentages']]));
+
+    expect($result->isRestricted())->toBeFalse();
+});
+
+it('does not restrict the one remaining held outcome either', function () {
+    $result = evaluateAnswers(cleanAnswers(['q1' => 'difc']));
 
     expect($result->outcome)->toBe(Outcome::Review)
         ->and($result->isRestricted())->toBeFalse();
 });
 
-it('routes the fourth religion option to review', function () {
-    expect(evaluateAnswers(cleanAnswers(['q5' => 'prefer_not_to_say']))->outcome)->toBe(Outcome::Review);
+it('flags the fourth religion option rather than holding it', function () {
+    $result = evaluateAnswers(cleanAnswers(['q5' => 'prefer_not_to_say']));
+
+    expect($result->outcome)->toBe(Outcome::ContinueFlag)
+        ->and($result->flags)->toContain('enhanced_review');
 });
 
 // ----------------------------------------------------- flags and reminders

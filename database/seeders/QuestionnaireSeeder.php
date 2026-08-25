@@ -396,53 +396,78 @@ class QuestionnaireSeeder extends Seeder
             detail: 'Restricted — authorised legal staff only.',
             conditions: [['q15b', Op::In, ['health_condition', 'someone_helping', 'feel_pressured', 'no_or_unsure']]]);
 
-        // --- Review before payment ------------------------------------------
+        // --- Enhanced review. These no longer stop the customer. --------------
+        //
+        // Per the approved result-screen handoff, August 2026: the distinction
+        // between a standard and an enhanced review is an INTERNAL classification
+        // and "must not remove the payment option from an ADJD or Dubai Courts
+        // candidate". So every rule below flags the case for Summit's attention
+        // and lets the customer continue to payment as normal.
+        //
+        // Two things are deliberately not in this list. DIFC (R-05) still needs a
+        // quotation before any money is taken, and the capacity and undue
+        // influence rule (R-04) remains an urgent review that is never charged.
         $this->rule('R-05 · DIFC Will requested', 50, Outcome::Review,
             conditions: [['q1', Op::Equals, 'difc']]);
 
-        $this->rule('R-06 · Existing Will to review, amend or revoke', 60, Outcome::Review,
+        $this->rule('R-06 · Existing Will to review, amend or revoke', 60, Outcome::StopRefer, terminal: true,
+            detail: 'Reviewing, amending, replacing or revoking an existing Will is handled directly by our team rather than through the online assessment. Leave your details and Summit will contact you.',
             conditions: [['q1', Op::Equals, 'review_existing']]);
 
-        $this->rule('R-07 · Religion requires review', 70, Outcome::Review,
+        $this->rule('R-07 · Religion requires review', 70, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q5', Op::In, ['previously_muslim', 'prefer_not_to_say']]]);
 
-        $this->rule('R-08 · Marital history', 80, Outcome::Review,
+        $this->rule('R-08 · Marital history', 80, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q6', Op::In, ['married_before', 'divorced', 'separated', 'agreement', 'unclear']]]);
 
-        $this->rule('R-08a · Unmarried partner with a competing claim', 81, Outcome::Review,
+        $this->rule('R-08a · Unmarried partner with a competing claim', 81, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q6a', Op::In, ['yes_with_claim', 'not_sure']]]);
 
-        $this->rule('R-08b · Unfinished estate of a late spouse', 82, Outcome::Review,
+        $this->rule('R-08b · Unfinished estate of a late spouse', 82, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q6b', Op::In, ['yes', 'not_sure']]]);
 
-        $this->rule('R-09 · Blended family or dependant with care needs', 90, Outcome::Review,
+        $this->rule('R-09 · Blended family or dependant with care needs', 90, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q7', Op::In, ['multiple_relationships', 'step_adopted', 'child_died', 'dependant_disability', 'not_sure']]]);
 
-        $this->rule('R-09a · Guardianship position unclear', 91, Outcome::Review,
+        $this->rule('R-09a · Guardianship position unclear', 91, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q8a', Op::Equals, 'not_sure']]);
 
-        $this->rule('R-09b · Children living outside the UAE', 92, Outcome::Review,
+        $this->rule('R-09b · Children living outside the UAE', 92, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q8b', Op::In, ['all_outside', 'mixed', 'not_sure']]]);
 
-        $this->rule('R-09c · Parental responsibility dispute', 93, Outcome::Review,
+        $this->rule('R-09c · Parental responsibility dispute', 93, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q8c', Op::In, ['no_dispute', 'not_sure']]]);
 
-        $this->rule('R-09d · No suitable guardian, or a dispute expected', 94, Outcome::Review,
+        $this->rule('R-09d · No suitable guardian, or a dispute expected', 94, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q8d', Op::In, ['no_suitable', 'may_be_dispute', 'not_sure']]]);
 
-        $this->rule('R-09e · Assets outside the UAE', 95, Outcome::Review,
+        $this->rule('R-09e · Assets outside the UAE', 95, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q9', Op::In, ['uae_and_other', 'outside_only', 'not_sure']]]);
 
-        $this->rule('R-10 · Business, Trust or complex asset', 100, Outcome::Review,
+        $this->rule('R-10 · Business, Trust or complex asset', 100, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q10', Op::In, ['business', 'trust_owned', 'ip', 'other']]]);
 
-        $this->rule('R-10b · Digital assets needing special handling', 102, Outcome::Review,
+        $this->rule('R-10b · Digital assets needing special handling', 102, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q10b', Op::In, ['specific_wallet', 'complex', 'not_sure']]]);
 
-        $this->rule('R-10c · Ownership unclear or restricted', 103, Outcome::Review,
+        $this->rule('R-10c · Ownership unclear or restricted', 103, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q11', Op::In, ['joint_unclear', 'registered_other', 'trust_owned', 'disputed', 'not_sure']]]);
 
-        $this->rule('R-11 · Existing Will, law election or structure', 110, Outcome::Review,
+        $this->rule('R-11 · Existing Will, law election or structure', 110, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q12', Op::In, ['uae_will', 'foreign_will', 'law_election', 'agreement', 'incomplete_gift', 'trust_owns', 'other_arrangement', 'not_sure']]]);
 
         // ------------------------------------------------------------------
@@ -458,8 +483,9 @@ class QuestionnaireSeeder extends Seeder
         // ------------------------------------------------------------------
         $wider = ['specific_gift', 'different_percentages', 'gift_to_friend'];
 
-        $this->rule('R-12 · Distribution needs the wider route, and the customer is Muslim', 120, Outcome::Review,
-            detail: 'An instruction of this kind may require a feature available only through the Dubai Courts route, which is not available to a Muslim customer. The matter is reviewed before payment.',
+        $this->rule('R-12 · Distribution needs the wider route, and the customer is Muslim', 120, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
+            detail: 'An instruction of this kind may require a feature available only through the Dubai Courts route, which is not available to a Muslim customer. Summit will review this and confirm the appropriate route before your Will is drafted.',
             conditions: [
                 ['q13a', Op::In, $wider, 0],
                 ['q5', Op::Equals, 'muslim', 0],
@@ -472,7 +498,8 @@ class QuestionnaireSeeder extends Seeder
                 ['q5', Op::Equals, 'non_muslim', 0],
             ]);
 
-        $this->rule('R-12b · Unmarried partner inheriting, and the customer is Muslim', 122, Outcome::Review,
+        $this->rule('R-12b · Unmarried partner inheriting, and the customer is Muslim', 122, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [
                 ['q6a', Op::Equals, 'yes_no_competing', 0],
                 ['q5', Op::Equals, 'muslim', 0],
@@ -486,13 +513,16 @@ class QuestionnaireSeeder extends Seeder
             ]);
         // ------------------------------------------------------------------
 
-        $this->rule('R-13 · Distribution requiring advice or a structure', 130, Outcome::Review,
+        $this->rule('R-13 · Distribution requiring advice or a structure', 130, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q13a', Op::In, ['charity', 'need_advice', 'exclude_someone', 'conditions', 'trust_arrangement', 'other']]]);
 
-        $this->rule('R-13a · Beneficiary needing protection', 131, Outcome::Review,
+        $this->rule('R-13a · Beneficiary needing protection', 131, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q13b', Op::In, ['disability', 'cannot_manage', 'delay', 'other_protective', 'not_sure']]]);
 
-        $this->rule('R-14 · Executor arrangement needs review', 140, Outcome::Review,
+        $this->rule('R-14 · Executor arrangement needs review', 140, Outcome::ContinueFlag,
+            flag: 'enhanced_review',
             conditions: [['q14', Op::In, ['professional', 'several', 'conflict', 'none_suitable', 'not_sure']]]);
 
         // --- Continue, with something recorded on the case -------------------
