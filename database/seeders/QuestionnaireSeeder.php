@@ -42,11 +42,20 @@ class QuestionnaireSeeder extends Seeder
                 ],
             );
 
-            // Rebuild version 1 from scratch on every seed run.
-            $questionnaire->versions()->forceDelete();
+            // A version that nobody has answered against can be rebuilt in
+            // place. One that HAS been answered against cannot: an assessment
+            // must keep the exact wording and rules it was taken under, which
+            // is the entire reason questionnaires are versioned. On a live site
+            // this seeder therefore publishes a NEW version beside the old one
+            // rather than trying to delete a version rows still point at.
+            $questionnaire->versions()->whereDoesntHave('assessments')->forceDelete();
+
+            $questionnaire->versions()
+                ->where('status', 'published')
+                ->update(['status' => 'superseded']);
 
             $this->version = $questionnaire->versions()->create([
-                'version_number' => 1,
+                'version_number' => (int) $questionnaire->versions()->max('version_number') + 1,
                 'status' => 'published',
                 'published_at' => now(),
                 'notes' => 'Seeded from the Final Qualifying Questionnaire, "Final English version for the website journey".',
