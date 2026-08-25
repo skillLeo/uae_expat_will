@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Public;
 
+use App\Domain\Settings\Services\CommercialTokens;
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
 use App\Models\FaqCategory;
@@ -59,15 +60,7 @@ class PageController extends Controller
      */
     private function interpolate($sections)
     {
-        $tokens = [
-            '{fee}' => number_format((float) setting('commercial.standard_fee', 2199)),
-            '{difc_fee}' => number_format((float) setting('commercial.difc_starting_fee', 3999)),
-            '{vat_rate}' => (string) setting('commercial.vat_rate', 5),
-            '{currency}' => (string) setting('commercial.currency', 'AED'),
-            '{first_draft_days}' => (string) setting('commercial.first_draft_days', 2),
-            '{amendment_rounds}' => (string) setting('commercial.amendment_allowance', 2),
-            '{trade_licence}' => (string) setting('branding.trade_licence'),
-        ];
+        $tokens = app(CommercialTokens::class)->all();
 
         $walk = function ($value) use (&$walk, $tokens) {
             if (is_string($value)) {

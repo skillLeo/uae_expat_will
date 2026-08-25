@@ -43,17 +43,23 @@ class SettingsSeeder extends Seeder
         $s->define(G::Contact, 'contact.registered_address', null, T::Text, 'Registered address', 'Hidden until set. Compliance rule: no address is displayed anywhere on the site.', true, 6);
 
         // ---------------------------------------------------------- commercial
-        $s->define(G::Commercial, 'commercial.standard_fee', 2199, T::Integer, 'Standard professional fee (AED)', 'Excluding VAT. One accepted standard Will.', true, 1);
-        $s->define(G::Commercial, 'commercial.difc_starting_fee', 3999, T::Integer, 'DIFC starting fee (AED)', 'Never shown as a fixed purchasable price — always "from".', true, 2);
-        $s->define(G::Commercial, 'commercial.vat_rate', 5, T::Integer, 'VAT rate (%)', null, true, 3);
-        $s->define(G::Commercial, 'commercial.currency', 'AED', T::String, 'Currency', null, true, 4);
+        // Set from the approved result-screen handoff, August 2026. Every page,
+        // FAQ and notification reads this through the {fee} token, so the price
+        // lives in exactly one place and a change is never a dozen content edits.
+        $s->define(G::Commercial, 'commercial.standard_fee', 1999, T::Integer, 'Standard professional fee (AED)', 'Excluding VAT. One accepted standard Will.', true, 1);
+        // Two coordinated but legally separate Wills. Not two times the single
+        // fee — it is its own price, so it is its own setting.
+        $s->define(G::Commercial, 'commercial.mirror_fee', 2999, T::Integer, 'Mirror Wills professional fee (AED)', 'Excluding VAT. Two coordinated but legally separate standard Wills.', true, 2);
+        $s->define(G::Commercial, 'commercial.difc_starting_fee', 3999, T::Integer, 'DIFC starting fee (AED)', 'Never shown as a fixed purchasable price — always "from".', true, 3);
+        $s->define(G::Commercial, 'commercial.vat_rate', 5, T::Integer, 'VAT rate (%)', null, true, 4);
+        $s->define(G::Commercial, 'commercial.currency', 'AED', T::String, 'Currency', null, true, 5);
         $s->define(G::Commercial, 'commercial.authority_fees', [
             ['route' => 'ADJD Civil Will', 'amount' => '950.00', 'note' => "For one regular Will, subject to ADJD's current service, eligibility and fee schedule"],
             ['route' => 'Dubai Courts Will', 'amount' => '≈ 2,100.00', 'note' => 'For one Will, subject to the service and fee confirmed by Dubai Courts'],
             ['route' => 'DIFC Courts Will', 'amount' => 'varies by Will type', 'note' => 'Confirmed from the current DIFC fee schedule with the individual quotation'],
-        ], T::Json, 'Authority fee table', 'Open item 06 — re-check each figure against the authority schedule before launch.', true, 5);
-        $s->define(G::Commercial, 'commercial.amendment_allowance', 2, T::Integer, 'Amendment rounds included', 'Open item 07 — the specification says "as stated in your Service Confirmation" without fixing a number.', true, 6);
-        $s->define(G::Commercial, 'commercial.first_draft_days', 2, T::Integer, 'First-draft target (business days)', 'Open item 09 — confirm Summit stands behind this, it appears in client-facing copy.', true, 7);
+        ], T::Json, 'Authority fee table', 'Open item 06 — re-check each figure against the authority schedule before launch.', true, 6);
+        $s->define(G::Commercial, 'commercial.amendment_allowance', 2, T::Integer, 'Amendment rounds included', 'Open item 07 — the specification says "as stated in your Service Confirmation" without fixing a number.', true, 7);
+        $s->define(G::Commercial, 'commercial.first_draft_days', 2, T::Integer, 'First-draft target (business days)', 'Open item 09 — confirm Summit stands behind this, it appears in client-facing copy.', true, 8);
 
         // -------------------------------------------------------------- mail
         $s->define(G::Mail, 'mail.driver', 'smtp', T::String, 'Mail driver', null, false, 1);

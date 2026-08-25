@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Domain\Notifications\Enums\NotificationChannel;
+use App\Domain\Settings\Services\CommercialTokens;
 use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -47,7 +48,9 @@ class NotificationTemplate extends Model
      */
     public function render(string $field, array $data): string
     {
-        $text = (string) ($this->{$field} ?? '');
+        // The commercial placeholders resolve first, from settings, so an email
+        // can never quote a price the website has stopped charging.
+        $text = app(CommercialTokens::class)->apply((string) ($this->{$field} ?? ''));
 
         foreach ($data as $key => $value) {
             $text = str_replace(['{{ '.$key.' }}', '{{'.$key.'}}'], (string) $value, $text);
