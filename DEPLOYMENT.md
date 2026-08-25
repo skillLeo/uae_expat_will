@@ -174,15 +174,20 @@ If that happens: it usually clears on its own once the limit window resets. If i
 hPanel is the only way back in — the browser Terminal under **Advanced**, or Hostinger
 support, to kill the stray `node` / `rolldown` processes.
 
-To avoid it entirely, run the build detached so an SSH drop cannot take it with it:
+Running it detached is not enough. It has taken the site down **twice**, the second
+time even when started with `setsid nohup` — the problem is not the SSH session dying,
+it is the build itself saturating the account.
+
+**So do not build on the host at all.** Build here and ship the output:
 
 ```bash
-cd ~/domains/will.skillleo.com/public_html
-export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"
-export RAYON_NUM_THREADS=1 UV_THREADPOOL_SIZE=1
-setsid nohup npm run build > storage/logs/build.log 2>&1 &
-# then poll: tail -f storage/logs/build.log
+export SSHPASS='...'
+./scripts/deploy-assets.sh
 ```
+
+That builds locally, rsyncs `public/build` and `bootstrap/ssr` with `--delete`, and
+restarts the renderer. The host only ever serves files. A deploy is then two steps:
+git + migrations + seeders over SSH, then this script for the assets.
 
 ---
 
