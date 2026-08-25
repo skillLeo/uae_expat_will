@@ -181,9 +181,20 @@ it is the build itself saturating the account.
 **So do not build on the host at all.** Build here and ship the output:
 
 ```bash
-export SSHPASS='...'
+export DEPLOY_KEY=~/.ssh/uew_deploy    # preferred
 ./scripts/deploy-assets.sh
 ```
+
+Set the key up once and the password can stop being passed around at all:
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/uew_deploy
+ssh-copy-id -i ~/.ssh/uew_deploy.pub -p 65002 u290685119@46.202.183.38
+```
+
+The script still accepts `SSHPASS` as a stopgap and warns every time it uses it.
+Host keys are verified with `accept-new`, so the host is pinned on first use and a
+later change fails loudly rather than being accepted silently.
 
 That builds locally, rsyncs `public/build` and `bootstrap/ssr` with `--delete`, and
 restarts the renderer. The host only ever serves files. A deploy is then two steps:
