@@ -56,15 +56,16 @@ const subColour = computed(() => (onInk.value ? 'text-steel' : 'text-slate'));
     <div class="inline-block">
         <!-- One Name · the live identity -->
         <div v-if="dir === 'one_name'">
-            <!-- UAE is set marginally smaller than the name so that its cap
-                 height matches optically: all-caps at an identical point size
-                 reads heavier than mixed case beside it. -->
+            <!-- UAE is set at exactly the same size as the name. Summit asked
+                 for equal twice, and equal is the point: the whole complaint was
+                 that a smaller UAE read as a label rather than as half the name.
+                 A little tracking keeps the caps from crowding. -->
             <div class="whitespace-nowrap font-display leading-none tracking-[-0.015em]">
                 <span
                     class="font-medium"
                     :class="[
                         uaeColour,
-                        isLockup ? 'text-[39px] tracking-[0.05em]' : 'text-[24px] tracking-[0.055em]',
+                        isLockup ? 'text-[42px] tracking-[0.04em]' : 'text-[26px] tracking-[0.045em]',
                     ]"
                     style="padding-right: 0.16em"
                 >UAE</span><span
