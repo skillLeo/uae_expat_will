@@ -6,6 +6,7 @@ use App\Domain\Assessment\DTOs\AnswerSet;
 use App\Domain\Assessment\Enums\Outcome;
 use App\Domain\Assessment\RoutingEngine;
 use App\Models\Concerns\RecordsActivity;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,7 +26,8 @@ class Assessment extends Model
         'outcome_detail', 'trigger_reasons', 'flags', 'reminders', 'route_marks',
         'current_question_key', 'abandoned_at_question_key', 'source', 'campaign',
         'utm', 'referrer', 'ip_address', 'user_agent', 'started_at', 'completed_at',
-        'expires_at',
+        'expires_at', 'contact_name', 'contact_email', 'contact_phone',
+        'contact_captured_at',
     ];
 
     protected $hidden = ['session_token'];
@@ -42,7 +44,34 @@ class Assessment extends Model
             'started_at' => 'datetime',
             'completed_at' => 'datetime',
             'expires_at' => 'datetime',
+            'contact_captured_at' => 'datetime',
         ];
+    }
+
+    public function hasContact(): bool
+    {
+        return $this->contact_captured_at !== null && $this->contact_email !== null;
+    }
+
+    /** @return array{full_name: string|null, email: string|null, phone: string|null} */
+    public function contact(): array
+    {
+        return [
+            'full_name' => $this->contact_name,
+            'email' => $this->contact_email,
+            'phone' => $this->contact_phone,
+        ];
+    }
+
+    /**
+     * Started, gave us their details, and never finished. This is the follow-up
+     * list — the entire reason the details are collected early.
+     *
+     * @param  Builder<Assessment>  $query
+     */
+    public function scopeAbandonedWithContact($query)
+    {
+        return $query->whereNotNull('contact_captured_at')->whereNull('completed_at');
     }
 
     protected static function booted(): void

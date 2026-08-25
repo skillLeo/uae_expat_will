@@ -30,6 +30,13 @@ class SubmitAssessment
         array $acceptedDeclarationIds = [],
         array $contact = [],
     ): LegalCase {
+        // The details were taken after the age question, so by the time anybody
+        // reaches this point they are already on the assessment. Anything posted
+        // with the submission only fills a gap, it never overwrites what the
+        // person actually typed.
+        $contact = array_filter($contact, fn ($v) => $v !== null && $v !== '')
+            + array_filter($assessment->contact(), fn ($v) => $v !== null && $v !== '');
+
         $assessment->load('answers', 'version.declarations');
         $engine = $assessment->engine();
         $answers = $assessment->answerSet();

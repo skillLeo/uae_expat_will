@@ -65,6 +65,25 @@ class AssessmentController extends Controller
         return back();
     }
 
+    public function contact(Request $request): RedirectResponse
+    {
+        $assessment = $this->resolveOrFail($request);
+
+        $validated = $request->validate([
+            'contact_name' => 'required|string|max:120',
+            'contact_email' => 'required|email:rfc|max:190',
+            'contact_phone' => 'required|string|max:40',
+        ], [], [
+            'contact_name' => 'name',
+            'contact_email' => 'email address',
+            'contact_phone' => 'contact number',
+        ]);
+
+        $assessment->update([...$validated, 'contact_captured_at' => now()]);
+
+        return back();
+    }
+
     /** Back is never destructive — the answer stays, we simply move the cursor. */
     public function back(Request $request): RedirectResponse
     {
@@ -131,15 +150,32 @@ class AssessmentController extends Controller
                 'non_muslim' => $screen->extra['non_muslim_note'] ?? null,
                 default => null,
             },
+            // Two Wills carry their own price, not twice the single fee.
             'fee' => [
-                'amount' => (float) setting('commercial.standard_fee', 2199),
+                'amount' => $assessment->answerSet()->get('q1') === 'two_wills'
+                    ? (float) setting('commercial.mirror_fee', 2999)
+                    : (float) setting('commercial.standard_fee', 1999),
                 'vat_rate' => (int) setting('commercial.vat_rate', 5),
                 'currency' => setting('commercial.currency', 'AED'),
+                'is_mirror' => $assessment->answerSet()->get('q1') === 'two_wills',
             ],
         ]);
     }
 
     // ------------------------------------------------------------------ helpers
+
+    /**
+     * Asked once, after q2 is answered, and never again.
+     *
+     * Gated on the answer rather than on a cursor position so that a hero
+     * pre-fill, a resumed session or a jump backwards all land in the same
+     * place — the question is "do we know who this is yet", not "which screen
+     * were they on".
+     */
+    private function needsContact(Assessment $assessment, $answers): bool
+    {
+        return $answers->get('q2') !== null && ! $assessment->hasContact();
+    }
 
     private function render(Assessment $assessment): Response
     {
@@ -159,6 +195,17 @@ class AssessmentController extends Controller
                 'detail' => $terminal->outcomeDetail,
                 'screen' => $screen?->only(['heading', 'body', 'primary_action_label']),
                 'token' => $assessment->session_token,
+            ]);
+        }
+
+        // Contact details are asked for once, straight after the age question.
+        // That is the first point at which the person is known to be eligible,
+        // and it means somebody who abandons at question nine still leaves a
+        // lead Summit can follow up rather than vanishing.
+        if ($this->needsContact($assessment, $answers)) {
+            return Inertia::render('Assessment/Contact', [
+                'progress' => $engine->progress($answers)->toArray(),
+                'contact' => $assessment->contact(),
             ]);
         }
 
