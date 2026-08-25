@@ -647,14 +647,62 @@ class QuestionnaireSeeder extends Seeder
     {
         $screens = [
             [
+                // Copy below is transcribed from the approved developer content
+                // handoff, August 2026, and must not be reworded here. The fee
+                // is a token so the screen can never quote a price the platform
+                // has stopped charging.
                 Outcome::Continue_,
-                'You may continue through our online service',
-                'Your answers indicate that your circumstances may be suitable for our standard online UAE Will service. After payment and completion of the detailed Will questionnaire, Summit Legal Consultancy will review all of your instructions and confirm the appropriate registration authority. Depending on your religion, your instructions and the authority\'s requirements, the recommended route may be ADJD or Dubai Courts. Every draft is subject to human legal review before it is sent to you. This result is not final acceptance by any authority and does not mean that your Will has been prepared or registered.',
-                'View the service and fees',
-                'I have a question before continuing',
+                'Continue with Our Online UAE Will Service',
+                'Based on your answers, you can continue with our standard online UAE Will service.'
+                ."\n\n".'After payment, you will complete the detailed Will questionnaire and provide the information required for preparing your Will. Summit Legal Consultancy will then review your circumstances, instructions and supporting information before preparing your draft.'
+                ."\n\n".'Our legal team will select the registration route (ADJD or Dubai Courts) that best fits your circumstances and helps provide the strongest protection for your wishes.'
+                ."\n\n".'Every Will is reviewed by our legal team before the draft is sent to you for approval.',
+                'Continue and Pay {currency} {total_2dp}',
+                'I Have a Question Before Paying',
                 [
+                    'eyebrow' => 'You can continue online',
+                    'callout_heading' => 'Your assessment is complete. Your registration route is now under legal review.',
+                    'callout_body' => 'You may proceed with payment now. After you provide your detailed instructions, Summit will review your matter, prepare the draft and recommend the appropriate registration authority.',
+                    'includes_heading' => 'What the professional fee includes',
+                    'includes' => [
+                        ['Will preparation', 'Preparation of one standard UAE Will.'],
+                        ['Legal review', 'Mandatory human legal review of the client\'s information and instructions.'],
+                        ['Legal translation', 'Legal translation of the standard UAE Will.'],
+                        ['Route recommendation', 'Recommendation of the appropriate ADJD or Dubai Courts registration route.'],
+                        ['Submission assistance', 'Assistance with submitting the approved Will to the relevant authority.'],
+                        ['Amendments', 'Reasonable amendments before final approval, subject to the service terms.'],
+                    ],
+                    'authority_fees_note' => 'Government, court, registry, notary and other third-party charges are separate and will be explained after we confirm the appropriate registration route.',
+                    'reassurance' => 'Secure payment · Mandatory legal review included',
+                    'notice_heading' => 'Payment does not mean that your Will has been prepared, approved or registered. Registration takes place only after legal review, preparation of the draft, your approval and completion of the competent authority\'s requirements.',
+                    'notice_body' => 'If our review identifies an issue requiring additional information, specialised advice or a different service, we will contact you before proceeding further.',
                     'muslim_note' => 'Based on your answers, the ADJD Civil Will route may be available. Summit will confirm this after reviewing your complete information.',
                     'non_muslim_note' => 'Based on your answers, registration through ADJD or Dubai Courts may be available. Summit will recommend the route that best matches your instructions after review.',
+
+                    // Shown instead of the above when question one asked for two
+                    // Wills. Same screen, its own approved wording and its own price.
+                    'mirror' => [
+                        'heading' => 'Continue with Our Online Mirror Wills Service',
+                        'subheading' => 'Two coordinated but legally separate standard UAE Wills',
+                        'body' => 'Based on your answers, you and your spouse or partner can continue with our online Mirror Wills service for two coordinated but legally separate standard UAE Wills.'
+                            ."\n\n".'After payment, you will provide the detailed instructions required for each Will. Summit Legal Consultancy will review both clients\' circumstances, instructions and supporting information before preparing the two drafts.'
+                            ."\n\n".'Our legal team will confirm the appropriate registration route for each Will (ADJD or Dubai Courts), based on your circumstances and to help provide strong protection for both of your wishes.'
+                            ."\n\n".'Each Will remains a separate legal document. Each person must review and approve their own draft before registration.',
+                        'callout_heading' => 'Your joint assessment is complete. Both Wills are now subject to mandatory legal review.',
+                        'callout_body' => 'You may proceed with payment now. After receiving complete instructions from both clients, Summit will review the matter, prepare the two drafts and confirm the appropriate registration route for each Will.',
+                        'includes' => [
+                            ['Two Will preparations', 'Preparation of two coordinated but legally separate standard UAE Wills.'],
+                            ['Legal review', 'Mandatory human legal review of both clients\' information and instructions.'],
+                            ['Legal translation', 'Legal translation of both standard UAE Wills.'],
+                            ['Route recommendation', 'Recommendation of the appropriate ADJD or Dubai Courts registration route for each Will.'],
+                            ['Submission assistance', 'Assistance with submitting both approved Wills to the relevant authority or authorities.'],
+                            ['Amendments', 'Reasonable amendments to each draft before final approval, subject to the service terms.'],
+                        ],
+                        'authority_fees_note' => 'Government, court, registry, notary and other third-party charges are separate and may be charged for each Will. They will be explained after we confirm the appropriate registration route for each client.',
+                        'primary_action_label' => 'Continue and Pay {currency} {mirror_total_2dp}',
+                        'notice_heading' => 'Payment does not mean that either Will has been prepared, approved or registered. Each Will is a separate legal document and each client must review and approve their own draft before registration.',
+                        'notice_body' => 'Registration takes place only after legal review, preparation of both drafts, each client\'s approval and completion of the relevant authority\'s requirements. If our review identifies that DIFC registration, specialised advice or a different service may be more appropriate for either client, we will contact you before proceeding further.',
+                    ],
                 ],
             ],
             [

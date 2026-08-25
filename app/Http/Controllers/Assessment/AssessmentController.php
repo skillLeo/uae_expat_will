@@ -6,6 +6,7 @@ use App\Domain\Assessment\Actions\RecordAnswer;
 use App\Domain\Assessment\Actions\StartAssessment;
 use App\Domain\Assessment\Actions\SubmitAssessment;
 use App\Domain\Assessment\Enums\QuestionType;
+use App\Domain\Settings\Services\CommercialTokens;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\StoreAnswerRequest;
 use App\Http\Requests\Assessment\SubmitAssessmentRequest;
@@ -55,6 +56,14 @@ class AssessmentController extends Controller
     public function answer(StoreAnswerRequest $request): RedirectResponse
     {
         $assessment = $this->resolveOrFail($request);
+
+        // Once a stop has fired the journey is over. The interface already
+        // shows the terminal screen, but the endpoint has to refuse as well —
+        // otherwise somebody who answered "under 18" could keep posting answers
+        // and work their way to a payment screen they are not entitled to.
+        if ($assessment->engine()->checkTerminal($assessment->answerSet()) !== null) {
+            return back();
+        }
 
         $this->recordAnswer->execute(
             $assessment,
@@ -126,10 +135,21 @@ class AssessmentController extends Controller
 
         $screen = $assessment->version
             ->resultScreens()
-            ->where('outcome', $assessment->outcome)
+            ->where('outcome', $assessment->outcome->screenOutcome())
             ->first();
 
         $religion = $assessment->answerSet()->get('q5');
+        $isMirror = $assessment->answerSet()->get('q1') === 'two_wills';
+
+        // Two Wills use the same screen with its own approved wording. The
+        // mirror block overrides only what it names, so anything the handoff
+        // left common — the reassurance line, the eyebrow — is not duplicated.
+        $extra = $screen?->extra ?? [];
+        $mirror = $isMirror ? ($extra['mirror'] ?? []) : [];
+        unset($extra['mirror']);
+        $extra = [...$extra, ...$mirror];
+
+        $tokens = app(CommercialTokens::class);
 
         return Inertia::render('Assessment/Result', [
             'outcome' => $assessment->outcome->value,
@@ -137,11 +157,17 @@ class AssessmentController extends Controller
             'allowsPayment' => $assessment->outcome->allowsPayment(),
             'reference' => $request->session()->get('assessment_case_reference'),
             'screen' => $screen ? [
-                'heading' => $screen->heading,
-                'body' => $screen->body,
-                'primary_action_label' => $screen->primary_action_label,
+                'heading' => $tokens->apply($mirror['heading'] ?? $screen->heading),
+                'subheading' => isset($extra['subheading']) ? $tokens->apply($extra['subheading']) : null,
+                'body' => $tokens->apply($mirror['body'] ?? $screen->body),
+                'primary_action_label' => $tokens->apply(
+                    $mirror['primary_action_label'] ?? (string) $screen->primary_action_label
+                ),
                 'secondary_action_label' => $screen->secondary_action_label,
-                'extra' => $screen->extra,
+                'extra' => array_map(
+                    fn ($v) => is_string($v) ? $tokens->apply($v) : $v,
+                    $extra,
+                ),
             ] : null,
             // The route note depends on religion, but the REASON a case was held
             // is never sent to the client — only the neutral screen copy is.
@@ -228,8 +254,15 @@ class AssessmentController extends Controller
             'value' => $answers->get($question->key),
             'progress' => $engine->progress($answers)->toArray(),
             'canGoBack' => $engine->previousQuestion($answers, $question->key) !== null,
+            // The UAE is deliberately absent. The service is not available to
+            // UAE citizens, and offering the option only to reject the person a
+            // screen later is a poor way to tell them. It stays in the config
+            // and R-03 still fires, so a crafted request is still stopped —
+            // it is simply never offered.
             'countries' => $question->type === QuestionType::CountrySelect
-                ? config('countries.list')
+                ? collect(config('countries.list'))
+                    ->except(config('countries.uae_code', 'AE'))
+                    ->all()
                 : null,
         ]);
     }

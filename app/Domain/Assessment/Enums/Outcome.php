@@ -109,6 +109,19 @@ enum Outcome: string
      *
      * @param  array<int, self>  $outcomes
      */
+    /**
+     * The outcome whose result screen this one should be shown on.
+     *
+     * Every continue variant resolves to the same screen — they differ only in
+     * what they accumulate onto the case, never in what the customer reads.
+     * Without this, the nineteen rules that now emit ContinueFlag would look up
+     * a screen that was never seeded and the customer would be shown nothing.
+     */
+    public function screenOutcome(): self
+    {
+        return $this->precedence() === 5 ? self::Continue_ : $this;
+    }
+
     public static function mostSevere(array $outcomes): self
     {
         if ($outcomes === []) {

@@ -52,6 +52,13 @@ const label = computed(() => ({
                             {{ screen?.body }}
                         </p>
 
+                        <div v-if="screen?.extra?.callout_heading" class="card-paper mb-6 border-l-2 border-gold p-5">
+                            <p class="mb-1.5 text-body-s font-semibold leading-[1.6] text-ink">
+                                {{ screen.extra.callout_heading }}
+                            </p>
+                            <p class="text-legal leading-[1.72] text-ink-70">{{ screen.extra.callout_body }}</p>
+                        </div>
+
                         <p v-if="routeNote" class="card-paper mb-6 border-l-2 border-gold p-4 text-legal leading-[1.72] text-ink">
                             {{ routeNote }}
                         </p>
@@ -77,9 +84,36 @@ const label = computed(() => ({
                             </Link>
                         </div>
 
+                        <p v-if="screen?.extra?.reassurance" class="mt-4 text-caption text-slate">
+                            {{ screen.extra.reassurance }}
+                        </p>
+
                         <p v-if="!allowsPayment" class="mt-6 text-legal leading-[1.72] text-ink-70">
                             No payment is requested at this stage.
                         </p>
+
+                        <!-- What the fee buys, exactly as the approved handoff lists it. -->
+                        <section v-if="screen?.extra?.includes?.length" class="mt-10">
+                            <h2 class="eyebrow mb-4">{{ screen.extra.includes_heading ?? 'What the professional fee includes' }}</h2>
+                            <dl class="grid gap-0">
+                                <div
+                                    v-for="([label, detail], i) in screen.extra.includes" :key="i"
+                                    class="grid grid-cols-[190px_1fr] gap-5 border-b border-rule-warm py-3 last:border-0 max-[719px]:grid-cols-1 max-[719px]:gap-1"
+                                >
+                                    <dt class="text-body-s font-medium text-ink">{{ label }}</dt>
+                                    <dd class="text-body-s leading-[1.6] text-ink-70">{{ detail }}</dd>
+                                </div>
+                            </dl>
+                        </section>
+
+                        <!-- Not a footnote. Payment is not registration, and the
+                             handoff is emphatic that this must be unmissable. -->
+                        <aside v-if="screen?.extra?.notice_heading" class="card-paper mt-10 border-l-2 border-gold p-5">
+                            <p class="mb-2 text-body-s font-semibold leading-[1.6] text-ink">
+                                {{ screen.extra.notice_heading }}
+                            </p>
+                            <p class="text-legal leading-[1.72] text-ink-70">{{ screen.extra.notice_body }}</p>
+                        </aside>
                     </div>
 
                     <!-- The fee breakdown, again only where payment is possible. -->
@@ -100,8 +134,8 @@ const label = computed(() => ({
                             </div>
                         </dl>
                         <p class="help mt-4 border-t border-rule-cool pt-4">
-                            Government, court, registry and notary charges are separate and are set by the
-                            authority, not by us.
+                            {{ screen?.extra?.authority_fees_note
+                                ?? 'Government, court, registry and notary charges are separate and are set by the authority, not by us.' }}
                         </p>
                     </aside>
                 </div>
