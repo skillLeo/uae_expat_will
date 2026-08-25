@@ -7,7 +7,13 @@
  * settings value (`branding.wordmark_direction`) — the header, the footer, the
  * emails and every page follow, with no rebuild.
  *
- *   margin (1b, live) — UAE sits where a clause number sits: small, gold, in the
+ *   one_name (live) — three words, one line, one typeface, one size. Gold carries
+ *     UAE and that is the only distinction. Chosen by Summit in August 2026 after
+ *     the margin treatment set UAE at 38% of the name, where it read as a country
+ *     tag on a product called "Expat Wills" rather than as half the name. This is
+ *     also the version that survives being shrunk into a favicon or an email
+ *     signature, because there is no rule and no second alignment to lose.
+ *   margin (1b) — UAE sits where a clause number sits: small, gold, in the
  *     margin, separated by the margin rule of a court filing. The lockup is page
  *     geography rather than a line of type, which is why the same construction
  *     becomes the page grid.
@@ -20,7 +26,7 @@ import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
-    direction: { type: String, default: null },   // margin | engrossment | registers
+    direction: { type: String, default: null },   // one_name | margin | engrossment | registers
     context: { type: String, default: 'header' }, // header | lockup
     ground: { type: String, default: 'paper' },   // paper | ink
 });
@@ -28,7 +34,7 @@ const props = defineProps({
 const page = usePage();
 
 const dir = computed(
-    () => props.direction ?? page.props.settings?.['branding.wordmark_direction'] ?? 'margin',
+    () => props.direction ?? page.props.settings?.['branding.wordmark_direction'] ?? 'one_name',
 );
 
 const onInk = computed(() => props.ground === 'ink');
@@ -48,8 +54,34 @@ const subColour = computed(() => (onInk.value ? 'text-steel' : 'text-slate'));
 
 <template>
     <div class="inline-block">
+        <!-- One Name · the live identity -->
+        <div v-if="dir === 'one_name'">
+            <!-- UAE is set marginally smaller than the name so that its cap
+                 height matches optically: all-caps at an identical point size
+                 reads heavier than mixed case beside it. -->
+            <div class="whitespace-nowrap font-display leading-none tracking-[-0.015em]">
+                <span
+                    class="font-medium"
+                    :class="[
+                        uaeColour,
+                        isLockup ? 'text-[39px] tracking-[0.05em]' : 'text-[24px] tracking-[0.055em]',
+                    ]"
+                    style="padding-right: 0.16em"
+                >UAE</span><span
+                    :class="[nameColour, isLockup ? 'text-[42px]' : 'text-[26px]']"
+                >Expat Wills</span>
+            </div>
+            <div
+                v-if="isLockup"
+                class="pt-3.5 text-[10px] font-medium uppercase leading-[1.4] tracking-[0.135em]"
+                :class="subColour"
+            >
+                {{ shortLine }}
+            </div>
+        </div>
+
         <!-- 1b · The Margin -->
-        <div v-if="dir === 'margin'" class="flex items-baseline">
+        <div v-else-if="dir === 'margin'" class="flex items-baseline">
             <div
                 :class="[uaeColour, isLockup ? 'w-12 text-[14px] tracking-[0.12em]' : 'w-8 text-[10px] tracking-[0.1em]']"
                 class="flex-none font-display font-medium"

@@ -24,9 +24,10 @@ class SettingsSeeder extends Seeder
         $s->define(G::Branding, 'branding.short_line', 'A Summit Legal Consultancy UAE Platform', T::String, 'Short brand line', 'Appears under the wordmark. The phrase "Supported by Summit" must never appear anywhere.', true, 2);
         $s->define(G::Branding, 'branding.ownership_line', 'Owned and operated by Summit Legal Consultancy UAE · Trade Licence No. 4429232.01', T::String, 'Ownership line', 'Rendered on every page and in every email. Compliance requires this exact wording.', true, 3);
         $s->define(G::Branding, 'branding.trade_licence', '4429232.01', T::String, 'Trade licence number', null, true, 4);
-        // margin (1b) is live. Switching the whole product to 1a or 1c is this
-        // one value — the Wordmark component reads it and every page follows.
-        $s->define(G::Branding, 'branding.wordmark_direction', 'margin', T::String, 'Wordmark direction', 'margin (1b, live) · engrossment (1a) · registers (1c)', true, 5);
+        // one_name is live, chosen by Summit in August 2026. Switching the whole
+        // product to another direction is this one value — the Wordmark component
+        // reads it and every page, email and export follows with no rebuild.
+        $s->define(G::Branding, 'branding.wordmark_direction', 'one_name', T::String, 'Wordmark direction', 'one_name (live) · margin (1b) · engrossment (1a) · registers (1c)', true, 5);
         $s->define(G::Branding, 'branding.logo_light', null, T::File, 'Logo — light ground', null, true, 6);
         $s->define(G::Branding, 'branding.logo_dark', null, T::File, 'Logo — ink ground', null, true, 7);
         $s->define(G::Branding, 'branding.favicon', null, T::File, 'Favicon', null, true, 8);
