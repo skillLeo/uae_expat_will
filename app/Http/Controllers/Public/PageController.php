@@ -92,12 +92,17 @@ class PageController extends Controller
     /** @return array<string, mixed> */
     private function pagePayload(Page $page, Request $request): array
     {
+        // Titles and meta descriptions carry the same placeholders as the body
+        // copy. They are also what search engines index, so a stale price here
+        // is a wrong price in the search results — the one place nobody looks.
+        $tokens = app(CommercialTokens::class);
+
         return [
             'key' => $page->key,
             'slug' => $page->slug,
             'title' => $page->title,
-            'seo_title' => $page->seo_title,
-            'meta_description' => $page->meta_description,
+            'seo_title' => $tokens->apply((string) $page->seo_title),
+            'meta_description' => $tokens->apply((string) $page->meta_description),
             'breadcrumb' => $page->breadcrumb,
             // Self-referencing canonical on every page.
             'canonical' => $request->url(),
@@ -140,6 +145,8 @@ class PageController extends Controller
      */
     private function structuredData(Page $page, Request $request): array
     {
+        $tokens = app(CommercialTokens::class);
+
         $organisation = [
             '@type' => 'Organization',
             'name' => setting('branding.platform_name', 'UAE Expat Wills'),
@@ -156,8 +163,8 @@ class PageController extends Controller
             $organisation,
             [
                 '@type' => 'WebPage',
-                'name' => $page->seo_title ?? $page->title,
-                'description' => $page->meta_description,
+                'name' => $tokens->apply((string) ($page->seo_title ?? $page->title)),
+                'description' => $tokens->apply((string) $page->meta_description),
                 'url' => $request->url(),
             ],
             [
