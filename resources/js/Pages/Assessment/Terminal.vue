@@ -5,7 +5,7 @@
  * The journey ends here: the remaining questions and the declarations are
  * skipped entirely, and no payment control is rendered.
  */
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import StatusPill from '@/Components/StatusPill.vue';
 
@@ -15,6 +15,10 @@ defineProps({
     detail: { type: String, default: null },
     screen: { type: Object, default: null },
 });
+
+// People mis-click. Without this, one wrong tap on the age question ended the
+// session for good with no way back and no way to start over.
+const startAgain = () => router.post('/assessment/restart');
 </script>
 
 <template>
@@ -36,7 +40,14 @@ defineProps({
                         <Link href="/contact" class="btn btn-primary btn-lg">
                             {{ screen?.primary_action_label ?? 'Contact our team' }}
                         </Link>
-                        <Link href="/" class="text-legal font-medium text-ink underline decoration-gold underline-offset-4">
+                        <button
+                            type="button"
+                            class="text-legal font-medium text-ink underline decoration-gold underline-offset-4"
+                            @click="startAgain"
+                        >
+                            I answered something by mistake — start again
+                        </button>
+                        <Link href="/" class="text-legal font-medium text-ink-70 underline decoration-rule-warm underline-offset-4">
                             Back to the homepage
                         </Link>
                     </div>

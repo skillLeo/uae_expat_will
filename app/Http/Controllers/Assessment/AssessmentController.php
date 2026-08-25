@@ -57,21 +57,45 @@ class AssessmentController extends Controller
     {
         $assessment = $this->resolveOrFail($request);
 
-        // Once a stop has fired the journey is over. The interface already
-        // shows the terminal screen, but the endpoint has to refuse as well —
-        // otherwise somebody who answered "under 18" could keep posting answers
-        // and work their way to a payment screen they are not entitled to.
-        if ($assessment->engine()->checkTerminal($assessment->answerSet()) !== null) {
+        $key = $request->string('question_key')->toString();
+
+        // A stop blocks PROGRESS, not CORRECTION.
+        //
+        // Refusing everything after a stop locked people out permanently: one
+        // mis-click on the age question and the session was dead, with no way
+        // back and no way to start over. Somebody who meant to click "yes" is
+        // not a person to punish.
+        //
+        // So a question that already has an answer can be changed — that is how
+        // you undo a mistake — while a question that has never been answered
+        // cannot, which is what stops somebody walking past the stop towards a
+        // payment screen they are not entitled to.
+        if ($assessment->engine()->checkTerminal($assessment->answerSet()) !== null
+            && ! $assessment->answers()->where('question_key', $key)->exists()) {
             return back();
         }
 
-        $this->recordAnswer->execute(
-            $assessment,
-            $request->string('question_key')->toString(),
-            $request->input('value'),
-        );
+        $this->recordAnswer->execute($assessment, $key, $request->input('value'));
 
         return back();
+    }
+
+    /**
+     * Abandons this assessment and begins a clean one.
+     *
+     * The safety net behind the correction rule above. Somebody who has talked
+     * themselves into a corner — or who simply wants to try again for a spouse
+     * — should never have to clear cookies to do it.
+     */
+    public function restart(Request $request): RedirectResponse
+    {
+        if ($assessment = $this->resolve($request)) {
+            $assessment->update(['abandoned_at_question_key' => $assessment->current_question_key]);
+        }
+
+        $request->session()->forget(self::SESSION_KEY);
+
+        return redirect()->route('assessment.show');
     }
 
     public function contact(Request $request): RedirectResponse
@@ -191,6 +215,39 @@ class AssessmentController extends Controller
     // ------------------------------------------------------------------ helpers
 
     /**
+     * A contextual notice for the question on screen.
+     *
+     * DIFC Wills are open only to people who are not Muslim and never have
+     * been. Somebody who asked for a DIFC Will at question one therefore needs
+     * telling that before they answer the religion question, not after — and
+     * needs telling what happens to them if the answer rules DIFC out.
+     *
+     * It lives here rather than on the question row because the question is
+     * asked of everybody and this only applies to the DIFC path.
+     *
+     * @return array{heading: string, body: string, conflict_options: list<string>, conflict_body: string}|null
+     */
+    private function noticeFor(Question $question, $answers): ?array
+    {
+        if ($question->key !== 'q5' || $answers->get('q1') !== 'difc') {
+            return null;
+        }
+
+        return [
+            'heading' => 'DIFC eligibility notice',
+            'body' => 'DIFC Wills are available only to individuals who are not Muslim and have never been Muslim. '
+                .'Please answer accurately so our legal team can confirm whether DIFC is suitable or recommend '
+                .'another UAE Will registration route.',
+            // Shown the moment one of these is selected, before they continue.
+            'conflict_options' => ['muslim', 'previously_muslim'],
+            'conflict_body' => 'Based on your answer, the DIFC Wills route may not be available to you. However, '
+                .'another UAE Will registration option may be suitable. Please continue the assessment, and our '
+                .'legal team will review your answers and recommend the appropriate route. No payment will be '
+                .'taken at this stage.',
+        ];
+    }
+
+    /**
      * Asked once, after q2 is answered, and never again.
      *
      * Gated on the answer rather than on a cursor position so that a hero
@@ -264,6 +321,8 @@ class AssessmentController extends Controller
                     ->except(config('countries.uae_code', 'AE'))
                     ->all()
                 : null,
+            // Wording supplied by Summit, 26 August 2026. Reproduced exactly.
+            'notice' => $this->noticeFor($question, $answers),
         ]);
     }
 

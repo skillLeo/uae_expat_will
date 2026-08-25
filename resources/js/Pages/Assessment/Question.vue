@@ -11,6 +11,7 @@ import { router, useForm } from '@inertiajs/vue3';
 import AssessmentLayout from '@/Layouts/AssessmentLayout.vue';
 
 const props = defineProps({
+    notice: { type: Object, default: null },
     question: { type: Object, required: true },
     value: { type: [String, Array, Number, Boolean], default: null },
     progress: { type: Object, required: true },
@@ -24,6 +25,16 @@ const form = useForm({
 });
 
 const error = ref('');
+
+// DIFC is open only to people who are not Muslim and never have been. The
+// notice appears before the question is answered, and the consequence appears
+// the moment an answer rules DIFC out — while they can still see it, rather
+// than on a screen they have already moved past.
+const conflictShown = computed(() => {
+    const n = props.notice;
+    if (!n?.conflict_options?.length) return false;
+    return selected.value.some((k) => n.conflict_options.includes(k));
+});
 const countryFilter = ref('');
 
 watch(() => props.question.key, (key) => {
@@ -103,6 +114,21 @@ function goBack() {
                 <h1 class="mb-3 text-h1 font-semibold leading-[1.2] text-ink">{{ question.prompt }}</h1>
 
                 <p v-if="question.help_text" class="help mb-4">{{ question.help_text }}</p>
+
+                <!-- Eligibility notice for whoever asked for a DIFC Will. -->
+                <div v-if="notice" class="mb-5 rounded-md border border-attention-border bg-attention-bg p-4">
+                    <p class="mb-1.5 text-body-s font-semibold text-ink">{{ notice.heading }}</p>
+                    <p class="text-legal leading-[1.72] text-ink">{{ notice.body }}</p>
+                </div>
+
+                <div
+                    v-if="conflictShown"
+                    class="mb-5 rounded-md border border-gold-soft bg-paper p-4"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <p class="text-legal leading-[1.72] text-ink">{{ notice.conflict_body }}</p>
+                </div>
 
                 <!-- Why we ask, stated on the same screen as the question. -->
                 <div v-if="question.privacy_note" class="card-paper mb-5 border-l-2 border-gold p-4">
