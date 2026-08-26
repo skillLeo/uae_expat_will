@@ -1,0 +1,71 @@
+# ---------------------------------------------------------------------------
+# PHP version
+#
+# Symfony 8 and several Spatie packages require PHP >= 8.4.1. This domain's
+# host default is 8.3.31, which fails Composer's platform check before Laravel
+# boots at all. AddType is the only selector form this host honours —
+# AddHandler is accepted and silently ignored.
+# ---------------------------------------------------------------------------
+AddType application/x-httpd-alt-php84 .php
+
+# ---------------------------------------------------------------------------
+# UAE Expat Wills — document-root guard
+#
+# The Laravel application lives inside public_html, so everything except the
+# public/ directory must be unreachable over HTTP. Order matters: the denials
+# come BEFORE the rewrite, or the rewrite would hand them to the front
+# controller and they would 200.
+# ---------------------------------------------------------------------------
+
+# Never serve dotfiles — .env above all.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Never serve source, config, dependency or data directories.
+RedirectMatch 404 ^/(app|bootstrap|config|database|design-src|lang|node_modules|resources|routes|tests|vendor)(/|$)
+
+# storage/ is not blanket-denied, because /storage/... is also the public
+# disk: the rewrite below turns it into public/storage/..., a symlink to
+# storage/app/public, which holds only files meant to be served. Deny the
+# real Laravel storage subdirectories by name instead, so a missing
+# mod_rewrite still cannot expose a log file or a cached view.
+RedirectMatch 404 ^/storage/(app|framework|logs|debugbar)(/|$)
+RedirectMatch 404 ^/(composer\.(json|lock)|package(-lock)?\.json|artisan|phpunit\.xml|vite\.config\.js|README\.md|BUILD-NOTES\.md)$
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Everything else is served out of public/.
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Compression and long-lived caching for fingerprinted build assets.
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Content Security Policy
+#
+# The host sets `Content-Security-Policy: upgrade-insecure-requests` at the
+# vhost level, and that runs AFTER PHP — so the policy the SecurityHeaders
+# middleware sets is silently overwritten. `Header always unset` then `set`
+# here is the only way to make ours the one that ships.
+#
+# The Google hosts are permitted so analytics CAN load once consented to.
+# Whether it actually loads is decided by the cookie consent gate in JS, not
+# by this header.
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always unset Content-Security-Policy
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+</IfModule>
