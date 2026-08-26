@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Domain\Cases\Enums\CaseStage;
 use App\Domain\Cases\Enums\CaseStatus;
 use App\Domain\Cases\Enums\InternalStatus;
+use App\Domain\Cases\Enums\RequestType;
 use App\Models\Concerns\RecordsActivity;
 use App\Models\Scopes\RestrictedCaseScope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
@@ -33,7 +34,8 @@ class LegalCase extends Model
     protected $fillable = [
         'reference', 'customer_id', 'assessment_id', 'pathway', 'status',
         'internal_status', 'assigned_to', 'countdown_due_at', 'is_restricted',
-        'restricted_visible_to', 'service_type', 'quoted_amount', 'currency',
+        'restricted_visible_to', 'request_type', 'service_type', 'brief_description',
+        'quoted_amount', 'currency',
         'paid_amount', 'notes_count', 'last_contact_at', 'closed_at', 'closed_reason',
     ];
 
@@ -47,6 +49,7 @@ class LegalCase extends Model
             'internal_status' => InternalStatus::class,
             'is_restricted' => 'boolean',
             'restricted_visible_to' => 'array',
+            'request_type' => RequestType::class,
             'quoted_amount' => 'decimal:2',
             'paid_amount' => 'decimal:2',
             'countdown_due_at' => 'datetime',

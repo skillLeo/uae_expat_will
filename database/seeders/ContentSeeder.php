@@ -489,7 +489,7 @@ class ContentSeeder extends Seeder
                             ['label' => 'Responsible for', 'value' => 'Matter acceptance, scope and fees; service delivery'],
                             ['label' => 'Licence', 'value' => '{trade_licence}'],
                         ],
-                        'photo' => null,
+                        'photo' => '/storage/profile/ahmed.jpeg',
                         'mirrored' => false,
                     ],
                     [
@@ -504,7 +504,7 @@ class ContentSeeder extends Seeder
                             ['label' => 'Responsible for', 'value' => 'Human legal review, drafting standards and authority selection'],
                             ['label' => 'Applies to', 'value' => 'Every Will, without exception'],
                         ],
-                        'photo' => null,
+                        'photo' => '/storage/profile/muhammad.jpeg',
                         'mirrored' => true,
                     ],
                 ],
@@ -555,8 +555,8 @@ class ContentSeeder extends Seeder
                 'heading' => 'Without a Will, the decision is not yours',
                 'body' => 'Protect your family, children and assets through a guided digital process. Our legal team reviews your instructions, drafts your Will and confirms the correct registration authority before you approve anything.',
                 'items' => [
-                    ['name' => 'Ahmed Mohammedi', 'role' => 'Managing Director and Co-Founder'],
-                    ['name' => 'Dr. Mohamed Raouf', 'role' => 'Principal Legal Consultant and Co-Founder'],
+                    ['name' => 'Ahmed Mohammedi', 'role' => 'Managing Director and Co-Founder', 'photo' => '/storage/profile/ahmed.jpeg'],
+                    ['name' => 'Dr. Mohamed Raouf', 'role' => 'Principal Legal Consultant and Co-Founder', 'photo' => '/storage/profile/muhammad.jpeg'],
                 ],
                 'settings' => ['fee_label' => 'plus VAT · one accepted standard Will'],
             ],

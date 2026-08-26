@@ -70,9 +70,17 @@ const cfg = (key) => sec(key).settings ?? {};
                         <div v-if="items('hero').length">
                             <div class="eyebrow mb-3">Reviewed by</div>
                             <div class="flex flex-wrap gap-x-8 gap-y-3">
-                                <div v-for="person in items('hero')" :key="person.name">
-                                    <div class="text-body-s font-medium text-paper">{{ person.name }}</div>
-                                    <div class="text-caption text-steel">{{ person.role }}</div>
+                                <div v-for="person in items('hero')" :key="person.name" class="flex items-center gap-3">
+                                    <img
+                                        v-if="person.photo"
+                                        :src="person.photo" :alt="person.name"
+                                        width="44" height="44" loading="lazy" decoding="async"
+                                        class="h-11 w-11 flex-none rounded-pill object-cover object-top ring-1 ring-gold-soft/40"
+                                    >
+                                    <div>
+                                        <div class="text-body-s font-medium text-paper">{{ person.name }}</div>
+                                        <div class="text-caption text-steel">{{ person.role }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

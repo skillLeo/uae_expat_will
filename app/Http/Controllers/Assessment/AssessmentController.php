@@ -6,6 +6,7 @@ use App\Domain\Assessment\Actions\RecordAnswer;
 use App\Domain\Assessment\Actions\StartAssessment;
 use App\Domain\Assessment\Actions\SubmitAssessment;
 use App\Domain\Assessment\Enums\QuestionType;
+use App\Domain\Cases\Enums\RequestType;
 use App\Domain\Settings\Services\CommercialTokens;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\StoreAnswerRequest;
@@ -50,6 +51,16 @@ class AssessmentController extends Controller
             return redirect()->route('assessment.result');
         }
 
+        // Two of the five things a visitor can ask for are not Will preparation
+        // at all. Amending an existing Will and administering an estate after a
+        // death are separate legal services, so they leave the questionnaire at
+        // question one and go to the specialist request form. They used to be
+        // shown a page saying the service was not available, which is a poor
+        // way to answer somebody who came here to buy something.
+        if ($redirect = $this->specialistRedirect($assessment)) {
+            return $redirect;
+        }
+
         return $this->render($assessment);
     }
 
@@ -78,6 +89,24 @@ class AssessmentController extends Controller
         $this->recordAnswer->execute($assessment, $key, $request->input('value'));
 
         return back();
+    }
+
+    /**
+     * Sends an existing-Will or estate enquiry to the request form.
+     *
+     * DIFC is deliberately not here: Summit's instruction is that a DIFC client
+     * completes the entire questionnaire and only then receives a no-payment
+     * review ticket. Only these two bypass the assessment.
+     */
+    private function specialistRedirect(Assessment $assessment): ?RedirectResponse
+    {
+        $type = RequestType::fromServiceAnswer($assessment->answerSet()->get('q1'));
+
+        if (! $type->isDirectSpecialistRequest()) {
+            return null;
+        }
+
+        return redirect()->route('specialist.show', ['service' => $type->value]);
     }
 
     /**
@@ -164,6 +193,7 @@ class AssessmentController extends Controller
 
         $religion = $assessment->answerSet()->get('q5');
         $isMirror = $assessment->answerSet()->get('q1') === 'two_wills';
+        $isDifc = $assessment->answerSet()->get('q1') === 'difc';
 
         // Two Wills use the same screen with its own approved wording. The
         // mirror block overrides only what it names, so anything the handoff
@@ -173,6 +203,21 @@ class AssessmentController extends Controller
         unset($extra['mirror']);
         $extra = [...$extra, ...$mirror];
 
+        // A DIFC request answered every question and now has a review ticket.
+        // It is not a rejection and it is not a checkout, so it gets its own
+        // screen rather than either of the two it would otherwise fall into.
+        // Copy transcribed from Summit's handoff of 26 August.
+        if ($isDifc) {
+            $screen = null;
+            $extra = [
+                'eyebrow' => 'DIFC legal review',
+                'callout_heading' => 'No payment is required at this stage.',
+                'callout_body' => 'Payment will only be requested after our legal team has reviewed the case '
+                    .'and confirmed the suitable DIFC service and quotation.',
+                'notice_heading' => 'No payment has been taken.',
+            ];
+        }
+
         $tokens = app(CommercialTokens::class);
 
         return Inertia::render('Assessment/Result', [
@@ -180,7 +225,16 @@ class AssessmentController extends Controller
             'tone' => $assessment->outcome->tone(),
             'allowsPayment' => $assessment->outcome->allowsPayment(),
             'reference' => $request->session()->get('assessment_case_reference'),
-            'screen' => $screen ? [
+            'screen' => $isDifc ? [
+                'heading' => 'Your DIFC Will Assessment Is Ready for Legal Review',
+                'subheading' => null,
+                'body' => 'Thank you. We have received your completed answers and created a legal-review ticket. '
+                    .'The legal team at Summit Legal Consultancy will review your circumstances, confirm the '
+                    .'appropriate DIFC Will type and scope, and contact you with the applicable fees and next steps.',
+                'primary_action_label' => 'View My Review Ticket',
+                'secondary_action_label' => 'Return to Homepage',
+                'extra' => $extra,
+            ] : ($screen ? [
                 'heading' => $tokens->apply($mirror['heading'] ?? $screen->heading),
                 'subheading' => isset($extra['subheading']) ? $tokens->apply($extra['subheading']) : null,
                 'body' => $tokens->apply($mirror['body'] ?? $screen->body),
@@ -192,7 +246,7 @@ class AssessmentController extends Controller
                     fn ($v) => is_string($v) ? $tokens->apply($v) : $v,
                     $extra,
                 ),
-            ] : null,
+            ] : null),
             // The route note depends on religion, but the REASON a case was held
             // is never sent to the client — only the neutral screen copy is.
             'routeNote' => match ($religion) {

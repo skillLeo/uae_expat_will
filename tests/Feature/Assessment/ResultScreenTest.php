@@ -89,9 +89,12 @@ it('reads the price from settings rather than the seeded copy', function () {
 });
 
 it('offers no payment on a DIFC request', function () {
+    // Since Summit's handoff of 26 August a DIFC client answers every question
+    // and receives a review ticket, rather than being told the service is not
+    // available. DifcReviewTicketTest covers the ticket itself.
     completeTo(['q1' => 'difc']);
 
     $this->get('/assessment/result')->assertInertia(fn ($p) => $p
         ->where('allowsPayment', false)
-        ->where('screen.heading', 'We would like our legal team to review your circumstances first'));
+        ->where('screen.heading', 'Your DIFC Will Assessment Is Ready for Legal Review'));
 });
