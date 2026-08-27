@@ -139,6 +139,19 @@ function goBack() {
                     <p class="text-legal leading-[1.72] text-critical">{{ question.security_note }}</p>
                 </div>
 
+                <!-- Said on every multi-select, from the question type rather
+                     than from help text somebody has to remember to write.
+                     Three of the six were silent about it, and a person who
+                     does not know they may pick more than one simply picks the
+                     most serious answer and loses the rest. -->
+                <p v-if="question.multiple" class="mb-3 flex items-center gap-2 text-body-s font-medium text-gold-strong">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" class="flex-none">
+                        <rect x="2.4" y="2.4" width="11.2" height="11.2" rx="2.2" stroke-width="1.3" />
+                        <path d="M5 8.2 7.1 10.3 11.2 5.9" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    You can choose more than one answer.
+                </p>
+
                 <!-- Country select: type-ahead with a match count in tabular figures. -->
                 <div v-if="countries">
                     <label class="label" for="country-filter">Search the country list</label>
