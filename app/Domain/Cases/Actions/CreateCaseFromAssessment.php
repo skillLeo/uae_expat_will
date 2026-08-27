@@ -4,7 +4,6 @@ namespace App\Domain\Cases\Actions;
 
 use App\Domain\Assessment\DTOs\RoutingResult;
 use App\Domain\Cases\Enums\InternalStatus;
-use App\Domain\Cases\Enums\RequestType;
 use App\Domain\Cases\Services\ReferenceGenerator;
 use App\Domain\Notifications\Actions\SendInternalNewLeadAlert;
 use App\Models\Assessment;
@@ -25,15 +24,10 @@ class CreateCaseFromAssessment
     {
         return DB::transaction(function () use ($assessment, $result, $contact) {
             $customer = $this->customer($assessment, $contact);
-            $requestType = RequestType::fromServiceAnswer($assessment->answerSet()->get('q1'));
+            $internal = $this->internalStatus($result);
 
-            // A DIFC request is a review ticket, not a held matter. It reaches
-            // this point having answered every question, and the team needs to
-            // see at a glance that it is waiting on a quotation rather than on
-            // a compliance decision.
-            $internal = $requestType === RequestType::DifcWill
-                ? InternalStatus::DifcLegalReviewRequired
-                : $this->internalStatus($result);
+            // Two Wills carry their own fee rather than twice the single fee.
+            $isMirror = $assessment->answerSet()->get('q1') === 'two_wills';
 
             $case = new LegalCase([
                 'reference' => $this->references->generate(),
@@ -43,14 +37,10 @@ class CreateCaseFromAssessment
                 'status' => $internal->group(),
                 'internal_status' => $internal,
                 'is_restricted' => $result->isRestricted(),
-                'request_type' => $requestType,
-                'service_type' => $requestType->value,
-                // Nothing is priced until a human has looked at a DIFC matter,
-                // and two Wills carry their own fee rather than twice one fee.
+                'service_type' => $isMirror ? 'mirror_wills' : 'standard_will',
                 'quoted_amount' => match (true) {
-                    $requestType->requiresQuotationFirst() => null,
                     ! $result->allowsPayment() => null,
-                    $requestType === RequestType::MirrorWills => (float) setting('commercial.mirror_fee', 2999),
+                    $isMirror => (float) setting('commercial.mirror_fee', 2999),
                     default => (float) setting('commercial.standard_fee', 1999),
                 },
                 'currency' => setting('commercial.currency', 'AED'),

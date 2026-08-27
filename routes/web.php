@@ -3,7 +3,6 @@
 use App\Http\Controllers\Public\ConsentController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\SitemapController;
-use App\Http\Controllers\Public\SpecialistRequestController;
 use App\Http\Controllers\Webhooks\PaymentWebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,20 +40,6 @@ foreach ($pages as $slug => $key) {
 Route::post('consent/cookie', [ConsentController::class, 'cookie'])
     ->middleware('throttle:60,1')
     ->name('consent.cookie');
-
-/*
-|--------------------------------------------------------------------------
-| Specialist legal review requests
-|--------------------------------------------------------------------------
-| Amending an existing Will and administering an estate are separate legal
-| services. They leave the assessment at question one and land here.
-*/
-Route::middleware('throttle:assessment')->group(function () {
-    Route::get('specialist-request/{service}', [SpecialistRequestController::class, 'show'])->name('specialist.show');
-    Route::post('specialist-request/{service}/contact', [SpecialistRequestController::class, 'contact'])->name('specialist.contact');
-    Route::post('specialist-request/{service}', [SpecialistRequestController::class, 'submit'])->name('specialist.submit');
-    Route::get('request-received', [SpecialistRequestController::class, 'received'])->name('specialist.received');
-});
 
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('robots.txt', [SitemapController::class, 'robots'])->name('robots');
