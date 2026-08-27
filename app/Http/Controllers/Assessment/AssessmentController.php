@@ -6,6 +6,7 @@ use App\Domain\Assessment\Actions\RecordAnswer;
 use App\Domain\Assessment\Actions\StartAssessment;
 use App\Domain\Assessment\Actions\SubmitAssessment;
 use App\Domain\Assessment\Enums\QuestionType;
+use App\Domain\Cases\Enums\RequestType;
 use App\Domain\Settings\Services\CommercialTokens;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\StoreAnswerRequest;
@@ -50,6 +51,14 @@ class AssessmentController extends Controller
             return redirect()->route('assessment.result');
         }
 
+        // Amending an existing Will and administering an estate are not Will
+        // preparation. They leave the questionnaire at question one and go to
+        // the request form, rather than being shown a page saying the online
+        // Will service is not available.
+        if ($redirect = $this->specialistRedirect($assessment)) {
+            return $redirect;
+        }
+
         return $this->render($assessment);
     }
 
@@ -78,6 +87,18 @@ class AssessmentController extends Controller
         $this->recordAnswer->execute($assessment, $key, $request->input('value'));
 
         return back();
+    }
+
+    /** Sends an existing-Will or estate enquiry to the request form. */
+    private function specialistRedirect(Assessment $assessment): ?RedirectResponse
+    {
+        $type = RequestType::fromServiceAnswer($assessment->answerSet()->get('q1'));
+
+        if (! $type->isDirectSpecialistRequest()) {
+            return null;
+        }
+
+        return redirect()->route('specialist.show', ['service' => $type->value]);
     }
 
     /**

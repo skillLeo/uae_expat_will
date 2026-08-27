@@ -4,6 +4,7 @@ namespace App\Domain\Cases\Actions;
 
 use App\Domain\Assessment\DTOs\RoutingResult;
 use App\Domain\Cases\Enums\InternalStatus;
+use App\Domain\Cases\Enums\RequestType;
 use App\Domain\Cases\Services\ReferenceGenerator;
 use App\Domain\Notifications\Actions\SendInternalNewLeadAlert;
 use App\Models\Assessment;
@@ -26,8 +27,8 @@ class CreateCaseFromAssessment
             $customer = $this->customer($assessment, $contact);
             $internal = $this->internalStatus($result);
 
-            // Two Wills carry their own fee rather than twice the single fee.
-            $isMirror = $assessment->answerSet()->get('q1') === 'two_wills';
+            $requestType = RequestType::fromServiceAnswer($assessment->answerSet()->get('q1'));
+            $isMirror = $requestType === RequestType::MirrorWills;
 
             $case = new LegalCase([
                 'reference' => $this->references->generate(),
@@ -37,7 +38,8 @@ class CreateCaseFromAssessment
                 'status' => $internal->group(),
                 'internal_status' => $internal,
                 'is_restricted' => $result->isRestricted(),
-                'service_type' => $isMirror ? 'mirror_wills' : 'standard_will',
+                'request_type' => $requestType,
+                'service_type' => $requestType->value,
                 'quoted_amount' => match (true) {
                     ! $result->allowsPayment() => null,
                     $isMirror => (float) setting('commercial.mirror_fee', 2999),

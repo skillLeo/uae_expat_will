@@ -15,7 +15,13 @@ enum InternalStatus: string
     case AssessmentSubmitted = 'assessment_submitted';
     case AwaitingTriage = 'awaiting_triage';
 
+    // 01b — A lead that has given contact details but not finished the second
+    // step is still a lead, and must be visible and contactable rather than
+    // waiting for a submission that may never come.
+    case ContactCapturedIncomplete = 'contact_captured_incomplete';
+
     // 02 — Under Review or Further Information Required
+    case NewLegalReviewRequired = 'new_legal_review_required';
     case HeldDifcRoute = 'held_difc_route';
     case HeldSensitiveMatter = 'held_sensitive_matter';
     case HeldCapacityOrInfluence = 'held_capacity_or_influence'; // RESTRICTED
@@ -56,7 +62,10 @@ enum InternalStatus: string
     public function group(): CaseStatus
     {
         return match ($this) {
-            self::AssessmentSubmitted, self::AwaitingTriage => CaseStatus::AssessmentCompleted,
+            self::AssessmentSubmitted, self::AwaitingTriage,
+            self::ContactCapturedIncomplete => CaseStatus::AssessmentCompleted,
+
+            self::NewLegalReviewRequired => CaseStatus::UnderReview,
 
             self::HeldDifcRoute, self::HeldSensitiveMatter, self::HeldCapacityOrInfluence,
             self::FurtherInformationRequested, self::AwaitingClientReply => CaseStatus::UnderReview,
@@ -86,6 +95,8 @@ enum InternalStatus: string
         return match ($this) {
             self::AssessmentSubmitted => 'Assessment submitted',
             self::AwaitingTriage => 'Awaiting triage',
+            self::ContactCapturedIncomplete => 'Contact captured — details incomplete',
+            self::NewLegalReviewRequired => 'New — legal review required',
             self::HeldDifcRoute => 'Held — DIFC route',
             self::HeldSensitiveMatter => 'Held — sensitive matter',
             self::HeldCapacityOrInfluence => 'Held — capacity or influence',
@@ -123,9 +134,21 @@ enum InternalStatus: string
         return $this === self::HeldCapacityOrInfluence;
     }
 
-    /** Whether a payment may be requested while in this status. */
+    /**
+     * Whether a payment may be requested while in this status.
+     *
+     * Held matters are the obvious no. The less obvious one is a specialist
+     * request whose contact step is done but whose details are not: it groups
+     * under "assessment completed" so the team can see and chase it, but it is
+     * an existing-Will or estate enquiry and neither is priced before a human
+     * has looked at it.
+     */
     public function allowsPayment(): bool
     {
+        if ($this === self::ContactCapturedIncomplete) {
+            return false;
+        }
+
         return $this->group() !== CaseStatus::UnderReview;
     }
 
