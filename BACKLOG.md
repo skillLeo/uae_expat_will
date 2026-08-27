@@ -49,15 +49,6 @@ Nothing here can be built without him.
       death. Asked for on 25 August: "we will show different message to those 3
       options". He said he would send the text, then sent the DIFC document
       instead, which is void. The current wording is ours.
-- [ ] **What should DIFC actually do on this site?** Unresolved, and the one
-      real gap. On 27 August Ahmed wrote "difc doesnt go questions, it gives
-      contact form". That is not what it does: it goes through the whole
-      questionnaire and ends on the review screen with no payment, which is how
-      it has always behaved here. The DIFC document was another project's, but
-      "I specifically want a DIFC Will" is still an option at question one on
-      this site, so it has to do *something*. Three ways to settle it: leave it
-      as it is, send it to the contact form like options four and five, or take
-      the option off question one entirely.
 - [ ] **Mirror wills: what happens if the partner turns out ineligible** after
       the first person has already paid. He said "let the team decide", which
       covers DIFC but not a hard stop.
@@ -116,13 +107,24 @@ Real work, no external dependency.
 
 Written down so nobody relitigates them.
 
-- **The DIFC "Specialist Legal Review Request Flow" document belongs to another
-  client's project.** It was implemented here on 26 August and removed on
-  27 August. Nothing of it remains: no DIFC request type, no DIFC status, no
-  ticket, no DIFC result screen. A DIFC selection behaves as it always has —
-  through the questionnaire, ending on the review screen with no payment.
-  Routing options four and five to a contact form was *not* from that document;
-  it was Ahmed's own instruction on 25 August and is live.
+- **The "Specialist Legal Review Request Flow" document is another client's and
+  is ignored entirely.** Settled 28 August, after it was implemented here on
+  26 August and removed on 27 August. It carries UAE Expat Wills branding and
+  was pasted into this project's chat, which is what caused the confusion, but
+  it is not this project's document. Do not implement any part of it, however
+  convincing the header looks.
+
+  Nothing of it remains in the code — verified: no DIFC request type, no DIFC
+  status, no ticket, no DIFC result screen.
+
+  **DIFC on this site behaves as it always has**: through the whole
+  questionnaire, ending on the review screen, payment blocked. Rule R-05,
+  outcome `review`. That is correct and final.
+
+  Two things that look like they came from that document but did not, and stay:
+  routing options four and five to a contact form, which was Ahmed's own
+  instruction on 25 August; and the DIFC eligibility notice on the religion
+  question, which he sent by message on the same evening.
 - **Legal pages accepted at 9 clauses each** by Ahmed on 26 August, against a
   specification asking for 18, 16 and 17. `content:verify-legal` guards what he
   accepted and records what the specification wanted.
