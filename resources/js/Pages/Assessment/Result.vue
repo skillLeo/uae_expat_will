@@ -9,7 +9,7 @@
  *     over the customer's shoulder by the person who may be influencing them.
  */
 import { computed } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import StatusPill from '@/Components/StatusPill.vue';
 
@@ -22,6 +22,11 @@ const props = defineProps({
     routeNote: { type: String, default: null },
     fee: { type: Object, default: () => ({}) },
 });
+
+// Without this, completing an assessment ends the site for that browser: every
+// later visit is redirected straight back to this result, so a person who wants
+// a second Will — or who is simply looking again — can never start one.
+const startAgain = () => router.post('/assessment/restart');
 
 const vat = computed(() => (props.fee.amount * props.fee.vat_rate) / 100);
 const total = computed(() => props.fee.amount + vat.value);
@@ -139,6 +144,15 @@ const label = computed(() => ({
                         </p>
                     </aside>
                 </div>
+
+                <p class="mt-10 text-legal leading-[1.72] text-ink-70">
+                    Need to ask about something else?
+                    <button
+                        type="button"
+                        class="font-medium text-ink underline decoration-gold underline-offset-4"
+                        @click="startAgain"
+                    >Start a new assessment</button>
+                </p>
 
                 <p class="prose-measure mt-12 border-t border-rule-warm pt-6 text-legal leading-[1.72] text-ink-70">
                     This result is preliminary. It is not a legal opinion, not final acceptance by any

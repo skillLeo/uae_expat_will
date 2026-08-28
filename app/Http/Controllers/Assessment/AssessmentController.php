@@ -47,6 +47,18 @@ class AssessmentController extends Controller
             $this->seedFromHero($request, $assessment);
         }
 
+        // Somebody arriving with an answer to question one is starting over,
+        // whatever they did last time. The homepage hero navigates here that
+        // way, so a person who has already finished once picks a service on
+        // the homepage, is bounced to the result of their PREVIOUS assessment,
+        // and never sees the screen they asked for. That is what Ahmed hit:
+        // "option 4 gives no contact and also gives difc final result".
+        if ($assessment->isCompleted() && $request->filled('q1')) {
+            $assessment = $this->start->execute($request);
+            $request->session()->put(self::SESSION_KEY, $assessment->session_token);
+            $this->seedFromHero($request, $assessment);
+        }
+
         if ($assessment->isCompleted()) {
             return redirect()->route('assessment.result');
         }
@@ -67,6 +79,15 @@ class AssessmentController extends Controller
         $assessment = $this->resolveOrFail($request);
 
         $key = $request->string('question_key')->toString();
+
+        // A submitted assessment is the record of what somebody declared and
+        // agreed to; answering into it afterwards rewrites a case that has
+        // already been created from it. Somebody answering again wants a new
+        // assessment, so give them one rather than silently corrupting the old.
+        if ($assessment->isCompleted()) {
+            $assessment = $this->start->execute($request);
+            $request->session()->put(self::SESSION_KEY, $assessment->session_token);
+        }
 
         // A stop blocks PROGRESS, not CORRECTION.
         //
