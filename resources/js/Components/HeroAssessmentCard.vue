@@ -12,7 +12,7 @@
  * decides an outcome on its own.
  */
 import { ref, computed } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 
 const SERVICES = [
     { id: 'new_will', label: 'Prepare a new Will for myself' },
@@ -23,12 +23,22 @@ const SERVICES = [
 ];
 
 const OUTCOMES = [
-    { key: 'continue', label: 'You can continue online', detail: 'Straight to account, engagement terms and payment — AED 2,199 plus VAT.' },
+    { key: 'continue', label: 'You can continue online', detail: null },
     { key: 'review', label: 'We need to review your circumstances', detail: 'A member of the legal team contacts you before any payment.' },
     { key: 'other', label: 'The standard online pathway is not available', detail: 'We explain why, and offer a contact route where one applies.' },
 ];
 
-const step = ref('q1');           // q1 | q2 | estate | under18 | inside
+// The fee comes from settings. It was typed in here as 2,199 and was still
+// saying so after the price changed everywhere else.
+const fee = computed(() => {
+    const s = usePage().props.settings ?? {};
+    const currency = s['commercial.currency'] ?? 'AED';
+    const amount = Number(s['commercial.standard_fee'] ?? 0).toLocaleString('en-US');
+
+    return `Straight to account, engagement terms and payment — ${currency} ${amount} plus VAT.`;
+});
+
+const step = ref('q1');           // q1 | q2 | under18 | inside
 const service = ref(null);
 const age = ref(null);
 const error = ref('');
@@ -48,7 +58,19 @@ function continueFromQ1() {
         return;
     }
     error.value = '';
-    step.value = service.value === 'estate_death' ? 'estate' : 'q2';
+
+    // "Someone has died" used to stop here on a panel of its own, offering
+    // only a link to the contact page. It never reached the request form,
+    // which is why Ahmed kept reporting no contact form for it. Estate and
+    // existing-Will enquiries now go to the server like every other answer,
+    // and it routes them to the form with the service already selected.
+    if (service.value === 'estate_death' || service.value === 'review_existing') {
+        openAssessment();
+
+        return;
+    }
+
+    step.value = 'q2';
 }
 
 function answerAge(value) {
@@ -59,7 +81,17 @@ function answerAge(value) {
 /** Hands the two answers to the server, which starts the real assessment. */
 function openAssessment() {
     submitting.value = true;
-    router.get('/assessment', { q1: service.value, q2: age.value }, {
+
+    // q2 is omitted when it has not been asked — an estate or existing-Will
+    // enquiry skips the questionnaire entirely, so there is no age answer yet
+    // and sending an empty one would record a blank.
+    const params = { q1: service.value };
+
+    if (age.value) {
+        params.q2 = age.value;
+    }
+
+    router.get('/assessment', params, {
         onFinish: () => { submitting.value = false; },
     });
 }
@@ -111,17 +143,6 @@ function back(to) {
         </div>
 
         <!-- Terminal: an estate matter. Referred, never charged. -->
-        <div v-else-if="step === 'estate'">
-            <div class="eyebrow mb-3.5">A different service applies</div>
-            <h2 class="mb-3 text-h3 font-semibold leading-[1.3] text-ink">Our team will review this as a separate matter</h2>
-            <p class="mb-5 text-body-s leading-[1.6] text-ink-70">
-                This relates to the administration of an estate after death rather than the preparation of a
-                new Will. No payment is requested.
-            </p>
-            <a href="/contact" class="btn btn-primary mb-2 w-full">Contact our team</a>
-            <button type="button" class="btn btn-tertiary w-full" @click="back('q1')">Back to the first question</button>
-        </div>
-
         <!-- Terminal: under 18. No payment control exists on this screen at all. -->
         <div v-else-if="step === 'under18'">
             <div class="eyebrow mb-3.5">This service cannot continue</div>
@@ -177,7 +198,7 @@ function back(to) {
                 ></div>
                 <div class="rounded-sm border px-3.5 py-2.5 transition-colors duration-300" :class="liveOutcome === o.key ? 'border-gold' : 'border-ink-line'">
                     <div class="text-body-s font-medium leading-[1.4]" :class="liveOutcome === o.key ? 'text-paper' : 'text-steel'">{{ o.label }}</div>
-                    <div v-if="liveOutcome === o.key" class="mt-1 text-caption leading-[1.5] text-steel">{{ o.detail }}</div>
+                    <div v-if="liveOutcome === o.key" class="mt-1 text-caption leading-[1.5] text-steel">{{ o.detail ?? fee }}</div>
                 </div>
             </div>
         </div>
