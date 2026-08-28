@@ -6,6 +6,8 @@ import StatusPill from '@/Components/StatusPill.vue';
 defineProps({
     pages: { type: Array, default: () => [] },
     faqCount: { type: Number, default: 0 },
+    postCount: { type: Number, default: 0 },
+    draftCount: { type: Number, default: 0 },
     categoryCount: { type: Number, default: 0 },
 });
 
@@ -18,6 +20,14 @@ const togglePublish = (p) => router.post(`/admin/content/${p.id}/publish`, { is_
 <template>
     <AdminLayout title="Content">
         <div class="mb-6 grid grid-cols-2 gap-4 max-[719px]:grid-cols-1">
+            <Link href="/admin/content/posts" class="card flex items-center justify-between gap-4 p-5 hover:border-gold">
+                <div>
+                    <div class="text-body font-semibold text-ink">Insights</div>
+                    <div class="help">{{ postCount }} articles, {{ draftCount }} in draft</div>
+                </div>
+                <span class="text-gold-strong" aria-hidden="true">→</span>
+            </Link>
+
             <Link href="/admin/content/faqs" class="card flex items-center justify-between gap-4 p-5 hover:border-gold">
                 <div>
                     <div class="text-body font-semibold text-ink">Frequently asked questions</div>

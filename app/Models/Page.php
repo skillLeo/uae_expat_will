@@ -64,10 +64,18 @@ class Page extends Model
 
             $link = fn (Page $p) => ['label' => $p->title, 'href' => $p->slug];
 
+            $pages = $published
+                ->whereNotIn('key', [...self::LEGAL_KEYS, 'home'])
+                ->map($link)->values()->all();
+
+            // Only linked once something is published. A footer link to an
+            // empty blog is worse than no link at all.
+            if (Post::published()->exists()) {
+                $pages[] = ['label' => 'Insights', 'href' => '/blog'];
+            }
+
             return [
-                'pages' => $published
-                    ->whereNotIn('key', [...self::LEGAL_KEYS, 'home'])
-                    ->map($link)->values()->all(),
+                'pages' => $pages,
                 'legal' => $published
                     ->whereIn('key', self::LEGAL_KEYS)
                     ->sortBy(fn (Page $p) => array_search($p->key, self::LEGAL_KEYS, true))

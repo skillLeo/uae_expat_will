@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Page;
+use App\Models\Post;
 use Illuminate\Http\Response;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
@@ -25,6 +26,21 @@ class SitemapController extends Controller
 
         // The assessment is a real entry point and belongs in the sitemap.
         $sitemap->add(Url::create('/assessment')->setPriority(0.9));
+
+        if (Post::published()->exists()) {
+            $sitemap->add(Url::create('/blog')->setPriority(0.7));
+        }
+
+        foreach (Post::published()->forLocale()->orderByDesc('published_at')->get() as $post) {
+            $sitemap->add(
+                Url::create('/blog/'.$post->slug)
+                    // The review date, where there is one. It is what tells a
+                    // crawler the piece has been checked since it was written.
+                    ->setLastModificationDate($post->lastVerifiedAt() ?? $post->updated_at)
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                    ->setPriority(0.6)
+            );
+        }
 
         return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
     }

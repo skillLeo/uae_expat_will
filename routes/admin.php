@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\Admin\DraftController;
 use App\Http\Controllers\Admin\NotificationTemplateController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\QuestionnaireController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SavedViewController;
@@ -130,6 +131,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::middleware('permission:content.view')->group(function () {
                 Route::get('content', [ContentController::class, 'index'])->name('content.index');
                 Route::get('content/faqs', [ContentController::class, 'faqs'])->name('content.faqs');
+                Route::get('content/posts', [PostController::class, 'index'])->name('content.posts');
                 Route::get('content/{page}', [ContentController::class, 'edit'])->name('content.edit');
             });
 
@@ -137,6 +139,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::patch('content/{page}', [ContentController::class, 'updatePage'])->name('content.update');
                 Route::patch('content/sections/{section}', [ContentController::class, 'updateSection'])->name('content.section.update');
                 Route::post('content/{page}/reorder', [ContentController::class, 'reorderSections'])->name('content.reorder');
+                Route::post('content/posts', [PostController::class, 'store'])->name('content.posts.store');
+                Route::patch('content/posts/{post}', [PostController::class, 'update'])->name('content.posts.update');
+                Route::delete('content/posts/{post}', [PostController::class, 'destroy'])->name('content.posts.destroy');
+                Route::post('content/posts/{post}/reviewed', [PostController::class, 'markReviewed'])->name('content.posts.reviewed');
+
                 Route::post('content/faqs', [ContentController::class, 'storeFaq'])->name('content.faqs.store');
                 Route::patch('content/faqs/{faq}', [ContentController::class, 'updateFaq'])->name('content.faqs.update');
                 Route::delete('content/faqs/{faq}', [ContentController::class, 'destroyFaq'])->name('content.faqs.destroy');

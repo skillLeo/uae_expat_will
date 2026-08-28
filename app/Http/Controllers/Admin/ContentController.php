@@ -7,6 +7,7 @@ use App\Models\Faq;
 use App\Models\FaqCategory;
 use App\Models\Page;
 use App\Models\PageSection;
+use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,8 @@ class ContentController extends Controller
                     'updated_at' => $p->updated_at->toIso8601String(),
                 ]),
             'faqCount' => Faq::count(),
+            'postCount' => Post::count(),
+            'draftCount' => Post::where('is_published', false)->count(),
             'categoryCount' => FaqCategory::count(),
         ]);
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Public\BlogController;
 use App\Http\Controllers\Public\ConsentController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\SitemapController;
@@ -56,6 +57,9 @@ Route::middleware('throttle:assessment')->group(function () {
     Route::post('specialist-request/{service}', [SpecialistRequestController::class, 'submit'])->name('specialist.submit');
     Route::get('request-received', [SpecialistRequestController::class, 'received'])->name('specialist.received');
 });
+
+Route::get('blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('robots.txt', [SitemapController::class, 'robots'])->name('robots');
