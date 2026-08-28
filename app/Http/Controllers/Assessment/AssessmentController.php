@@ -47,15 +47,21 @@ class AssessmentController extends Controller
             $this->seedFromHero($request, $assessment);
         }
 
-        // Somebody arriving with an answer to question one is starting over,
-        // whatever they did last time. The homepage hero navigates here that
-        // way, so a person who has already finished once picks a service on
-        // the homepage, is bounced to the result of their PREVIOUS assessment,
-        // and never sees the screen they asked for. That is what Ahmed hit:
-        // "option 4 gives no contact and also gives difc final result".
-        if ($assessment->isCompleted() && $request->filled('q1')) {
-            $assessment = $this->start->execute($request);
-            $request->session()->put(self::SESSION_KEY, $assessment->session_token);
+        // Somebody arriving with an answer to question one is telling us what
+        // they want, and it must win over whatever is already in the session.
+        //
+        // The homepage hero navigates here as /assessment?q1=...&q2=..., and
+        // this used to be read only when a brand new assessment was created.
+        // So a person who had already finished was bounced to their previous
+        // result — Ahmed's "option 4 gives no contact and also difc final
+        // result" — and a person still mid-assessment kept the service they
+        // picked the first time, whatever they clicked on the homepage.
+        if ($request->filled('q1')) {
+            if ($assessment->isCompleted()) {
+                $assessment = $this->start->execute($request);
+                $request->session()->put(self::SESSION_KEY, $assessment->session_token);
+            }
+
             $this->seedFromHero($request, $assessment);
         }
 

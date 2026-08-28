@@ -53,6 +53,16 @@ it('does not show the previous result to somebody choosing a new service', funct
         ->assertRedirect('/specialist-request/estate_administration');
 });
 
+it('lets someone mid-assessment change their mind from the homepage', function () {
+    // Not finished — just part way through, and back on the homepage picking
+    // something else. The new choice has to win.
+    $this->get('/assessment?q1=review_existing&q2=yes')
+        ->assertRedirect('/specialist-request/existing_will_service');
+
+    $this->get('/assessment?q1=estate_death&q2=yes')
+        ->assertRedirect('/specialist-request/estate_administration');
+});
+
 it('starts a fresh assessment rather than rewriting a submitted one', function () {
     finishAnAssessment('new_will');
     $submitted = Assessment::first();
