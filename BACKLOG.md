@@ -86,9 +86,19 @@ Real work, no external dependency.
 ## Not started
 
 - [ ] **Mirror wills.** Partner link, one case with one reference and two forms,
-      first person pays for both. Spec is complete from Ahmed's answers. Needs
-      a look at the case model, because drafts are currently one per case and
-      two people must approve separately. 3 to 5 days.
+      first person pays for both. Needs a look at the case model, because drafts
+      are currently one per case and two people must approve separately.
+      3 to 5 days. Spec as agreed with Ahmed on 28 August:
+      - Partner block on the contact details form: name, nationality, phone,
+        email. All required — cannot continue without them.
+      - Partner email entered twice and shown back, because a typo in your own
+        address is self-correcting and a typo in someone else's is not.
+      - The "not available to UAE citizens" line under partner nationality.
+      - The link goes to the partner the moment the details are given; person
+        one carries straight on to payment without waiting.
+      - Both arrive as one case, one reference, two forms.
+      - **Open:** what happens if the partner nationality is UAE. Stop there and
+        refer to the team, or continue and flag it. Not yet answered.
 - [ ] **Blog.** Posts with author and review dates, `/blog` and `/blog/{slug}`,
       Article structured data, sitemap entries, admin editing. FAQ overlap
       handled by depth, not duplication: short answer on `/faqs`, long version
@@ -133,6 +143,24 @@ Written down so nobody relitigates them.
   ticked, so it loses the record that someone answered no — on a question
   adjacent to capacity, that record is the protection. He did not press it
   after the mis-click problem was fixed. Reopen if he asks.
+- **No email verification code before payment.** Agreed with Ahmed on
+  28 August. A code proves somebody can open an inbox; it does not prove they
+  are serious, and payment already does that. Put before payment it is a hard
+  stop in a journey that promises "free, no account needed" on every screen,
+  and it costs real customers to filter out leads that cost nothing while they
+  sit in a list. Revisit after launch, placed *after* payment where the
+  customer must have a working inbox anyway — or rely on the questionnaire link
+  itself, which proves the same thing for free. He expects to revisit in a few
+  months.
+
+  The one genuine cost of unverified leads is that the four-hour first-contact
+  countdown fires on fake ones and the team chases ghosts. That is fixed by
+  handling bounces, not by a code.
+- **The "not available to UAE citizens" notice shows on the nationality
+  question for every will type** — personal, mirror and DIFC. Already live.
+  Confirmed as mandatory by Ahmed on 28 August, so it must never be made
+  conditional. The same line goes under the partner nationality field when the
+  mirror partner block is built.
 - **The Cookie Policy stays unpublished** until the production cookie scan
   confirms the counts it states. One click to publish from Content.
 - **The client portal stays off** behind `client_portal_enabled` until Ahmed
