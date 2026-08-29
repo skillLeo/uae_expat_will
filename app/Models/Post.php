@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domain\Content\Services\HtmlSanitiser;
 use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +36,12 @@ class Post extends Model
     {
         static::saving(function (self $post) {
             $post->slug = $post->slug ?: Str::slug($post->title);
+
+            // The body is written in the admin and rendered with v-html, so
+            // whatever is stored runs in every reader's browser. Cleaned here
+            // rather than at render, because there is one save path and many
+            // read paths.
+            $post->body = app(HtmlSanitiser::class)->clean($post->body);
 
             // Counted from the rendered text, not the source, so markup does
             // not inflate it.

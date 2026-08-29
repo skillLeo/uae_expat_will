@@ -31,6 +31,13 @@ const when = (iso) => iso
             <div class="mx-auto max-w-[1280px] px-8 max-[719px]:px-4">
                 <Link href="/blog" class="eyebrow mb-6 inline-block text-gold-strong">← All insights</Link>
 
+                <div v-if="post.is_draft" class="mb-6 rounded-md border border-attention-border bg-attention-bg p-4">
+                    <p class="text-body-s font-semibold text-ink">Draft — only you can see this</p>
+                    <p class="mt-1 text-legal leading-[1.72] text-ink-70">
+                        This article is not published. Tick "Publish this article" in Content to make it public.
+                    </p>
+                </div>
+
                 <header class="mb-10 max-w-[64ch]">
                     <div v-if="post.category" class="eyebrow mb-4">{{ post.category }}</div>
 

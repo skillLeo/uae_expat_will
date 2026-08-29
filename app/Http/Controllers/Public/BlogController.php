@@ -22,7 +22,11 @@ class BlogController extends Controller
 {
     public function index(Request $request): Response
     {
-        $posts = Post::published()->forLocale()
+        $preview = $request->user('admin')?->can('content.edit') ?? false;
+
+        $posts = Post::query()
+            ->unless($preview, fn ($q) => $q->published())
+            ->forLocale()
             ->orderByDesc('published_at')
             ->paginate(12)
             ->withQueryString()
@@ -30,6 +34,7 @@ class BlogController extends Controller
 
         return Inertia::render('Blog/Index', [
             'posts' => $posts,
+            'isPreview' => $preview,
             'page' => [
                 'title' => 'Insights',
                 'seo_title' => 'UAE Wills and Inheritance — Insights from Summit Legal Consultancy',
@@ -43,7 +48,16 @@ class BlogController extends Controller
 
     public function show(Request $request, string $slug): Response
     {
-        $post = Post::published()->forLocale()->where('slug', $slug)->firstOrFail();
+        // A draft is visible at its real address to an admin who could publish
+        // it, and to nobody else. Previewing an article before it goes live is
+        // ordinary, and without this there was no way to see one at all.
+        $preview = $request->user('admin')?->can('content.edit') ?? false;
+
+        $post = Post::query()
+            ->unless($preview, fn ($q) => $q->published())
+            ->forLocale()
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         $tokens = app(CommercialTokens::class);
 
@@ -61,6 +75,7 @@ class BlogController extends Controller
                 'reviewed_at' => $post->reviewed_at?->toIso8601String(),
                 'was_reviewed' => $post->wasReviewedAfterPublishing(),
                 'reading_minutes' => $post->reading_minutes,
+                'is_draft' => ! $post->is_published,
             ],
             'page' => [
                 'title' => $post->title,

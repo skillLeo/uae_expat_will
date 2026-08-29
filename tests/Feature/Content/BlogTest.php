@@ -138,3 +138,35 @@ it('lets Summit record that an article has been checked again', function () {
 
     expect($post->fresh()->reviewed_at)->not->toBeNull();
 });
+
+it('lets an admin preview a draft at its real address', function () {
+    // Without this there is no way to look at an article before publishing it,
+    // which is why Ahmed could not see the blog at all.
+    $post = writePost(['is_published' => false]);
+    $user = adminUser(['Super Administrator']);
+
+    $this->actingAs($user, 'admin')->withSession(['2fa.passed' => true]);
+
+    $this->get('/blog/'.$post->slug)->assertOk()->assertInertia(fn ($p) => $p
+        ->where('post.is_draft', true));
+});
+
+it('shows a signed-in admin their drafts on the index', function () {
+    writePost(['is_published' => false]);
+    $user = adminUser(['Super Administrator']);
+
+    $this->actingAs($user, 'admin')->withSession(['2fa.passed' => true]);
+
+    $this->get('/blog')->assertInertia(fn ($p) => $p
+        ->where('isPreview', true)
+        ->has('posts.data', 1));
+});
+
+it('still hides drafts from everybody else', function () {
+    $post = writePost(['is_published' => false]);
+
+    $this->get('/blog/'.$post->slug)->assertNotFound();
+    $this->get('/blog')->assertInertia(fn ($p) => $p
+        ->where('isPreview', false)
+        ->has('posts.data', 0));
+});

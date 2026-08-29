@@ -13,6 +13,7 @@ defineProps({
     posts: { type: Object, required: true },
     page: { type: Object, required: true },
     structuredData: { type: Object, default: null },
+    isPreview: { type: Boolean, default: false },
 });
 
 const when = (iso) => iso
@@ -36,6 +37,14 @@ const when = (iso) => iso
                         Practical pieces from the legal team at Summit Legal Consultancy. Every article
                         names the person who wrote it and the date it was last checked, because the law
                         in this area changes.
+                    </p>
+                </div>
+
+                <div v-if="isPreview" class="mb-8 rounded-md border border-attention-border bg-attention-bg p-4">
+                    <p class="text-body-s font-semibold text-ink">You are signed in, so drafts are shown here too</p>
+                    <p class="mt-1 text-legal leading-[1.72] text-ink-70">
+                        A visitor sees only published articles, and the blog is not linked anywhere on the
+                        site until the first one is published.
                     </p>
                 </div>
 
