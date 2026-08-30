@@ -24,6 +24,24 @@ The client contact is **Ahmed Mohammadi**, Managing Director. He is the
 decision maker on wording, pricing and policy. **Dr. Mohamed Raouf** is the
 Principal Legal Consultant.
 
+### Always end with a message for the client
+
+SkillLeo forwards these straight to Ahmed on WhatsApp. **Every time work is
+finished, end the reply with a ready-to-send message in a fenced block**, so it
+can be copied without editing.
+
+Style it for him, not for a developer:
+
+- lowercase, casual, plain words
+- **no dashes, no bullet symbols, no em dashes, no jargon**; numbered points
+  like "1." are fine
+- say what it means for his business, not what was built
+- structure: what is done, what he needs to do or decide, what is next
+- when something is not done, say so plainly rather than softening it
+
+Keep the engineering detail in the reply above the block, where SkillLeo reads
+it. The block is Ahmed's.
+
 ### Two rules that override everything else
 
 1. **Never write or alter Summit's legal wording.** Not the Terms, not the
