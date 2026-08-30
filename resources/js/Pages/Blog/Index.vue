@@ -69,9 +69,21 @@ const when = (iso) => iso
                     </article>
                 </div>
 
-                <p v-else class="text-body-l text-ink-70">
-                    The first articles are being written. Please check back shortly.
-                </p>
+                <template v-else>
+                    <p v-if="!isPreview" class="text-body-l text-ink-70">
+                        The first articles are being written. Please check back shortly.
+                    </p>
+
+                    <div v-else class="card-paper max-w-[64ch] border-l-2 border-gold p-6">
+                        <p class="mb-2 text-body font-semibold text-ink">Nothing written yet</p>
+                        <p class="mb-4 text-body-s leading-[1.65] text-ink-70">
+                            Write your first article in the dashboard, under Content then Insights. You can
+                            save it without publishing and it will appear here for you to read, marked as a
+                            draft. Nobody else sees anything until you tick publish.
+                        </p>
+                        <a href="/admin/content/posts" class="btn btn-primary">Write an article</a>
+                    </div>
+                </template>
 
                 <div v-if="posts.links?.length > 3" class="mt-10 flex flex-wrap gap-1">
                     <Link

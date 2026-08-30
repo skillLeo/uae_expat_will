@@ -71,7 +71,24 @@ class HandleInertiaRequests extends Middleware
             ],
 
             // The footer is built from the pages that are actually published.
-            'navigation' => fn () => Page::navigation(),
+            //
+            // The blog is the exception: it stays out of the public footer
+            // until an article exists, so a customer is never shown an empty
+            // section — but a signed-in administrator gets the link anyway,
+            // because otherwise there is no way to reach it from the site at
+            // all and Summit could not find their own blog.
+            'navigation' => function () use ($request) {
+                $navigation = Page::navigation();
+
+                $isEditor = $request->user('admin')?->can('content.edit') ?? false;
+                $alreadyThere = collect($navigation['pages'])->contains('href', '/blog');
+
+                if ($isEditor && ! $alreadyThere) {
+                    $navigation['pages'][] = ['label' => 'Insights', 'href' => '/blog'];
+                }
+
+                return $navigation;
+            },
 
             'locale' => fn () => app()->getLocale(),
             'supportedLocales' => fn () => config('app.supported_locales', ['en']),

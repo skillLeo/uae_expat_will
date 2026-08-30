@@ -170,3 +170,30 @@ it('still hides drafts from everybody else', function () {
         ->where('isPreview', false)
         ->has('posts.data', 0));
 });
+
+it('shows a signed-in editor the blog link even with nothing published', function () {
+    // Ahmed reported twice that he could not see the blog. There were no
+    // articles, and the footer link only appeared once one was published, so
+    // there was no way to reach it from the site at all.
+    $user = adminUser(['Super Administrator']);
+    $this->actingAs($user, 'admin')->withSession(['2fa.passed' => true]);
+
+    $this->get('/')->assertInertia(fn ($p) => $p
+        ->where('navigation.pages', fn ($pages) => collect($pages)->contains('href', '/blog')));
+});
+
+it('keeps an empty blog out of the public footer', function () {
+    $this->get('/')->assertInertia(fn ($p) => $p
+        ->where('navigation.pages', fn ($pages) => ! collect($pages)->contains('href', '/blog')));
+});
+
+it('does not add the link twice once an article is published', function () {
+    writePost();
+    Cache::flush();
+
+    $user = adminUser(['Super Administrator']);
+    $this->actingAs($user, 'admin')->withSession(['2fa.passed' => true]);
+
+    $this->get('/')->assertInertia(fn ($p) => $p
+        ->where('navigation.pages', fn ($pages) => collect($pages)->where('href', '/blog')->count() === 1));
+});
