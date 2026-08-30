@@ -4,6 +4,9 @@ One list, in the repo, so it survives a lost chat and neither of us has to
 reconstruct scope from WhatsApp history. Correct it freely — if something below
 is wrong or missing, edit this file and it becomes the truth.
 
+For how the platform works, how to deploy it and the access details, see
+[HANDOVER.md](HANDOVER.md).
+
 Last reviewed: 28 August 2026, against the full client conversation of 25 to
 27 August. Every request in that thread is either done below or listed as open;
 nothing from it is unaccounted for.
@@ -31,12 +34,16 @@ Verified on `will.skillleo.com`, not just merged.
 | Existing-Will and estate go to a contact form, not a rejection | 27 Aug |
 | Every multi-select says more than one answer is allowed | 28 Aug |
 | Legal pages closed at 9 clauses, accepted by Ahmed | 26 Aug |
+| Blog: posts, author and review dates, Article markup, admin editing | 28 Aug |
+| Stored HTML sanitised on save; drafts previewable by an admin | 29 Aug |
+| Fees set to AED 10,000 single and 15,000 mirror | 31 Aug |
+| AED shown on the ADJD and Dubai Courts authority charges | 31 Aug |
 
 ---
 
 ## Waiting on Ahmed
 
-Nothing here can be built without him.
+Nothing here can be built without him. The first two block launch outright.
 
 - [ ] **SMTP credentials.** The platform cannot send a single email until these
       exist. No receipts, no questionnaire links, no team alerts. This is the
@@ -45,6 +52,10 @@ Nothing here can be built without him.
       taken.
 - [ ] **Meta WhatsApp approval** for the 11 templates, plus the phone number ID,
       business account ID, permanent token and the two admin numbers.
+- [ ] **Locations for three change requests made on 31 August by screenshot.**
+      The images did not reach the assistant, so the instructions are known but
+      not the places: "change dubai to UAE", "remove this", and "2 and 3 change
+      the price". Ask Ahmed which page and section, or re-send as text.
 - [ ] **Wording for the two request forms** — existing Will, and estate after
       death. Asked for on 25 August: "we will show different message to those 3
       options". He said he would send the text, then sent the DIFC document
@@ -99,10 +110,6 @@ Real work, no external dependency.
       - Both arrive as one case, one reference, two forms.
       - **Open:** what happens if the partner nationality is UAE. Stop there and
         refer to the team, or continue and flag it. Not yet answered.
-- [ ] **Blog.** Posts with author and review dates, `/blog` and `/blog/{slug}`,
-      Article structured data, sitemap entries, admin editing. FAQ overlap
-      handled by depth, not duplication: short answer on `/faqs`, long version
-      as the post, FAQ links to it. 2 to 3 days.
 - [ ] **Admin image upload with cropping.** Ahmed asked for it. There is no file
       upload anywhere in the admin today — the `File` setting type exists but
       nothing implements it. Upload, storage, validation and a crop UI. About a
