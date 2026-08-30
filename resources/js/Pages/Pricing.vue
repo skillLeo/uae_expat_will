@@ -21,6 +21,7 @@ const props = defineProps({
 const site = usePage();
 const s = computed(() => site.props.settings ?? {});
 const fee = computed(() => Number(s.value['commercial.standard_fee'] ?? 2199).toLocaleString('en-US'));
+const mirrorFee = computed(() => Number(s.value['commercial.mirror_fee'] ?? 2999).toLocaleString('en-US'));
 const difcFee = computed(() => Number(s.value['commercial.difc_starting_fee'] ?? 3999).toLocaleString('en-US'));
 const authorityFees = computed(() => s.value['commercial.authority_fees'] ?? []);
 
@@ -92,6 +93,28 @@ const cfg = (k) => sec(k).settings ?? {};
                             class="btn btn-secondary mt-2"
                         >{{ cfg('difc').cta.label }}</Link>
                         <p class="help mt-4">{{ cfg('difc').note }}</p>
+                    </div>
+                </div>
+
+                <!-- Mirror Wills: a second purchasable price, not "from" like DIFC -->
+                <div class="grid grid-cols-12 gap-8 mt-8">
+                    <div class="card card-accent col-span-7 p-8 max-[1080px]:col-span-full max-[719px]:p-4">
+                        <div class="eyebrow mb-4">{{ sec('mirror_fee').heading }}</div>
+                        <div class="mb-2 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                            <div class="tabular font-mono text-[40px] font-medium leading-[1.05] tracking-[-0.015em] text-ink">AED {{ mirrorFee }}</div>
+                            <div class="text-body text-ink-70">plus VAT</div>
+                        </div>
+                        <p class="mb-6 max-w-[56ch] text-body leading-[1.65] text-ink-70">{{ sec('mirror_fee').body }}</p>
+
+                        <div class="grid gap-3">
+                            <p v-for="line in items('mirror_fee')" :key="line" class="border-b border-rule-cool py-2.5 text-legal leading-[1.5] text-ink last:border-0">
+                                {{ line }}
+                            </p>
+                        </div>
+
+                        <div class="mt-6 border-t border-rule-cool pt-5">
+                            <p class="legal-measure text-ink-70">{{ cfg('mirror_fee').note }}</p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -27,6 +27,37 @@ it('renders the fee from settings everywhere it appears on a page', function () 
             ->where('structuredData.@graph.1.description', fn ($d) => str_contains($d, 'AED 1,234')));
 });
 
+it('renders the fee from settings on how-it-works and uae-will-options too', function () {
+    // Both of these once carried the fee as a hand-typed literal in
+    // pages.json rather than the {fee} token, so the price drifted silently
+    // while every other page updated. This guards both routes directly.
+    app(SettingsRepository::class)->set('commercial.standard_fee', 1234);
+
+    foreach (['/how-it-works', '/uae-will-registration-options'] as $url) {
+        $this->get($url)->assertOk()->assertInertia(function ($page) {
+            $rendered = json_encode($page->toArray()['props']['sections'] ?? []);
+
+            expect($rendered)->toContain('AED 1,234')
+                ->and($rendered)->not->toContain('{fee}')
+                ->and($rendered)->not->toContain('2,199');
+        });
+    }
+});
+
+it('resolves the {fee} token in FAQ answers instead of leaking it raw', function () {
+    // FAQ answers come off the model directly rather than through
+    // PageController::interpolate(), so they need their own token pass —
+    // this once meant the FAQ page showed the literal text "{fee}".
+    app(SettingsRepository::class)->set('commercial.standard_fee', 1234);
+
+    $this->get('/faqs')->assertOk()->assertInertia(function ($page) {
+        $rendered = json_encode($page->toArray()['props']['faqs'] ?? []);
+
+        expect($rendered)->toContain('AED 1,234')
+            ->and($rendered)->not->toContain('{fee}');
+    });
+});
+
 it('keeps the legal clauses in step with the advertised price', function () {
     app(SettingsRepository::class)->set('commercial.standard_fee', 1234);
 
@@ -42,7 +73,9 @@ it('keeps the legal clauses in step with the advertised price', function () {
 
 it('leaves no price written out by hand in the seeded content', function () {
     // The whole class of bug: a literal that no setting can reach.
-    foreach (['content.json', 'notification_templates.json'] as $file) {
+    // pages.json is included because that's exactly where it happened —
+    // "AED 2,199" sat there, hand-typed, untouched by three price changes.
+    foreach (['content.json', 'notification_templates.json', 'pages.json'] as $file) {
         $raw = file_get_contents(database_path('seeders/data/'.$file));
 
         expect($raw)->not->toContain('2,199')

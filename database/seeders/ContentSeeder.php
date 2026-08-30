@@ -322,7 +322,6 @@ class ContentSeeder extends Seeder
                 'settings' => [
                     'primary' => ['label' => 'Start the assessment', 'href' => '/assessment'],
                     'secondary' => ['label' => 'See how the service works', 'href' => '/how-it-works'],
-                    'aside' => 'This is the only call to action on the page. The five route sections above carry none, so nothing pressures a decision while you are still reading.',
                 ],
             ],
         ];
@@ -387,6 +386,20 @@ class ContentSeeder extends Seeder
                 ],
                 'settings' => [
                     'note' => 'For an accepted standard matter, we aim to send the first draft within {first_draft_days} business days after receiving complete, usable instructions and all required documents. A matter requiring specialist analysis, further clarification or additional documents may take longer.',
+                ],
+            ],
+            [
+                'key' => 'mirror_fee',
+                'type' => 'fee_block',
+                'heading' => 'Mirror Wills · two people, one pathway',
+                'body' => "The total professional fee for a couple's two accepted standard Wills, prepared and reviewed together through the online pathway.",
+                'items' => [
+                    'The first person to pay covers the professional fee for both Wills — a package rate for the pair, not the standard fee charged twice.',
+                    "Each person's Will remains a separate document and a separate authority registration, with its own personal approval before anything is submitted.",
+                    'Everything included in the standard fee above — preparation, human legal review, certified translation, the amendment allowance and registration assistance — applies to both Wills.',
+                ],
+                'settings' => [
+                    'note' => 'Authority charges normally apply separately to each Will, in the same way as for a single Will.',
                 ],
             ],
             [

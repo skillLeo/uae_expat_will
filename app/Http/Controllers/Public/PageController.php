@@ -112,26 +112,34 @@ class PageController extends Controller
     /** @return array<string, mixed> */
     private function extra(string $key): array
     {
+        // FAQ answers carry the same {fee}/{mirror_fee} placeholders as page
+        // copy, but they come straight off the model rather than through
+        // interpolate(), so they need their own pass through the tokens.
+        $tokens = app(CommercialTokens::class);
+        $resolve = fn (Collection $faqs) => $faqs->each(
+            fn (Faq $faq) => $faq->answer = $tokens->apply((string) $faq->answer)
+        );
+
         return match ($key) {
             'home' => [
                 // The homepage carries a short teaser set, not all 57.
-                'faqs' => Faq::published()
+                'faqs' => $resolve(Faq::published()
                     ->forLocale()
                     ->where('category_key', 'platform')
                     ->orderBy('order')
                     ->limit(5)
-                    ->get(['id', 'question', 'answer', 'anchor']),
+                    ->get(['id', 'question', 'answer', 'anchor'])),
             ],
             'faqs' => [
                 'categories' => FaqCategory::where('locale', app()->getLocale())
                     ->orderBy('order')->get(['key', 'label']),
                 // Every answer is sent, so all 57 are in the server-rendered HTML
                 // even when collapsed. No pagination — a written client rule.
-                'faqs' => Faq::published()
+                'faqs' => $resolve(Faq::published()
                     ->forLocale()
                     ->orderBy('category_key')
                     ->orderBy('order')
-                    ->get(['id', 'category_key', 'question', 'answer', 'anchor']),
+                    ->get(['id', 'category_key', 'question', 'answer', 'anchor'])),
             ],
             default => [],
         };
