@@ -217,7 +217,7 @@ specialist request form for existing-Will and estate enquiries, 24 admin
 screens, the payment webhook with idempotency, the refund engine, the system
 health panel, and the blog.
 
-**344 tests, 1353 assertions, all passing. Pint clean.**
+**349 tests, 1408 assertions, all passing. Pint clean.**
 
 ### The two things blocking launch, neither of them code
 
@@ -272,3 +272,24 @@ Each of these cost real time or broke production.
 - **Ask before deleting.** Told to remove that document, I removed more than
   it contained, including an instruction Ahmed had given separately. He noticed
   within the hour.
+- **A price typed by hand into `pages.json` doesn't move when the price does.**
+  How It Works and the UAE Will Options table both had "AED 2,199" typed as a
+  literal instead of the `{fee}` token, so they silently sat through three
+  price changes while everything else on the site updated correctly. Fixed
+  31 Aug — `PriceIsSingleSourcedTest.php` now scans `pages.json` too, and
+  asserts a rendered FAQ page too, because that gap is exactly what let it
+  through: the test scanned `content.json` but not `pages.json`.
+- **FAQ answers never went through the token pass.** Every other content type
+  — page sections, notification templates, blog posts — runs through
+  `CommercialTokens::apply()` before it reaches the browser. FAQs came straight
+  off the model in `PageController::extra()`, so the FAQ page showed the
+  literal text `{fee}` instead of a number. Fixed 31 Aug in `extra()`.
+- **`pgrep -f "$BUNDLE" | head -1` only ever looks at one PID.** If a previous
+  restart left two `node bootstrap/ssr/ssr.js` processes stacked, the watchdog
+  could kill the wrong one and leave the real stale renderer bound to the
+  port — a deploy's health check passes while the site keeps serving the old
+  build, with nothing anywhere saying so. Hit this during the 31 Aug deploy:
+  SSR went down for a few minutes after a routine asset ship and needed a
+  manual `pkill` and restart to recover. `scripts/ssr-watchdog.sh` now kills
+  every matching PID, polls for the port to clear and the replacement to
+  answer healthy instead of guessing with a fixed `sleep`, and retries once.

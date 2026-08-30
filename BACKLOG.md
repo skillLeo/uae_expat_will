@@ -38,6 +38,11 @@ Verified on `will.skillleo.com`, not just merged.
 | Stored HTML sanitised on save; drafts previewable by an admin | 29 Aug |
 | Fees set to AED 10,000 single and 15,000 mirror | 31 Aug |
 | AED shown on the ADJD and Dubai Courts authority charges | 31 Aug |
+| Dubai Courts Wills description said "Dubai's statutory framework" — now "UAE's" | 31 Aug |
+| How It Works and UAE Will Options showed a hand-typed AED 2,199 that never picked up any price change — now token-driven | 31 Aug |
+| FAQ fee answer showed the literal text "{fee}" instead of a number — FAQs now resolve tokens like every other content type | 31 Aug |
+| UAE Will Options CTA aside ("This is the only call to action...") removed | 31 Aug |
+| Mirror Wills price (AED 15,000) added as its own card on Pricing, next to the standard fee | 31 Aug |
 
 ---
 
@@ -52,10 +57,6 @@ Nothing here can be built without him. The first two block launch outright.
       taken.
 - [ ] **Meta WhatsApp approval** for the 11 templates, plus the phone number ID,
       business account ID, permanent token and the two admin numbers.
-- [ ] **Locations for three change requests made on 31 August by screenshot.**
-      The images did not reach the assistant, so the instructions are known but
-      not the places: "change dubai to UAE", "remove this", and "2 and 3 change
-      the price". Ask Ahmed which page and section, or re-send as text.
 - [ ] **Wording for the two request forms** — existing Will, and estate after
       death. Asked for on 25 August: "we will show different message to those 3
       options". He said he would send the text, then sent the DIFC document
