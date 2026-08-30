@@ -39,9 +39,11 @@ it('shows the single Will screen at the approved price', function () {
 
     $this->get('/assessment/result')->assertInertia(fn ($p) => $p
         ->where('screen.heading', 'Continue with Our Online UAE Will Service')
-        ->where('screen.primary_action_label', 'Continue and Pay AED 2,098.95')
+        // Read from settings, not typed in. A test that hardcodes the price
+        // stops testing anything the day the price changes.
+        ->where('screen.primary_action_label', 'Continue and Pay AED '.number_format(setting('commercial.standard_fee') * 1.05, 2))
         ->where('screen.secondary_action_label', 'I Have a Question Before Paying')
-        ->where('fee.amount', 1999)
+        ->where('fee.amount', (int) setting('commercial.standard_fee'))
         ->where('fee.is_mirror', false)
         ->has('screen.extra.includes', 6)
         ->where('allowsPayment', true));
@@ -52,8 +54,8 @@ it('shows the mirror screen and its own price for two Wills', function () {
 
     $this->get('/assessment/result')->assertInertia(fn ($p) => $p
         ->where('screen.heading', 'Continue with Our Online Mirror Wills Service')
-        ->where('screen.primary_action_label', 'Continue and Pay AED 3,148.95')
-        ->where('fee.amount', 2999)
+        ->where('screen.primary_action_label', 'Continue and Pay AED '.number_format(setting('commercial.mirror_fee') * 1.05, 2))
+        ->where('fee.amount', (int) setting('commercial.mirror_fee'))
         ->where('fee.is_mirror', true)
         ->has('screen.extra.includes', 6)
         ->where('allowsPayment', true));

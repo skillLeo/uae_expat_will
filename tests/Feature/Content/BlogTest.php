@@ -87,7 +87,7 @@ it('resolves the fee token inside an article', function () {
     $post = writePost(['body' => '<p>The professional fee is AED {fee} plus VAT.</p>']);
 
     $this->get('/blog/'.$post->slug)->assertInertia(fn ($p) => $p
-        ->where('post.body', fn ($b) => str_contains($b, 'AED 1,999')
+        ->where('post.body', fn ($b) => str_contains($b, 'AED '.number_format((float) setting('commercial.standard_fee')))
             && ! str_contains($b, '{fee}')));
 });
 
