@@ -18,6 +18,19 @@
 # fixed `sleep 2` was not always long enough for the port to be released
 # before the replacement tried to bind it, and that failure was silent.
 #
+# The pattern that finds those PIDs has to allow a leading directory. Once
+# node was started by absolute path (below), `^node $BUNDLE` could not match
+# `/home/.../bin/node bootstrap/ssr/ssr.js` at all — so every run decided the
+# renderer was dead, killed nothing, and started another one. The new process
+# could not bind a port the old one still held, so it died; the stale renderer
+# kept serving the previous build and /health kept answering 200 for it. On
+# cron that also spawns a node process a minute, which is how this account ran
+# out of processes once already.
+#
+# It is anchored at both ends for the opposite reason: unanchored, it matches
+# any shell that merely mentions the bundle — this script's own cron parent, a
+# deploy over ssh — and kill_all would kill those instead.
+#
 # Node is resolved by path, not by nvm.
 #
 # Sourcing nvm.sh does not select a version — that needs a `default` alias, and
@@ -47,9 +60,25 @@ fi
 APP=~/domains/will.skillleo.com/public_html
 cd "$APP" || exit 1
 
+# Two copies racing each other can both decide to start a renderer, and the
+# cost of that mistake here is the whole account's process budget. A deploy
+# calls this script while cron may also be running it, so the overlap is real
+# rather than theoretical. Where flock is missing, carry on unprotected — a
+# watchdog that refuses to run is worse than one that occasionally overlaps.
+# -E 0 so "another copy already holds it" exits 0: that is the lock working,
+# not a failure, and the deploy script chains on this script's exit status.
+if command -v flock >/dev/null 2>&1 && [ -z "${SSR_WATCHDOG_LOCKED:-}" ]; then
+    export SSR_WATCHDOG_LOCKED=1
+    exec flock -n -E 0 storage/app/ssr-watchdog.lock "$0" "$@"
+fi
+
 BUNDLE="bootstrap/ssr/ssr.js"
 
-pids() { pgrep -f "^node $BUNDLE"; }
+# Regex form of the bundle path: the dot is a metacharacter to pgrep.
+BUNDLE_RE=$(printf '%s' "$BUNDLE" | sed 's/\./\\./g')
+
+# An optional directory, then node, then the bundle and nothing after it.
+pids() { pgrep -f "^[^ ]*node ${BUNDLE_RE}\$"; }
 
 kill_all() {
   pids | while read -r pid; do kill "$pid" 2>/dev/null; done

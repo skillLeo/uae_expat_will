@@ -284,12 +284,24 @@ Each of these cost real time or broke production.
   `CommercialTokens::apply()` before it reaches the browser. FAQs came straight
   off the model in `PageController::extra()`, so the FAQ page showed the
   literal text `{fee}` instead of a number. Fixed 31 Aug in `extra()`.
-- **`pgrep -f "$BUNDLE" | head -1` only ever looks at one PID.** If a previous
-  restart left two `node bootstrap/ssr/ssr.js` processes stacked, the watchdog
-  could kill the wrong one and leave the real stale renderer bound to the
-  port — a deploy's health check passes while the site keeps serving the old
-  build, with nothing anywhere saying so. Hit this during the 31 Aug deploy:
-  SSR went down for a few minutes after a routine asset ship and needed a
-  manual `pkill` and restart to recover. `scripts/ssr-watchdog.sh` now kills
-  every matching PID, polls for the port to clear and the replacement to
-  answer healthy instead of guessing with a fixed `sleep`, and retries once.
+- **The watchdog could not see the renderer at all.** It starts node by
+  absolute path (`/home/.../bin/node bootstrap/ssr/ssr.js`) but searched for
+  `^node bootstrap/ssr/ssr.js`, which never matches that. So every run decided
+  the renderer was dead, killed nothing, and started a second one; the new
+  process could not bind a port the old one still held, so it died, and the
+  stale renderer kept answering /health 200 while serving the previous build.
+  That is the real cause of the 31 Aug incident where SSR went down after a
+  routine asset ship and needed a manual `pkill` — not the `head -1` problem
+  it was first attributed to. On cron it would also have spawned a node
+  process a minute, which is how this account ran out of processes once
+  already. Fixed 31 Aug: the pattern allows a leading directory and is
+  anchored at both ends, so it matches the renderer and never an incidental
+  shell that merely mentions the bundle (a cron parent, a deploy over ssh) —
+  those would otherwise be killed. The script also takes an `flock` so a
+  deploy and a cron run cannot both start a renderer.
+  **Verify a change to that pattern against a real `ps -o args=` line**, not
+  against what you think the command line looks like.
+- **Every matching PID is handled**, and a restart is not declared done until
+  `/health` actually answers 200 — a fixed `sleep 2` was not always long
+  enough for the port to be released before the replacement tried to bind it,
+  and that failure was silent.
