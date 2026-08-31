@@ -43,6 +43,8 @@ Verified on `will.skillleo.com`, not just merged.
 | FAQ fee answer showed the literal text "{fee}" instead of a number — FAQs now resolve tokens like every other content type | 31 Aug |
 | UAE Will Options CTA aside ("This is the only call to action...") removed | 31 Aug |
 | Mirror Wills price (AED 15,000) added as its own card on Pricing, next to the standard fee | 31 Aug |
+| SSR watchdog could never find its own renderer, so every run started another one | 31 Aug |
+| `admin:password` — the only way back in for a locked-out administrator | 31 Aug |
 
 ---
 
@@ -74,6 +76,18 @@ Nothing here can be built without him. The first two block launch outright.
 - [ ] **Three hPanel cron entries** — scheduler, queue worker, SSR watchdog.
       Nothing scheduled runs without them: no backups, no retention, no overdue
       alerts. The health panel on the admin dashboard reports this honestly.
+      **Safe to add now, and it was not before 31 August**: the watchdog could
+      not match its own renderer, so on a one-minute schedule it would have
+      started a node process a minute until the account ran out of them. That
+      is fixed. Adding these clears three of the four criticals on the health
+      panel (scheduler, backups, retention).
+- [ ] **Set Ahmed a password.** He has never logged in — confirmed 31 August,
+      `last_login_at` is null and no 2FA secret exists. This is the login
+      complaint. There is no admin forgot-password route and no mail server, so
+      it cannot be self-served:
+      `/opt/alt/php84/usr/bin/php artisan admin:password ahmed@summitlegaluae.com`
+      It prompts, so the password never reaches a chat window or shell history.
+      He is walked through 2FA setup on first login.
 - [ ] **Rotate the SSH and database credentials.** They were shared in plain
       text over chat during the build and should be treated as exposed.
 - [ ] **Deploy key** so the password stops being passed around:

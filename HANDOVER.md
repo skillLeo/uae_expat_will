@@ -155,6 +155,34 @@ serves files.
 
 ---
 
+## 3a. Letting a locked-out administrator in
+
+There is **no forgot-password route on the admin side** — staff accounts are
+provisioned, not self-registered — and the platform has **no mail server**, so
+a reset email could not be delivered even if there were one. An administrator
+without a password therefore has no way in on their own. Someone with server
+access has to set it:
+
+```bash
+/opt/alt/php84/usr/bin/php artisan admin:password ahmed@summitlegaluae.com
+```
+
+It prints the account first so you can see you have the right one, then asks
+for the password twice. **It is never passed as an argument** — that would put
+it in shell history and in `ps` on a shared host, and it would have to be typed
+into a chat window on its way to you. Add `--reset-2fa` only when someone has
+lost their authenticator; it asks again before clearing it.
+
+Two-factor is mandatory and does not need setting up in advance: a user with no
+enrolment is walked through it on first login by
+`EnsureTwoFactorIsConfirmed`. So a password is the whole of what a new
+administrator needs.
+
+Give the password to the person directly, and have them change it. Never paste
+it into chat.
+
+---
+
 ## 4. How to verify a deploy
 
 SSR is the one that lies. **`data-server-rendered="true"` is the only reliable
