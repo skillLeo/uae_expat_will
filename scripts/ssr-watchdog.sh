@@ -18,7 +18,32 @@
 # fixed `sleep 2` was not always long enough for the port to be released
 # before the replacement tried to bind it, and that failure was silent.
 #
-export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh" >/dev/null 2>&1
+# Node is resolved by path, not by nvm.
+#
+# Sourcing nvm.sh does not select a version — that needs a `default` alias, and
+# when the alias went missing this script silently had no `node` on PATH. Every
+# restart then failed with "nohup: failed to run command 'node'", the renderer
+# stayed dead, and the whole site served client-rendered pages for days without
+# anything reporting it. The binary was on disk the entire time.
+#
+# The same reasoning as PHP, which is called at /opt/alt/php84/usr/bin/php for
+# exactly this reason.
+NODE="${NODE_BIN:-}"
+
+if [ -z "$NODE" ] || [ ! -x "$NODE" ]; then
+    # Newest installed version wins, and no alias has to exist.
+    NODE=$(ls -d "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | sort -V | tail -1)
+fi
+
+if [ -z "$NODE" ] || [ ! -x "$NODE" ]; then
+    NODE=$(command -v node 2>/dev/null)
+fi
+
+if [ -z "$NODE" ] || [ ! -x "$NODE" ]; then
+    echo "ssr-watchdog: no node binary found — the renderer cannot start" >&2
+    exit 1
+fi
+
 APP=~/domains/will.skillleo.com/public_html
 cd "$APP" || exit 1
 
@@ -32,7 +57,7 @@ kill_all() {
 
 start() {
   rm -f storage/logs/ssr.log
-  setsid nohup node "$BUNDLE" > storage/logs/ssr.log 2>&1 < /dev/null &
+  setsid nohup "$NODE" "$BUNDLE" > storage/logs/ssr.log 2>&1 < /dev/null &
   date +%s > storage/app/ssr-started-at
 }
 
