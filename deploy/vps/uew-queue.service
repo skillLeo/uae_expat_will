@@ -1,0 +1,42 @@
+[Unit]
+# The queue worker.
+#
+# Every notification the platform sends goes through this. On the shared host
+# there was no worker at all, so queued mail simply accumulated in the jobs
+# table with nothing to run it.
+Description=UAE Expat Wills — queue worker
+After=network.target mariadb.service
+PartOf=uew.target
+
+[Service]
+Type=simple
+User=uew
+Group=uew
+WorkingDirectory=/var/www/uaeexpatwills
+
+# --max-time recycles the worker hourly. A long-lived PHP process holds the
+# code it booted with, so without this a deploy's changes never reach the
+# queue until someone restarts it by hand.
+ExecStart=/usr/bin/php8.4 /var/www/uaeexpatwills/artisan queue:work \
+    --queue=high,default \
+    --sleep=3 \
+    --tries=3 \
+    --backoff=30 \
+    --max-time=3600
+
+Restart=always
+RestartSec=5
+
+# queue:restart asks workers to finish the current job and exit. systemd then
+# starts a fresh one, which is how a deploy picks up new code.
+KillSignal=SIGTERM
+TimeoutStopSec=90
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/www/uaeexpatwills/storage
+
+[Install]
+WantedBy=multi-user.target

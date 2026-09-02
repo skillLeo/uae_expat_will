@@ -1,0 +1,230 @@
+#!/usr/bin/env bash
+#
+# One-time provisioning for the UAE Expat Wills VPS.
+#
+# Run as root on a fresh Ubuntu/Debian box. It is idempotent: running it twice
+# changes nothing the second time, so it is safe to re-run after a failure.
+#
+#   bash provision.sh
+#
+# It does NOT deploy the application or issue certificates. Those are
+# deploy.sh and ssl.sh, in that order, because a certificate cannot be issued
+# until DNS actually points here.
+#
+# Why a dedicated VPS at all: the shared host ran ten sites on one account. A
+# Next.js app belonging to a different project exhausted the process budget,
+# the SSR renderer was killed and could not restart, and this site served empty
+# HTML to search engines for days. Nothing in the application was wrong. The
+# whole point of this box is that nothing else runs on it.
+set -euo pipefail
+
+APP_USER=uew
+APP_DIR=/var/www/uaeexpatwills
+DOMAIN=uaeexpatwills.com
+PHP_VERSION=8.4
+NODE_MAJOR=20
+
+log() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
+
+if [ "$(id -u)" -ne 0 ]; then
+    echo "provision.sh must run as root" >&2
+    exit 1
+fi
+
+# --------------------------------------------------------------- base packages
+log "Base packages"
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -y -qq \
+    ca-certificates curl gnupg lsb-release software-properties-common \
+    git unzip zip rsync ufw fail2ban cron \
+    nginx mariadb-server \
+    ghostscript
+
+# PHP 8.4 is not in Ubuntu's own archive on most releases; ondrej/php is the
+# standard source and is what the shared host effectively used too.
+if ! command -v php"$PHP_VERSION" >/dev/null 2>&1; then
+    log "PHP $PHP_VERSION"
+    add-apt-repository -y ppa:ondrej/php >/dev/null 2>&1 || true
+    apt-get update -qq
+fi
+
+# gd/imagick and exif are medialibrary's; intl and bcmath are the framework's;
+# zip is composer's. mysqldump (mariadb-client) is spatie/laravel-backup's, and
+# without it the nightly backup fails silently at the point you need it most.
+apt-get install -y -qq \
+    php"$PHP_VERSION"-fpm php"$PHP_VERSION"-cli \
+    php"$PHP_VERSION"-mysql php"$PHP_VERSION"-mbstring php"$PHP_VERSION"-xml \
+    php"$PHP_VERSION"-curl php"$PHP_VERSION"-zip php"$PHP_VERSION"-gd \
+    php"$PHP_VERSION"-intl php"$PHP_VERSION"-bcmath php"$PHP_VERSION"-imagick \
+    php"$PHP_VERSION"-redis php"$PHP_VERSION"-soap \
+    mariadb-client
+
+# ------------------------------------------------------------------- composer
+if ! command -v composer >/dev/null 2>&1; then
+    log "Composer"
+    curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php
+    php"$PHP_VERSION" /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet
+    rm -f /tmp/composer-setup.php
+fi
+
+# ----------------------------------------------------------------------- node
+# The SSR renderer runs this. Node is a runtime dependency here, not a build
+# tool: assets are built on a workstation and shipped, never built on the
+# server. Building on the host is what took the old site down twice.
+if ! command -v node >/dev/null 2>&1 || [ "$(node -v | cut -d. -f1)" != "v$NODE_MAJOR" ]; then
+    log "Node $NODE_MAJOR"
+    curl -fsSL "https://deb.nodesource.com/setup_${NODE_MAJOR}.x" | bash - >/dev/null
+    apt-get install -y -qq nodejs
+fi
+
+# ------------------------------------------------------------------- app user
+if ! id -u "$APP_USER" >/dev/null 2>&1; then
+    log "Application user: $APP_USER"
+    adduser --system --group --home "$APP_DIR" --shell /bin/bash "$APP_USER"
+fi
+mkdir -p "$APP_DIR"
+chown -R "$APP_USER":"$APP_USER" "$APP_DIR"
+
+# ------------------------------------------------------------------- php-fpm
+log "PHP-FPM pool"
+POOL=/etc/php/"$PHP_VERSION"/fpm/pool.d/uew.conf
+cat > "$POOL" <<EOF
+; The application's own pool, so it never shares a process budget with
+; anything else that might later land on this box.
+[uew]
+user = $APP_USER
+group = $APP_USER
+listen = /run/php/php$PHP_VERSION-fpm-uew.sock
+listen.owner = www-data
+listen.group = www-data
+listen.mode = 0660
+
+pm = dynamic
+pm.max_children = 20
+pm.start_servers = 4
+pm.min_spare_servers = 2
+pm.max_spare_servers = 6
+; Recycle workers periodically; a long-lived worker that has leaked is the
+; classic cause of a slow site nobody can explain.
+pm.max_requests = 500
+
+php_admin_value[memory_limit] = 512M
+php_admin_value[upload_max_filesize] = 20M
+php_admin_value[post_max_size] = 25M
+php_admin_value[max_execution_time] = 120
+php_admin_flag[expose_php] = off
+EOF
+
+# Remove the default pool so www-data cannot serve anything unexpected.
+rm -f /etc/php/"$PHP_VERSION"/fpm/pool.d/www.conf
+
+# Production PHP settings. display_errors off matters: a stack trace on a legal
+# services site can leak paths, queries and occasionally client data.
+INI=/etc/php/"$PHP_VERSION"/fpm/conf.d/99-uew.ini
+cat > "$INI" <<'EOF'
+display_errors = Off
+display_startup_errors = Off
+expose_php = Off
+opcache.enable = 1
+opcache.memory_consumption = 192
+opcache.max_accelerated_files = 20000
+opcache.validate_timestamps = 0
+date.timezone = Asia/Dubai
+EOF
+cp "$INI" /etc/php/"$PHP_VERSION"/cli/conf.d/99-uew.ini
+
+systemctl enable --now php"$PHP_VERSION"-fpm >/dev/null 2>&1 || true
+systemctl restart php"$PHP_VERSION"-fpm
+
+# -------------------------------------------------------------------- mariadb
+log "Database"
+systemctl enable --now mariadb >/dev/null 2>&1 || true
+
+# The password is generated here and written only to a root-readable file. It
+# is never echoed, so it cannot end up in a terminal scrollback or a chat
+# window. deploy.sh reads it from the same file.
+CRED=/root/.uew-db-credentials
+if [ ! -f "$CRED" ]; then
+    DB_PASS=$(head -c 32 /dev/urandom | base64 | tr -d '/+=' | head -c 28)
+    umask 077
+    cat > "$CRED" <<EOF
+DB_DATABASE=uaeexpatwills
+DB_USERNAME=uaeexpatwills
+DB_PASSWORD=$DB_PASS
+EOF
+fi
+# shellcheck disable=SC1090
+. "$CRED"
+
+mysql <<SQL
+CREATE DATABASE IF NOT EXISTS \`$DB_DATABASE\`
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS '$DB_USERNAME'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
+ALTER USER '$DB_USERNAME'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
+GRANT ALL PRIVILEGES ON \`$DB_DATABASE\`.* TO '$DB_USERNAME'@'localhost';
+FLUSH PRIVILEGES;
+SQL
+
+# --------------------------------------------------------------------- nginx
+log "nginx"
+HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+install -m 0644 "$HERE/nginx-uaeexpatwills.conf" /etc/nginx/sites-available/uaeexpatwills
+ln -sfn /etc/nginx/sites-available/uaeexpatwills /etc/nginx/sites-enabled/uaeexpatwills
+rm -f /etc/nginx/sites-enabled/default
+
+# Serve the plain-HTTP vhost until a certificate exists. ssl.sh swaps this for
+# the full config; without it nginx refuses to start on a missing certificate
+# and the box looks dead for reasons unrelated to the application.
+if [ ! -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
+    sed -i 's|^\( *\)\(listen 443\)|\1# \2|; s|^\( *\)\(ssl_certificate\)|\1# \2|; s|^\( *\)\(ssl_certificate_key\)|\1# \2|; s|^\( *\)\(include /etc/letsencrypt\)|\1# \2|; s|^\( *\)\(ssl_dhparam\)|\1# \2|' \
+        /etc/nginx/sites-available/uaeexpatwills
+fi
+
+mkdir -p /var/www/letsencrypt
+chown -R www-data:www-data /var/www/letsencrypt
+nginx -t && systemctl reload nginx
+
+# ------------------------------------------------------------------- services
+log "systemd units for the renderer and the queue"
+install -m 0644 "$HERE/uew-ssr.service" /etc/systemd/system/uew-ssr.service
+install -m 0644 "$HERE/uew-queue.service" /etc/systemd/system/uew-queue.service
+systemctl daemon-reload
+systemctl enable uew-ssr uew-queue >/dev/null 2>&1 || true
+
+# --------------------------------------------------------------------- cron
+# The shared host had no usable cron at all, so nothing scheduled ever ran: no
+# backups, no retention, no overdue-case escalation. This is that gap closed.
+log "Scheduler"
+cat > /etc/cron.d/uew-scheduler <<EOF
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+* * * * * $APP_USER cd $APP_DIR && /usr/bin/php$PHP_VERSION artisan schedule:run >> /dev/null 2>&1
+EOF
+chmod 0644 /etc/cron.d/uew-scheduler
+
+# ------------------------------------------------------------------ firewall
+log "Firewall"
+ufw allow OpenSSH >/dev/null
+ufw allow 'Nginx Full' >/dev/null
+ufw --force enable >/dev/null
+systemctl enable --now fail2ban >/dev/null 2>&1 || true
+
+# ------------------------------------------------------- unattended security
+apt-get install -y -qq unattended-upgrades >/dev/null
+dpkg-reconfigure -f noninteractive unattended-upgrades >/dev/null 2>&1 || true
+
+log "Provisioned"
+cat <<EOF
+
+  Application user   $APP_USER
+  Application dir    $APP_DIR
+  Database           $DB_DATABASE  (credentials in $CRED, root-readable only)
+  PHP                $(php$PHP_VERSION -v | head -1)
+  Node               $(node -v)
+
+  Next:
+    1. Point $DOMAIN and www.$DOMAIN at this server's IP.
+    2. bash deploy/vps/deploy.sh        first deploy
+    3. bash deploy/vps/ssl.sh           once DNS resolves here
+EOF

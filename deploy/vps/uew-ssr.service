@@ -1,0 +1,42 @@
+[Unit]
+# The Inertia server-side renderer.
+#
+# On the shared host this was a shell watchdog run from cron, because there was
+# no service manager and no usable cron either. It failed in the worst possible
+# way: the renderer died, nothing restarted it, and the site went on serving
+# pages that looked fine in a browser but reached Google as empty HTML.
+#
+# systemd removes that whole class of problem. Restart=always means a crashed
+# renderer is back in five seconds without anyone watching, and the site is
+# never silently client-rendered again.
+Description=UAE Expat Wills — Inertia SSR renderer
+After=network.target
+PartOf=uew.target
+
+[Service]
+Type=simple
+User=uew
+Group=uew
+WorkingDirectory=/var/www/uaeexpatwills
+
+# The health panel compares this marker against the SSR bundle's mtime to spot
+# a renderer that is answering but serving a build older than the one deployed.
+# Written on every start so that check keeps working here.
+ExecStartPre=/bin/sh -c 'date +%%s > /var/www/uaeexpatwills/storage/app/ssr-started-at'
+ExecStart=/usr/bin/node /var/www/uaeexpatwills/bootstrap/ssr/ssr.js
+
+Restart=always
+RestartSec=5
+
+StandardOutput=append:/var/www/uaeexpatwills/storage/logs/ssr.log
+StandardError=append:/var/www/uaeexpatwills/storage/logs/ssr.log
+
+# The renderer needs nothing but its own directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/www/uaeexpatwills/storage
+
+[Install]
+WantedBy=multi-user.target

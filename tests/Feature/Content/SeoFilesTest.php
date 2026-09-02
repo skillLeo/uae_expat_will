@@ -84,3 +84,35 @@ it('does not let the verification route shadow a real page', function () {
     $this->get('/pricing')->assertOk();
     $this->get('/faqs')->assertOk();
 });
+
+/**
+ * Structured data is emitted from PublicLayout through Inertia's <Head>, whose
+ * serialiser turns a vnode's props into attributes. Binding the JSON with
+ * v-html therefore produced innerHTML="{...}" on an EMPTY script tag: present
+ * in the HTML, ignored by every crawler, and impossible to spot without
+ * reading the markup. It has to be a text child.
+ */
+it('emits structured data as script content, never as an attribute', function () {
+    $layout = file_get_contents(resource_path('js/Layouts/PublicLayout.vue'));
+
+    $tag = null;
+    if (preg_match('/<component[^>]*application\/ld\+json.*?<\/component>/s', $layout, $m)) {
+        $tag = $m[0];
+    }
+
+    expect($tag)->not->toBeNull('The ld+json script tag has gone missing from PublicLayout.');
+
+    // v-html or innerHTML here means an empty script tag with the JSON parked
+    // in an attribute. The interpolation is what makes it a text child.
+    expect($tag)->not->toContain('v-html');
+    expect($tag)->not->toContain('innerHTML');
+    expect($tag)->toContain('{{');
+});
+
+it('escapes angle brackets in the structured data', function () {
+    $layout = file_get_contents(resource_path('js/Layouts/PublicLayout.vue'));
+
+    // A "</script>" inside any string value would otherwise close the element
+    // early and spill the rest of the JSON into the document as markup.
+    expect($layout)->toContain('u003C');
+});
