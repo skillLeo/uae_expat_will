@@ -25,17 +25,36 @@ command -v certbot >/dev/null 2>&1 || {
 
 MINE=$(curl -s --max-time 10 https://api.ipify.org || hostname -I | awk '{print $1}')
 log "Checking DNS"
-ok=1
+
+# Each name is checked on its own, and only the ones that actually resolve
+# here go on the certificate.
+#
+# Requesting a name that does not point at this server fails the whole
+# request, not just that name -- so one lagging record would otherwise hold
+# the apex hostage and leave the site with no HTTPS at all. The apex is
+# required; www is included when it is ready and added later by re-running
+# this script, which certbot handles as an expansion of the same certificate.
+NAMES=""
+ok=0
 for name in "$DOMAIN" "www.$DOMAIN"; do
-    got=$(dig +short A "$name" | tail -1)
-    printf '  %-26s -> %s (this server: %s)\n' "$name" "${got:-nothing}" "$MINE"
-    [ "$got" = "$MINE" ] || ok=0
+    # Authoritative answer, so a stale resolver cache neither adds a name that
+    # is not ready nor drops one that is.
+    got=$(dig +short A "$name" @"$(dig +short NS "$DOMAIN" | head -1)" 2>/dev/null | grep -E '^[0-9.]+$' | tail -1)
+    [ -n "$got" ] || got=$(dig +short A "$name" | grep -E '^[0-9.]+$' | tail -1)
+
+    if [ "$got" = "$MINE" ]; then
+        printf '  %-26s -> %s  included\n' "$name" "$got"
+        NAMES="$NAMES -d $name"
+        [ "$name" = "$DOMAIN" ] && ok=1
+    else
+        printf '  %-26s -> %s  SKIPPED (expected %s)\n' "$name" "${got:-nothing}" "$MINE"
+    fi
 done
 
 if [ "$ok" -ne 1 ]; then
     cat <<EOF
 
-  DNS does not point here yet, so verification would fail.
+  The domain itself does not point here yet, so verification would fail.
 
   At the registrar for $DOMAIN, set:
 
@@ -53,8 +72,10 @@ EOF
 fi
 
 log "Requesting the certificate"
-certbot certonly --webroot -w /var/www/letsencrypt \
-    -d "$DOMAIN" -d "www.$DOMAIN" \
+# --expand so re-running once www is ready adds it to the same certificate
+# rather than being refused as a duplicate.
+# shellcheck disable=SC2086
+certbot certonly --webroot -w /var/www/letsencrypt $NAMES --expand \
     --email "$EMAIL" --agree-tos --no-eff-email --non-interactive
 
 log "Enabling HTTPS"
