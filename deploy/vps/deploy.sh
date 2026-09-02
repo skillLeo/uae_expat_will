@@ -97,6 +97,11 @@ as_app "$PHP" artisan migrate --force
 install -d -o "$APP_USER" -g "$APP_USER" storage/app/public storage/framework/{cache,sessions,views} storage/logs
 chown -R "$APP_USER":"$APP_USER" storage bootstrap/cache
 
+# nginx must be able to traverse to public/. A git checkout or a restored
+# backup can put this back to 0750, so it is asserted on every deploy.
+chmod 0755 "$APP_DIR"
+chmod 0755 "$APP_DIR/public"
+
 # Laravel ships a public/robots.txt. A static file there is served by nginx
 # before the request reaches Laravel and silently overrides the robots route,
 # which is how the sitemap went undeclared and /admin stayed crawlable for

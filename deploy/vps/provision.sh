@@ -116,6 +116,15 @@ fi
 mkdir -p "$APP_DIR"
 chown -R "$APP_USER":"$APP_USER" "$APP_DIR"
 
+# adduser creates a home at 0750, and this home is the document root's parent.
+# nginx runs as www-data and needs to traverse it to reach public/, so without
+# this every request is a 404 with "Permission denied" buried in the nginx
+# error log rather than anything the application ever sees.
+#
+# 0755 exposes nothing on its own: .env stays 0640 and owned by the app user,
+# so www-data still cannot read it, and PHP-FPM runs as the app user.
+chmod 0755 "$APP_DIR"
+
 # ------------------------------------------------------------------- php-fpm
 log "PHP-FPM pool"
 POOL=/etc/php/"$PHP_VERSION"/fpm/pool.d/uew.conf
