@@ -45,3 +45,10 @@ Homestead.yaml
 .DS_Store
 Thumbs.db
 *.log
+
+# Laravel ships a default public/robots.txt. A static file there is served by
+# the web server before the request ever reaches index.php, which silently
+# overrides the robots route -- so the sitemap goes undeclared and /admin stays
+# crawlable. It happened on the shared host and went unnoticed for weeks.
+/public/robots.txt
+/public/sitemap.xml

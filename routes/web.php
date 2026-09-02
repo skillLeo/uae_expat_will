@@ -64,6 +64,12 @@ Route::get('blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
+// Search Console hands out a filename like google1a2b3c4d5e6f.html. Constrained
+// to that shape so this route can never shadow a real page.
+Route::get('{file}', [SitemapController::class, 'googleVerification'])
+    ->where('file', 'google[a-z0-9]+\\.html')
+    ->name('google-verification');
+
 /*
 |--------------------------------------------------------------------------
 | Webhooks

@@ -45,6 +45,29 @@ class SitemapController extends Controller
         return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
     }
 
+    /**
+     * Google Search Console's HTML-file verification method.
+     *
+     * Search Console offers a meta tag (handled in app.blade.php) or a file at
+     * the site root whose name is a token it gives you and whose body repeats
+     * that name. Uploading a real file into public/ does not survive here: the
+     * deploy rsyncs that directory with --delete, so the file would vanish on
+     * the next asset ship and the property would quietly become unverified.
+     *
+     * So the token is a setting and the file is a route. Nothing to re-upload,
+     * and it moves with the database rather than the filesystem.
+     */
+    public function googleVerification(string $file): Response
+    {
+        $expected = (string) setting('analytics.search_console_file');
+
+        abort_if($expected === '' || $file !== $expected, 404);
+
+        return response('google-site-verification: '.$expected, 200, [
+            'Content-Type' => 'text/html; charset=UTF-8',
+        ]);
+    }
+
     public function robots(): Response
     {
         $lines = [

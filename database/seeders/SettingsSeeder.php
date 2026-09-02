@@ -101,7 +101,11 @@ class SettingsSeeder extends Seeder
         // sufficient for them to load — see the consent gate.
         $s->define(G::Analytics, 'analytics.ga4_measurement_id', '', T::String, 'GA4 measurement ID', 'Only loads after the visitor accepts analytics cookies.', true, 1);
         $s->define(G::Analytics, 'analytics.gtm_container_id', '', T::String, 'GTM container ID', 'Only loads after the visitor accepts analytics cookies.', true, 2);
-        $s->define(G::Analytics, 'analytics.search_console_verification', '', T::String, 'Search Console verification', null, true, 3);
+        $s->define(G::Analytics, 'analytics.search_console_verification', '', T::String, 'Search Console verification', 'The meta-tag method. Paste only the content value, not the whole tag.', true, 3);
+        // The other half of Search Console verification. Kept as a setting
+        // rather than a file in public/, because the asset deploy rsyncs that
+        // directory with --delete and would remove it.
+        $s->define(G::Analytics, 'analytics.search_console_file', '', T::String, 'Search Console verification file', 'The filename Google gives you, e.g. google1a2b3c4d.html. It is then served at the site root automatically.', false, 4);
 
         // ----------------------------------------------------------- security
         $s->define(G::Security, 'security.session_lifetime_minutes', 120, T::Integer, 'Session lifetime (minutes)', null, false, 1);
