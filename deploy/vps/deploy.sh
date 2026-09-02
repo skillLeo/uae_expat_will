@@ -41,34 +41,52 @@ fi
 cd "$APP_DIR"
 
 # ------------------------------------------------------------------- secrets
+# Replace a key in place, or append it only if it is genuinely new.
+#
+# Blindly appending produced a .env with every key defined twice, because
+# .env.example already carries most of them. Laravel reads the last
+# occurrence so it behaved correctly, while leaving a file in which editing
+# the obvious line has no effect -- a trap for whoever touches it next.
+set_env() {
+    local key=$1 value=$2
+    if grep -q "^${key}=" .env; then
+        # Rewrite the first occurrence and drop any later ones.
+        awk -v k="$key" -v v="$value" '
+            index($0, k "=") == 1 { if (!seen++) print k "=" v; next }
+            { print }
+        ' .env > .env.tmp && mv .env.tmp .env
+    else
+        printf '%s=%s\n' "$key" "$value" >> .env
+    fi
+}
+
 if [ ! -f .env ]; then
     log "Creating .env"
-    as_app cp .env.example .env
-    # shellcheck disable=SC1091
-    . /root/.uew-db-credentials
-    {
-        echo
-        echo "DB_CONNECTION=mysql"
-        echo "DB_HOST=127.0.0.1"
-        echo "DB_PORT=3306"
-        echo "DB_DATABASE=$DB_DATABASE"
-        echo "DB_USERNAME=$DB_USERNAME"
-        echo "DB_PASSWORD=$DB_PASSWORD"
-        echo "APP_URL=https://uaeexpatwills.com"
-        echo "APP_ENV=production"
-        echo "APP_DEBUG=false"
-        echo "SESSION_DRIVER=database"
-        echo "SESSION_SECURE_COOKIE=true"
-        echo "QUEUE_CONNECTION=database"
-        echo "CACHE_STORE=database"
-        echo "FILESYSTEM_DISK=local"
-        echo "INERTIA_SSR_ENABLED=true"
-        echo "INERTIA_SSR_URL=http://127.0.0.1:13714"
-        echo "APP_TIMEZONE=Asia/Dubai"
-    } >> .env
-    chown "$APP_USER":"$APP_USER" .env
-    chmod 640 .env
+    cp .env.example .env
 fi
+
+log "Environment"
+# shellcheck disable=SC1091
+. /root/.uew-db-credentials
+set_env DB_CONNECTION mysql
+set_env DB_HOST 127.0.0.1
+set_env DB_PORT 3306
+set_env DB_DATABASE "$DB_DATABASE"
+set_env DB_USERNAME "$DB_USERNAME"
+set_env DB_PASSWORD "$DB_PASSWORD"
+set_env APP_URL https://uaeexpatwills.com
+set_env APP_ENV production
+set_env APP_DEBUG false
+set_env SESSION_DRIVER database
+set_env SESSION_SECURE_COOKIE true
+set_env QUEUE_CONNECTION database
+set_env CACHE_STORE database
+set_env FILESYSTEM_DISK local
+set_env INERTIA_SSR_ENABLED true
+set_env INERTIA_SSR_URL http://127.0.0.1:13714
+set_env APP_TIMEZONE Asia/Dubai
+chown "$APP_USER":"$APP_USER" .env
+chmod 640 .env
 
 # -------------------------------------------------------------- dependencies
 log "Composer"
