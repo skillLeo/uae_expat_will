@@ -85,12 +85,6 @@ sed "s|__PHP_VERSION__|${PHP_VERSION:-8.4}|g" "$HERE/nginx-uaeexpatwills.conf" \
     > /etc/nginx/sites-available/uaeexpatwills
 chmod 0644 /etc/nginx/sites-available/uaeexpatwills
 
-[ -f /etc/letsencrypt/options-ssl-nginx.conf ] || \
-    curl -fsSL https://raw.githubusercontent.com/certbot/certbot/main/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf \
-        -o /etc/letsencrypt/options-ssl-nginx.conf
-[ -f /etc/letsencrypt/ssl-dhparams.pem ] || \
-    openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048
-
 nginx -t && systemctl reload nginx
 
 # certbot installs its own renewal timer; this proves it works now rather than

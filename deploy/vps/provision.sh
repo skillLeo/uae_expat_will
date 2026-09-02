@@ -221,6 +221,21 @@ chmod 0644 /etc/nginx/sites-available/uaeexpatwills
 ln -sfn /etc/nginx/sites-available/uaeexpatwills /etc/nginx/sites-enabled/uaeexpatwills
 rm -f /etc/nginx/sites-enabled/default
 
+# TLS settings, written here rather than pulled from certbot or the internet.
+mkdir -p /etc/nginx/snippets
+cat > /etc/nginx/snippets/uew-tls.conf <<'TLSEOF'
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers off;
+ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 1d;
+ssl_session_tickets off;
+
+# No ssl_dhparam: every cipher above is ECDHE, so a finite-field DH parameter
+# is never negotiated. Generating one costs minutes at provision time and
+# buys nothing.
+TLSEOF
+
 mkdir -p /var/www/letsencrypt
 chown -R www-data:www-data /var/www/letsencrypt
 nginx -t && systemctl reload nginx
