@@ -45,6 +45,10 @@ Verified on `will.skillleo.com`, not just merged.
 | Mirror Wills price (AED 15,000) added as its own card on Pricing, next to the standard fee | 31 Aug |
 | SSR watchdog could never find its own renderer, so every run started another one | 31 Aug |
 | `admin:password` — the only way back in for a locked-out administrator | 31 Aug |
+| robots.txt was a stale static file: sitemap undeclared, /admin crawlable | 2 Sep |
+| Structured data reached crawlers as an empty script tag on every page | 2 Sep |
+| Search Console file verification, served from a setting so a deploy cannot lose it | 2 Sep |
+| Watchdog lock was held forever by the renderer, so it silently stopped watching | 2 Sep |
 
 ---
 
@@ -108,6 +112,24 @@ Real work, no external dependency.
       open by decision** — see the VAT item above.
 
 ---
+
+## Migration to a dedicated VPS
+
+Scripts and the full runbook are in [deploy/vps/README.md](deploy/vps/README.md).
+Target `200.234.43.188`, domain `uaeexpatwills.com`.
+
+- [x] Provisioning, deploy, asset-shipping, SSL and data-import scripts written
+- [x] systemd units for the renderer and the queue worker, so a dead renderer
+      restarts itself in five seconds instead of staying dead unnoticed
+- [x] Scheduler cron entry, which turns on backups, retention, health checks
+      and overdue-case escalation for the first time
+- [x] 301 redirect for the old address, so the move keeps its search ranking
+- [ ] **Blocked: the VPS root password.** `ssh root@200.234.43.188` was given
+      without one that works. Nothing can run until that arrives.
+- [ ] Whatever is currently on the VPS needs inventorying and backing up before
+      it is removed. Not touched: no visibility yet.
+- [ ] DNS still points at Hostinger parking, so the certificate cannot be
+      issued until it moves.
 
 ## Not started
 

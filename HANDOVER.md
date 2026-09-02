@@ -329,6 +329,30 @@ Each of these cost real time or broke production.
   deploy and a cron run cannot both start a renderer.
   **Verify a change to that pattern against a real `ps -o args=` line**, not
   against what you think the command line looks like.
+- **A lock held by a descriptor the child inherits is never released.** The
+  `flock` added to that watchdog was taken with `exec flock … "$0"`. The
+  renderer it starts inherited the descriptor, and the renderer runs forever,
+  so the lock was held for good. Every later run found it taken and exited 0
+  having done nothing: the watchdog silently stopped watching, and a stale SSR
+  bundle went on being served after a deploy that reported success. It is now
+  taken on descriptor 9, and `start()` closes it for the child with `9>&-`.
+  Both faults here share a shape worth remembering: **the watchdog reported
+  success while doing nothing at all.** Prove a watchdog acts by making it act
+  — touch the bundle and check the PID changes — never by reading its exit
+  code.
+- **Inertia's `<Head>` turns props into attributes, so `v-html` there renders
+  nothing.** The JSON-LD was bound with `v-html` and reached the browser as an
+  *empty* `<script type="application/ld+json">` carrying an `innerHTML="{…}"`
+  attribute. Every public page shipped its Organization, Service and
+  BreadcrumbList markup in a form no crawler reads. The payload was plainly
+  visible in the page source, which is exactly why it survived review. It has
+  to be a text child.
+- **A static file in `public/` silently beats a route.** Laravel ships a
+  default `public/robots.txt`; nginx and Apache both serve it before the
+  request reaches `index.php`. So the robots route never ran: the sitemap was
+  never declared to any search engine and `/admin`, `/client` and `/access`
+  were left crawlable. It is deleted and gitignored, and `SeoFilesTest`
+  asserts the file's absence.
 - **Every matching PID is handled**, and a restart is not declared done until
   `/health` actually answers 200 — a fixed `sleep 2` was not always long
   enough for the port to be released before the replacement tried to bind it,

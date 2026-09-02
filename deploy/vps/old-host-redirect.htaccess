@@ -1,0 +1,30 @@
+# will.skillleo.com -> uaeexpatwills.com
+#
+# Goes in ~/domains/will.skillleo.com/public_html/.htaccess on the SHARED HOST,
+# replacing what is there, once the VPS is live and serving the new domain.
+#
+# 301 rather than 302 on purpose. A permanent redirect passes the accumulated
+# ranking of the old address to the new one; a temporary one does not, and
+# search engines go on indexing the old address indefinitely. Leave this in
+# place for at least six months — Google needs to see it repeatedly before it
+# fully transfers the property.
+#
+# $1 preserves the path, so every existing link and bookmark lands on its own
+# page rather than being dumped on the home page. A redirect that throws away
+# the path is treated as a soft 404 and passes nothing.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Let Let's Encrypt keep renewing the old certificate while the redirect
+    # is in place. Without this the old host's certificate expires and
+    # visitors get a browser warning instead of a redirect.
+    RewriteRule ^\.well-known/acme-challenge/ - [L]
+
+    RewriteRule ^(.*)$ https://uaeexpatwills.com/$1 [R=301,L]
+</IfModule>
+
+# If mod_rewrite is ever unavailable, still move people to the right place.
+<IfModule !mod_rewrite.c>
+    Redirect 301 / https://uaeexpatwills.com/
+</IfModule>
