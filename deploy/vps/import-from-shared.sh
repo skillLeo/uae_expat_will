@@ -30,6 +30,10 @@ OLD_PATH=${OLD_PATH:-domains/will.skillleo.com/public_html}
 
 APP_DIR=/var/www/uaeexpatwills
 APP_USER=uew
+
+# provision.sh recorded which PHP it settled on.
+[ -f /etc/uew.env ] && . /etc/uew.env
+PHP=php${PHP_VERSION:-8.4}
 STAMP=$(date +%Y%m%d-%H%M%S)
 WORK=/root/uew-migration-$STAMP
 
@@ -137,8 +141,8 @@ chmod 640 "$ENV"
 
 # ---------------------------------------------------- settings that hold a URL
 log "Updating stored absolute URLs"
-sudo -u "$APP_USER" php8.4 "$APP_DIR/artisan" migrate --force
-sudo -u "$APP_USER" php8.4 "$APP_DIR/artisan" cache:clear
+sudo -u "$APP_USER" "$PHP" "$APP_DIR/artisan" migrate --force
+sudo -u "$APP_USER" "$PHP" "$APP_DIR/artisan" cache:clear
 
 log "Imported"
 cat <<EOF

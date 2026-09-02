@@ -21,8 +21,13 @@ set -euo pipefail
 APP_USER=uew
 APP_DIR=/var/www/uaeexpatwills
 DOMAIN=uaeexpatwills.com
-PHP_VERSION=8.4
 NODE_MAJOR=20
+
+# PHP_VERSION is discovered, not assumed. Ubuntu 26.04 ships 8.5 and has no
+# ondrej/php build, so a hardcoded 8.4 fails at the first apt-get. Whatever is
+# chosen here is written to /etc/uew.env and every other script reads it from
+# there, so the nginx socket path and the systemd units cannot drift from it.
+PHP_VERSION=${PHP_VERSION:-}
 
 log() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 
@@ -41,13 +46,38 @@ apt-get install -y -qq \
     nginx mariadb-server \
     ghostscript
 
-# PHP 8.4 is not in Ubuntu's own archive on most releases; ondrej/php is the
-# standard source and is what the shared host effectively used too.
-if ! command -v php"$PHP_VERSION" >/dev/null 2>&1; then
-    log "PHP $PHP_VERSION"
-    add-apt-repository -y ppa:ondrej/php >/dev/null 2>&1 || true
-    apt-get update -qq
+# Prefer a version already installed, then the distribution's own package,
+# and only then reach for ondrej/php. The PPA has no build for every release
+# and adding it on one it does not support breaks apt for everything after.
+log "PHP"
+if [ -z "$PHP_VERSION" ]; then
+    for v in 8.4 8.5 8.3; do
+        if command -v php"$v" >/dev/null 2>&1; then PHP_VERSION=$v; break; fi
+    done
 fi
+
+if [ -z "$PHP_VERSION" ]; then
+    for v in 8.4 8.5 8.3; do
+        if apt-cache show php"$v"-fpm >/dev/null 2>&1; then PHP_VERSION=$v; break; fi
+    done
+fi
+
+if [ -z "$PHP_VERSION" ]; then
+    add-apt-repository -y ppa:ondrej/php >/dev/null 2>&1 && apt-get update -qq || true
+    for v in 8.4 8.5 8.3; do
+        if apt-cache show php"$v"-fpm >/dev/null 2>&1; then PHP_VERSION=$v; break; fi
+    done
+fi
+
+if [ -z "$PHP_VERSION" ]; then
+    echo "No supported PHP (8.3-8.5) is installable on this release." >&2
+    exit 1
+fi
+echo "  using PHP $PHP_VERSION"
+
+# Everything else -- nginx's socket path, the queue unit, deploy.sh -- reads
+# this rather than carrying its own copy of the number.
+printf 'PHP_VERSION=%s\n' "$PHP_VERSION" > /etc/uew.env
 
 # gd/imagick and exif are medialibrary's; intl and bcmath are the framework's;
 # zip is composer's. mysqldump (mariadb-client) is spatie/laravel-backup's, and
@@ -57,7 +87,7 @@ apt-get install -y -qq \
     php"$PHP_VERSION"-mysql php"$PHP_VERSION"-mbstring php"$PHP_VERSION"-xml \
     php"$PHP_VERSION"-curl php"$PHP_VERSION"-zip php"$PHP_VERSION"-gd \
     php"$PHP_VERSION"-intl php"$PHP_VERSION"-bcmath php"$PHP_VERSION"-imagick \
-    php"$PHP_VERSION"-redis php"$PHP_VERSION"-soap \
+    php"$PHP_VERSION"-redis \
     mariadb-client
 
 # ------------------------------------------------------------------- composer
@@ -169,7 +199,9 @@ SQL
 # --------------------------------------------------------------------- nginx
 log "nginx"
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-install -m 0644 "$HERE/nginx-uaeexpatwills.conf" /etc/nginx/sites-available/uaeexpatwills
+sed "s|__PHP_VERSION__|$PHP_VERSION|g" "$HERE/nginx-uaeexpatwills.conf" \
+    > /etc/nginx/sites-available/uaeexpatwills
+chmod 0644 /etc/nginx/sites-available/uaeexpatwills
 ln -sfn /etc/nginx/sites-available/uaeexpatwills /etc/nginx/sites-enabled/uaeexpatwills
 rm -f /etc/nginx/sites-enabled/default
 
@@ -188,7 +220,9 @@ nginx -t && systemctl reload nginx
 # ------------------------------------------------------------------- services
 log "systemd units for the renderer and the queue"
 install -m 0644 "$HERE/uew-ssr.service" /etc/systemd/system/uew-ssr.service
-install -m 0644 "$HERE/uew-queue.service" /etc/systemd/system/uew-queue.service
+sed "s|__PHP_VERSION__|$PHP_VERSION|g" "$HERE/uew-queue.service" \
+    > /etc/systemd/system/uew-queue.service
+chmod 0644 /etc/systemd/system/uew-queue.service
 systemctl daemon-reload
 systemctl enable uew-ssr uew-queue >/dev/null 2>&1 || true
 

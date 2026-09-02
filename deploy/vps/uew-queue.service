@@ -17,7 +17,7 @@ WorkingDirectory=/var/www/uaeexpatwills
 # --max-time recycles the worker hourly. A long-lived PHP process holds the
 # code it booted with, so without this a deploy's changes never reach the
 # queue until someone restarts it by hand.
-ExecStart=/usr/bin/php8.4 /var/www/uaeexpatwills/artisan queue:work \
+ExecStart=/usr/bin/php__PHP_VERSION__ /var/www/uaeexpatwills/artisan queue:work \
     --queue=high,default \
     --sleep=3 \
     --tries=3 \

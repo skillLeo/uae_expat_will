@@ -16,7 +16,11 @@ APP_DIR=/var/www/uaeexpatwills
 APP_USER=uew
 REPO=${REPO:-https://github.com/skillLeo/uae_expat_will.git}
 BRANCH=${BRANCH:-main}
-PHP=/usr/bin/php8.4
+
+# provision.sh recorded which PHP it settled on. Reading it here keeps this
+# script from carrying a second, silently divergent copy of the version.
+[ -f /etc/uew.env ] && . /etc/uew.env
+PHP=/usr/bin/php${PHP_VERSION:-8.4}
 
 log() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 as_app() { sudo -u "$APP_USER" "$@"; }
@@ -107,7 +111,7 @@ log "Restarting services"
 # deploy. queue:restart asks it to stop cleanly after the job in hand.
 as_app "$PHP" artisan queue:restart || true
 systemctl restart uew-ssr
-systemctl restart php8.4-fpm
+systemctl restart "php${PHP_VERSION:-8.4}-fpm"
 systemctl reload nginx
 
 # ----------------------------------------------------------------- verify

@@ -45,7 +45,7 @@ git clone https://github.com/skillLeo/uae_expat_will.git /tmp/uew
 bash /tmp/uew/deploy/vps/provision.sh
 ```
 
-Installs nginx, PHP 8.4-FPM, MariaDB, Node 20, Composer, certbot, ufw and
+Installs nginx, PHP-FPM (the newest of 8.4/8.5/8.3 the release offers), MariaDB, Node 20, Composer, certbot, ufw and
 fail2ban. Creates the `uew` user, its own PHP-FPM pool, the database, the two
 systemd units and the scheduler cron entry. Idempotent — safe to re-run.
 
@@ -92,7 +92,7 @@ was no way in to stop it.
 
 ```bash
 curl -s -H 'Host: uaeexpatwills.com' http://127.0.0.1/ | grep -c 'data-server-rendered="true"'   # must be 1
-sudo -u uew php8.4 /var/www/uaeexpatwills/artisan system:health
+sudo -u uew php /var/www/uaeexpatwills/artisan system:health
 systemctl status uew-ssr uew-queue
 ```
 
@@ -148,9 +148,9 @@ months.
 
 - [ ] Confirm a backup actually ran: `ls -la /var/www/uaeexpatwills/storage/app/UAE*`
 - [ ] `systemctl status uew-queue` is active
-- [ ] `php8.4 artisan system:health` — scheduler, backups and retention should
+- [ ] `php artisan system:health` — scheduler, backups and retention should
       all have gone from critical to healthy
-- [ ] Set Ahmed's password: `php8.4 artisan admin:password ahmed@summitlegaluae.com`
+- [ ] Set Ahmed's password: `php artisan admin:password ahmed@summitlegaluae.com`
 - [ ] **Rotate the old shared-host credentials.** They were shared in plain
       text over chat and must be treated as exposed.
 - [ ] Add an SSH key and turn off password authentication on the VPS.
