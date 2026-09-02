@@ -59,7 +59,10 @@ certbot certonly --webroot -w /var/www/letsencrypt \
 
 log "Enabling HTTPS"
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-install -m 0644 "$HERE/nginx-uaeexpatwills.conf" /etc/nginx/sites-available/uaeexpatwills
+[ -f /etc/uew.env ] && . /etc/uew.env
+sed "s|__PHP_VERSION__|${PHP_VERSION:-8.4}|g" "$HERE/nginx-uaeexpatwills.conf" \
+    > /etc/nginx/sites-available/uaeexpatwills
+chmod 0644 /etc/nginx/sites-available/uaeexpatwills
 
 [ -f /etc/letsencrypt/options-ssl-nginx.conf ] || \
     curl -fsSL https://raw.githubusercontent.com/certbot/certbot/main/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf \

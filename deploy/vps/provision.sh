@@ -199,19 +199,18 @@ SQL
 # --------------------------------------------------------------------- nginx
 log "nginx"
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-sed "s|__PHP_VERSION__|$PHP_VERSION|g" "$HERE/nginx-uaeexpatwills.conf" \
-    > /etc/nginx/sites-available/uaeexpatwills
+# nginx will not start a server block that listens with `ssl` and has no
+# certificate, so the real config cannot go in until certbot has run. Use the
+# plain-HTTP bootstrap vhost until then; ssl.sh swaps in the full one.
+if [ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
+    SRC="$HERE/nginx-uaeexpatwills.conf"
+else
+    SRC="$HERE/nginx-bootstrap.conf"
+fi
+sed "s|__PHP_VERSION__|$PHP_VERSION|g" "$SRC" > /etc/nginx/sites-available/uaeexpatwills
 chmod 0644 /etc/nginx/sites-available/uaeexpatwills
 ln -sfn /etc/nginx/sites-available/uaeexpatwills /etc/nginx/sites-enabled/uaeexpatwills
 rm -f /etc/nginx/sites-enabled/default
-
-# Serve the plain-HTTP vhost until a certificate exists. ssl.sh swaps this for
-# the full config; without it nginx refuses to start on a missing certificate
-# and the box looks dead for reasons unrelated to the application.
-if [ ! -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
-    sed -i 's|^\( *\)\(listen 443\)|\1# \2|; s|^\( *\)\(ssl_certificate\)|\1# \2|; s|^\( *\)\(ssl_certificate_key\)|\1# \2|; s|^\( *\)\(include /etc/letsencrypt\)|\1# \2|; s|^\( *\)\(ssl_dhparam\)|\1# \2|' \
-        /etc/nginx/sites-available/uaeexpatwills
-fi
 
 mkdir -p /var/www/letsencrypt
 chown -R www-data:www-data /var/www/letsencrypt
