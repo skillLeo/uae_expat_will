@@ -68,17 +68,22 @@ if [ ! -f .env ]; then
     } >> .env
     chown "$APP_USER":"$APP_USER" .env
     chmod 640 .env
-
-    # Only if the migration has not already supplied the real one. A fresh key
-    # here would make every encrypted setting and 2FA secret unreadable.
-    if ! grep -q '^APP_KEY=base64:' .env; then
-        as_app "$PHP" artisan key:generate --force
-    fi
 fi
 
 # -------------------------------------------------------------- dependencies
 log "Composer"
 as_app composer install --no-dev --optimize-autoloader --no-interaction --quiet
+
+# artisan needs the autoloader, so the key can only be generated once Composer
+# has run -- not while the .env is being written.
+#
+# Only when there is no key at all. import-from-shared.sh brings the real one
+# across from the old server, and a fresh key here would make every encrypted
+# setting and every administrator's 2FA secret permanently unreadable.
+if ! grep -q '^APP_KEY=base64:' .env; then
+    log "Generating an application key"
+    as_app "$PHP" artisan key:generate --force
+fi
 
 # ------------------------------------------------------------------ database
 log "Migrations"
