@@ -58,45 +58,58 @@ it. The block is Ahmed's.
 
 ## 2. Access
 
+The site moved to its own VPS on **2 September 2026**. Everything below
+describes that server. The old shared host still exists but now serves only a
+301 redirect — see section 3b.
+
 ### Git
 
 ```
 https://github.com/skillLeo/uae_expat_will.git      branch: main
 ```
 
-### SSH
+### SSH — the live server
+
+```
+ssh root@200.234.43.188
+```
+
+Application path:
+
+```
+/var/www/uaeexpatwills
+```
+
+Runs as the `uew` user, in its own PHP-FPM pool. Ubuntu 26.04, PHP 8.5,
+nginx, MariaDB, Node 20.
+
+### Database
+
+Generated during provisioning and written **only** to
+`/root/.uew-db-credentials`, root-readable. It has never been printed, so it
+is not in any chat log or terminal scrollback. The deploy scripts read it from
+there; so should you.
+
+### PHP
+
+The version is discovered at provisioning time and recorded in `/etc/uew.env`,
+because Ubuntu 26.04 ships 8.5 and ondrej/php has no build for it. Read it
+rather than hardcoding a number:
+
+```bash
+. /etc/uew.env && php$PHP_VERSION artisan ...
+```
+
+### The old shared host
 
 ```
 ssh -p 65002 u290685119@46.202.183.38
 password: SkillLeo@571
 ```
 
-Application path on the server:
-
-```
-~/domains/will.skillleo.com/public_html
-```
-
-### Database (on the server)
-
-```
-name      u290685119_will
-user      u290685119_will
-password  u290685119_Will
-```
-
-> **These credentials were shared in plain text over chat during the build and
-> should be treated as exposed.** Rotating them is on the backlog and has not
-> been done. Do it before launch.
-
-### PHP on the server
-
-The domain default is 8.3; this application needs 8.4. Always use the absolute
-path:
-
-```
-/opt/alt/php84/usr/bin/php artisan ...
-```
+> **Treat these as exposed** — they were shared in plain text over chat. The
+> host now serves only a redirect, so the urgency has dropped, but the account
+> still holds other sites. Rotating is on the backlog.
 
 ---
 
@@ -104,54 +117,58 @@ path:
 
 Two steps, and **never** combine them.
 
-### Step one — code, migrations, seeders
+### Step one — assets, built locally and shipped
+
+From a workstation, in the repository:
 
 ```bash
-ssh -p 65002 u290685119@46.202.183.38
-cd ~/domains/will.skillleo.com/public_html
-git fetch origin main -q && git reset --hard origin/main -q
-/opt/alt/php84/usr/bin/php artisan migrate --force
-/opt/alt/php84/usr/bin/php artisan cache:clear
-/opt/alt/php84/usr/bin/php artisan config:cache
-/opt/alt/php84/usr/bin/php artisan route:cache
-/opt/alt/php84/usr/bin/php artisan view:cache
+VPS_SSH_PASS='...' ./deploy/vps/ship.sh
 ```
 
-### Step two — assets, built locally and shipped
+This builds the front end locally, rsyncs `public/build` and `bootstrap/ssr`,
+then runs step two on the server for you. Most deploys are just this.
+
+### Step two — code, migrations, caches
+
+Run on the server, and it is what `ship.sh` calls:
 
 ```bash
-export SSHPASS='SkillLeo@571'
-./scripts/deploy-assets.sh
+bash /var/www/uaeexpatwills/deploy/vps/deploy.sh
 ```
+
+Pulls `origin/main`, runs Composer, migrates, rebuilds every cache, restarts
+the renderer and the queue, then verifies that a page actually comes back
+server-rendered.
 
 ### Never run `npm run build` on the server
 
-It has taken the whole site down **twice**, including once when started
-detached with `setsid nohup`. Rolldown saturates the account's CloudLinux
-entry-process limit; every page then returns 503 **and SSH is refused**, so you
-cannot get in to kill the process causing it. Recovery took about 45 minutes
-each time, unattended.
+It took the old site down **twice**, including once when started detached with
+`setsid nohup`. That was a shared-hosting process limit rather than a law of
+nature, and this box has 8 GB to itself — but a laptop does the job better and
+there is no reason to hand a production server work it does not need.
 
-`scripts/deploy-assets.sh` builds locally and rsyncs `public/build` and
-`bootstrap/ssr` with `--delete`, then restarts the renderer. The host only
-serves files.
+### Facts about this server
 
-### Other host facts that will bite you
-
-- `exec()` is disabled, so `artisan storage:link` fails. The symlink exists,
-  made by hand: `ln -s ../storage/app/public public/storage`.
-- **There is no cron.** `crontab` is unavailable over SSH; entries must be
-  added through hPanel and **have never been added**. Nothing scheduled runs:
-  no backups, no retention, no overdue-case escalation. The admin dashboard's
-  health panel reports this honestly, and `php artisan system:health` exits
-  non-zero when anything is critical.
-- The root `.htaccess` is not in the web root by accident — the Laravel app
-  lives inside `public_html` and everything except `public/` is denied. A
-  tracked copy is at `deploy/public_html.htaccess`, with the reasoning. It
-  once denied `/storage/` wholesale, which silently broke **every uploaded
-  file on the site**.
-- Hostinger's CDN negative-caches 404s. A file that 404s once may keep 404ing
-  after you upload it; add `?v=<timestamp>` to check.
+- **Cron works.** `/etc/cron.d/uew-scheduler` runs Laravel's scheduler every
+  minute. Nightly backups, the retention policy, health checks and
+  overdue-case escalation all run for the first time in this project's life.
+- **The renderer and queue are systemd units** with `Restart=always`. A dead
+  renderer is back in five seconds. `scripts/ssr-watchdog.sh` is a shared-host
+  artefact and is not used here.
+- **The SSR bundle is self-contained.** `noExternal` in `vite.config.js`
+  bundles every dependency, so the server needs no `node_modules`, no npm and
+  no `package.json`. It runs one file.
+- **TLS settings are ours**, in `/etc/nginx/snippets/uew-tls.conf`, written by
+  `provision.sh`. Not certbot's `options-ssl-nginx.conf` — `certbot certonly
+  --webroot` never installs that, and nginx then refuses to start on a missing
+  include immediately after a certificate is successfully issued.
+- **The certificate renews itself.** certbot's timer is active and
+  `certbot renew --dry-run` passes. It covers the apex and `www`.
+- **`/var/www/uaeexpatwills` must stay 0755.** `adduser` creates a system
+  user's home at 0750, and nginx cannot then traverse to `public/` — every
+  request becomes a 404 whose reason appears only in nginx's error log.
+  `deploy.sh` asserts it every time.
+- `exec()` is available, so `artisan storage:link` works normally.
 
 ---
 
@@ -183,6 +200,23 @@ it into chat.
 
 ---
 
+## 3b. The old address
+
+`will.skillleo.com` serves nothing but a permanent redirect to
+`uaeexpatwills.com`, path preserved, from
+`deploy/vps/old-host-redirect.htaccess`. A 301 passes the accumulated search
+ranking to the new address; a 302 would not, and Google would go on indexing
+the old one indefinitely.
+
+**Leave it in place for at least six months.** Google needs to see it
+repeatedly before it fully transfers the property.
+
+The previous `.htaccess` is backed up on that host at
+`~/htaccess-before-redirect-*.bak`, so the old site can be brought back in one
+copy if it is ever needed.
+
+---
+
 ## 4. How to verify a deploy
 
 SSR is the one that lies. **`data-server-rendered="true"` is the only reliable
@@ -190,12 +224,13 @@ signal** — grepping for a phrase always "passes" because every string also
 appears in the JSON payload.
 
 ```bash
-curl -s https://will.skillleo.com/ | grep -c 'data-server-rendered="true"'
+curl -s https://uaeexpatwills.com/ | grep -c 'data-server-rendered="true"'
 ```
 
 A stale renderer answers health checks perfectly while serving the previous
-build, so `./scripts/ssr-watchdog.sh` compares the bundle's mtime against the
-process start time.
+build. `deploy.sh` restarts the systemd unit on every deploy, and the health
+panel still compares the bundle's mtime against `storage/app/ssr-started-at`,
+which the unit writes on each start.
 
 ---
 
@@ -239,6 +274,8 @@ permission that could be given to a coordinator or agency.
 
 ## 6. Where things stand
 
+**Live at https://uaeexpatwills.com on its own VPS since 2 September 2026.**
+
 **Live and working:** the full public site (13 pages, server-rendered), the
 screening assessment, contact capture, both payment result screens, the
 specialist request form for existing-Will and estate enquiries, 24 admin
@@ -253,6 +290,9 @@ health panel, and the blog.
    questionnaire links, no team alerts, no partner invitations. Everything
    email-shaped is built and untestable.
 2. **Gateway in test mode.** No real payment can be taken.
+
+These are the only two criticals left on the health panel. Scheduled tasks,
+backups, the queue and page rendering all read healthy since the move.
 
 Both are credentials Ahmed owes. Chase these before building anything else.
 

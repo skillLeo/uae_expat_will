@@ -132,11 +132,17 @@ Target `200.234.43.188`, domain `uaeexpatwills.com`.
       administrator's 2FA secret still decrypts.
 - [x] Verified on the box: 14 of 14 pages server-rendered, sitemap on the new
       domain, all five services active, scheduler running, a backup taken.
-- [ ] **Blocked on DNS.** `uaeexpatwills.com` still resolves to Hostinger, so
-      no certificate can be issued and the site is not reachable at its own
-      address. Two A records in hPanel — README step 6.
-- [ ] After DNS: `ssl.sh`, the old-host 301, a full journey test over HTTPS
-      (secure cookies make it untestable over plain HTTP), and Search Console.
+- [x] **DNS moved and HTTPS live, 2 September.** Let's Encrypt certificate
+      covering the apex and `www`, valid to 1 December, auto-renewal verified
+      by `certbot renew --dry-run`.
+- [x] Old address 301s to the new one with the path preserved, so the search
+      ranking transfers and no bookmark breaks.
+- [x] Full customer journey completed on the live site: reference
+      SLC-2026-00022, payment allowed at AED 10,500.00.
+- [ ] **Search Console.** Add `https://uaeexpatwills.com`, verify it through
+      Settings → Analytics, submit the sitemap, and use Change of Address on
+      the old property. Needs Ahmed's Google account.
+- [ ] **GA4 measurement ID** into Settings → Analytics. Needs Ahmed.
 
 ## Not started
 
