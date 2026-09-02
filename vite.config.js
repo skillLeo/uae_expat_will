@@ -20,6 +20,17 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    ssr: {
+        // Bundle every dependency into bootstrap/ssr/ssr.js.
+        //
+        // By default Vite leaves imports of installed packages external, so
+        // the renderer needs node_modules beside it at runtime -- 191 MB of it
+        // on the old host, and a hard failure the moment it is absent or out
+        // of step with the build. The production server has no npm, no
+        // package.json and no reason to acquire either: it runs one file.
+        noExternal: true,
+    },
+
     resolve: {
         alias: {
             '@': '/resources/js',
