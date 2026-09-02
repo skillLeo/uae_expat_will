@@ -74,7 +74,7 @@ sshpass -e ssh "${SSH_OPTS[@]}" "$REMOTE" "rm -f /tmp/uew-$STAMP.sql.gz"
 # --------------------------------------------------------------- uploaded files
 log "Copying uploaded files"
 mkdir -p "$WORK/storage-app"
-sshpass -e rsync -az --info=stats1 \
+sshpass -e rsync -az --stats \
     -e "ssh ${SSH_OPTS[*]}" \
     "$REMOTE:$OLD_PATH/storage/app/" "$WORK/storage-app/"
 

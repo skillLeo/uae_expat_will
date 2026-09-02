@@ -44,8 +44,10 @@ npm run build
 
 log "Shipping assets"
 # --delete so a file removed from a build does not linger and get served.
+# --stats rather than --info=stats1: macOS still ships rsync 2.6.9, which does
+# not have --info at all, and this script runs from a workstation.
 for path in public/build bootstrap/ssr; do
-    rsync -az --delete --info=stats1 -e "$RSH" \
+    rsync -az --delete --stats -e "$RSH" \
         "$path/" "$VPS_USER@$VPS_HOST:$APP_DIR/$path/"
 done
 
