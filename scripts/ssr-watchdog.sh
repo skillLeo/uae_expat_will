@@ -65,11 +65,24 @@ cd "$APP" || exit 1
 # calls this script while cron may also be running it, so the overlap is real
 # rather than theoretical. Where flock is missing, carry on unprotected — a
 # watchdog that refuses to run is worse than one that occasionally overlaps.
-# -E 0 so "another copy already holds it" exits 0: that is the lock working,
-# not a failure, and the deploy script chains on this script's exit status.
-if command -v flock >/dev/null 2>&1 && [ -z "${SSR_WATCHDOG_LOCKED:-}" ]; then
-    export SSR_WATCHDOG_LOCKED=1
-    exec flock -n -E 0 storage/app/ssr-watchdog.lock "$0" "$@"
+# The lock is taken on an explicit descriptor so it can be closed again before
+# the renderer is spawned.
+#
+# The obvious "exec flock -n lockfile $0" does not work here, and fails in the
+# worst direction. flock holds the lock through an open descriptor, and a child
+# process inherits it. The renderer is started by this script and then runs
+# forever, so it holds that descriptor -- and therefore the lock -- for its
+# whole life. Every later run then finds the lock taken and exits quietly
+# claiming success, which means the watchdog silently stops watching. A stale
+# bundle went on being served for exactly this reason.
+#
+# So: descriptor 9, and start() closes it for the renderer with 9>&-.
+LOCK=storage/app/ssr-watchdog.lock
+if command -v flock >/dev/null 2>&1; then
+    if exec 9>"$LOCK" 2>/dev/null; then
+        # Another copy is mid-restart. Nothing to do, and not a failure.
+        flock -n 9 || exit 0
+    fi
 fi
 
 BUNDLE="bootstrap/ssr/ssr.js"
@@ -86,7 +99,10 @@ kill_all() {
 
 start() {
   rm -f storage/logs/ssr.log
-  setsid nohup "$NODE" "$BUNDLE" > storage/logs/ssr.log 2>&1 < /dev/null &
+  # 9>&- closes the lock descriptor for the renderer. Without it the renderer
+  # holds this script's lock for as long as it lives, and no later run of the
+  # watchdog ever does anything again.
+  setsid nohup "$NODE" "$BUNDLE" > storage/logs/ssr.log 2>&1 < /dev/null 9>&- &
   date +%s > storage/app/ssr-started-at
 }
 
