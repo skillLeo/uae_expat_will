@@ -124,12 +124,19 @@ Target `200.234.43.188`, domain `uaeexpatwills.com`.
 - [x] Scheduler cron entry, which turns on backups, retention, health checks
       and overdue-case escalation for the first time
 - [x] 301 redirect for the old address, so the move keeps its search ranking
-- [ ] **Blocked: the VPS root password.** `ssh root@200.234.43.188` was given
-      without one that works. Nothing can run until that arrives.
-- [ ] Whatever is currently on the VPS needs inventorying and backing up before
-      it is removed. Not touched: no visibility yet.
-- [ ] DNS still points at Hostinger parking, so the certificate cannot be
-      issued until it moves.
+- [x] **Provisioned and deployed, 2 September.** Ubuntu 26.04, PHP 8.5, nginx,
+      MariaDB, Node 20. The VPS was bare, so nothing was removed — the
+      placeholder on the domain is Hostinger's and goes when DNS goes.
+- [x] Database, uploads and **APP_KEY** imported. The key's fingerprint is
+      identical to the old server's, so every encrypted setting and every
+      administrator's 2FA secret still decrypts.
+- [x] Verified on the box: 14 of 14 pages server-rendered, sitemap on the new
+      domain, all five services active, scheduler running, a backup taken.
+- [ ] **Blocked on DNS.** `uaeexpatwills.com` still resolves to Hostinger, so
+      no certificate can be issued and the site is not reachable at its own
+      address. Two A records in hPanel — README step 6.
+- [ ] After DNS: `ssl.sh`, the old-host 301, a full journey test over HTTPS
+      (secure cookies make it untestable over plain HTTP), and Search Console.
 
 ## Not started
 
