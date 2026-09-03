@@ -157,7 +157,18 @@ printf '  scheduler:       %s\n' "$([ -f /etc/cron.d/uew-scheduler ] && echo ins
 # The only reliable signal that server-side rendering is actually working.
 # Grepping for a phrase always passes, because every string on the page also
 # appears in the JSON payload Inertia embeds.
-rendered=$(curl -s --max-time 10 -H 'Host: uaeexpatwills.com' http://127.0.0.1/ | grep -c 'data-server-rendered="true"' || true)
+#
+# Over HTTPS with --resolve, so the request reaches this box without depending
+# on DNS. Plain HTTP now answers 301 to HTTPS, which made this check report a
+# hard 0 on a perfectly healthy deploy -- a verification step that lies is
+# worse than none, because it trains you to ignore it.
+rendered=$(curl -sk --max-time 10 --resolve "uaeexpatwills.com:443:127.0.0.1" \
+    https://uaeexpatwills.com/ 2>/dev/null | grep -c 'data-server-rendered="true"' || true)
+if [ "$rendered" = "0" ]; then
+    # Before the certificate exists there is no HTTPS to ask.
+    rendered=$(curl -s --max-time 10 -L -H 'Host: uaeexpatwills.com' http://127.0.0.1/ \
+        | grep -c 'data-server-rendered="true"' || true)
+fi
 printf '  server-rendered: %s\n' "$rendered"
 
 log "Deployed"
