@@ -85,6 +85,15 @@ Nothing here can be built without him. The first two block launch outright.
       started a node process a minute until the account ran out of them. That
       is fixed. Adding these clears three of the four criticals on the health
       panel (scheduler, backups, retention).
+- [x] **Roles and permissions: already built, nothing to add.** 42 granular
+      permissions across 6 roles. An administrator can create a role, give it
+      any combination of permissions, create users and assign roles — including
+      `content.edit` / `content.publish`, which is how someone is given the
+      blog without any other access. Verified 3 September.
+
+      One catch while SMTP is missing: an invited user is created with a random
+      password they never learn and would normally set their own by email
+      reset. Until mail works, use `artisan admin:password <email>`.
 - [ ] **Set Ahmed a password.** He has never logged in — confirmed 31 August,
       `last_login_at` is null and no 2FA secret exists. This is the login
       complaint. There is no admin forgot-password route and no mail server, so
@@ -139,10 +148,14 @@ Target `200.234.43.188`, domain `uaeexpatwills.com`.
       ranking transfers and no bookmark breaks.
 - [x] Full customer journey completed on the live site: reference
       SLC-2026-00022, payment allowed at AED 10,500.00.
-- [ ] **Search Console.** Add `https://uaeexpatwills.com`, verify it through
-      Settings → Analytics, submit the sitemap, and use Change of Address on
-      the old property. Needs Ahmed's Google account.
-- [ ] **GA4 measurement ID** into Settings → Analytics. Needs Ahmed.
+- [x] **GA4 live, 3 September.** `G-2C8L9N60Z1`, under Consent Mode v2: the
+      tag is on every page so Google's own "Test installation" finds it, and
+      stores nothing until the visitor accepts. Advertising storage is refused
+      outright whatever they pick.
+- [ ] **Search Console.** Add `https://uaeexpatwills.com`, paste the token into
+      Settings → Analytics (either method is served automatically), submit the
+      sitemap, and use Change of Address on the old property. Needs Ahmed's
+      Google account.
 
 ## Not started
 
