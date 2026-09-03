@@ -19,12 +19,23 @@ import FormField from '@/Components/FormField.vue';
 const props = defineProps({
     progress: { type: Object, required: true },
     contact: { type: Object, default: () => ({}) },
+    isMirror: { type: Boolean, default: false },
+    partner: { type: Object, default: () => ({}) },
+    countries: { type: Array, default: null },
+    partnerNotice: { type: String, default: null },
 });
 
 const form = useForm({
     contact_name: props.contact.full_name ?? '',
     contact_email: props.contact.email ?? '',
     contact_phone: props.contact.phone ?? '',
+    // Mirror Wills only. Sent regardless and ignored by the server otherwise,
+    // which keeps the request shape stable.
+    partner_name: props.partner?.name ?? '',
+    partner_nationality: props.partner?.nationality ?? '',
+    partner_phone: props.partner?.phone ?? '',
+    partner_email: props.partner?.email ?? '',
+    partner_email_confirmation: props.partner?.email ?? '',
 });
 
 const submit = () => form.post('/assessment/contact', { preserveScroll: true });
@@ -33,7 +44,7 @@ const submit = () => form.post('/assessment/contact', { preserveScroll: true });
 <template>
     <AssessmentLayout title="Your details" :progress="progress">
         <h1 class="mb-3 font-display text-h1 leading-[1.15] text-ink">
-            Who should we send your result to?
+            {{ isMirror ? 'Who are the two Wills for?' : 'Who should we send your result to?' }}
         </h1>
 
         <p class="prose-measure mb-6 text-body leading-[1.65] text-ink-70">
@@ -74,6 +85,92 @@ const submit = () => form.post('/assessment/contact', { preserveScroll: true });
                     :aria-invalid="form.errors.contact_phone ? 'true' : undefined"
                 >
             </FormField>
+
+            <!--
+                Mirror Wills: the partner's details, on the same screen.
+
+                Required rather than optional, because the pair is the service:
+                the first person pays for both, and their partner is invited
+                straight away rather than chased for later.
+            -->
+            <template v-if="isMirror">
+                <div class="mt-4 border-t border-rule-cool pt-6">
+                    <h2 class="mb-1 text-h2 font-semibold text-ink">Your spouse or partner</h2>
+                    <p class="prose-measure mb-4 text-body leading-[1.65] text-ink-70">
+                        Their Will is a separate document that they approve themselves, so we need
+                        their details too. We contact them directly once you continue.
+                    </p>
+
+                    <div class="grid gap-4">
+                        <FormField id="p-name" label="Partner's full name" required :error="form.errors.partner_name">
+                            <input
+                                id="p-name" v-model="form.partner_name" class="field"
+                                autocomplete="off" enterkeyhint="next"
+                                :aria-invalid="form.errors.partner_name ? 'true' : undefined"
+                            >
+                        </FormField>
+
+                        <FormField
+                            id="p-nat" label="Partner's nationality" required
+                            :help="partnerNotice"
+                            :error="form.errors.partner_nationality"
+                        >
+                            <select
+                                id="p-nat" v-model="form.partner_nationality" class="field"
+                                :aria-invalid="form.errors.partner_nationality ? 'true' : undefined"
+                            >
+                                <option value="" disabled>Select a nationality</option>
+                                <option v-for="c in countries" :key="c.code" :value="c.code">{{ c.name }}</option>
+                            </select>
+                        </FormField>
+
+                        <FormField id="p-phone" label="Partner's contact number" required :error="form.errors.partner_phone">
+                            <input
+                                id="p-phone" v-model="form.partner_phone" type="tel" class="field"
+                                autocomplete="off" inputmode="tel" enterkeyhint="next"
+                                :aria-invalid="form.errors.partner_phone ? 'true' : undefined"
+                            >
+                        </FormField>
+
+                        <FormField
+                            id="p-email" label="Partner's email address" required
+                            help="Their invitation and their own questionnaire link are sent here."
+                            :error="form.errors.partner_email"
+                        >
+                            <input
+                                id="p-email" v-model="form.partner_email" type="email" class="field"
+                                autocomplete="off" inputmode="email" enterkeyhint="next"
+                                :aria-invalid="form.errors.partner_email ? 'true' : undefined"
+                            >
+                        </FormField>
+
+                        <!--
+                            Asked twice on purpose. A typo in your own address
+                            corrects itself, because nothing arrives. A typo in
+                            someone else's does not: the invitation goes
+                            silently nowhere and nobody finds out for days.
+                        -->
+                        <FormField
+                            id="p-email2" label="Confirm partner's email address" required
+                            :error="form.errors.partner_email_confirmation"
+                        >
+                            <input
+                                id="p-email2" v-model="form.partner_email_confirmation" type="email" class="field"
+                                autocomplete="off" inputmode="email" enterkeyhint="done"
+                                :aria-invalid="form.errors.partner_email_confirmation ? 'true' : undefined"
+                            >
+                        </FormField>
+
+                        <p
+                            v-if="form.partner_email && form.partner_email_confirmation
+                                && form.partner_email === form.partner_email_confirmation"
+                            class="help"
+                        >
+                            We will contact your partner at <strong class="text-ink">{{ form.partner_email }}</strong>.
+                        </p>
+                    </div>
+                </div>
+            </template>
 
             <p class="help">
                 We never ask for your instructions, your beneficiaries or any document at this

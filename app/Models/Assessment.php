@@ -28,6 +28,7 @@ class Assessment extends Model
         'utm', 'referrer', 'ip_address', 'user_agent', 'started_at', 'completed_at',
         'expires_at', 'contact_name', 'contact_email', 'contact_phone',
         'contact_captured_at',
+        'partner_name', 'partner_nationality', 'partner_phone', 'partner_email',
     ];
 
     protected $hidden = ['session_token'];
@@ -61,6 +62,27 @@ class Assessment extends Model
             'email' => $this->contact_email,
             'phone' => $this->contact_phone,
         ];
+    }
+
+    /**
+     * The partner on a mirror-Wills assessment.
+     *
+     * @return array{name: string|null, nationality: string|null, phone: string|null, email: string|null}
+     */
+    public function partner(): array
+    {
+        return [
+            'name' => $this->partner_name,
+            'nationality' => $this->partner_nationality,
+            'phone' => $this->partner_phone,
+            'email' => $this->partner_email,
+        ];
+    }
+
+    /** Two Wills were asked for at question one. */
+    public function isMirror(): bool
+    {
+        return $this->answerSet()->get('q1') === 'two_wills';
     }
 
     /**

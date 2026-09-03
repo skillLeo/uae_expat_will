@@ -15,6 +15,7 @@ use App\Models\Assessment;
 use App\Models\Question;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -150,15 +151,57 @@ class AssessmentController extends Controller
     {
         $assessment = $this->resolveOrFail($request);
 
-        $validated = $request->validate([
+        $rules = [
             'contact_name' => 'required|string|max:120',
             'contact_email' => 'required|email:rfc|max:190',
             'contact_phone' => 'required|string|max:40',
-        ], [], [
+        ];
+
+        $names = [
             'contact_name' => 'name',
             'contact_email' => 'email address',
             'contact_phone' => 'contact number',
-        ]);
+        ];
+
+        // Mirror Wills: the partner's details are taken on the same screen and
+        // are not optional. Agreed with Summit on 28 August 2026.
+        //
+        // The nationality list is the same one the nationality question uses,
+        // with the UAE removed — the service is not available to UAE citizens,
+        // and that has to be true of the partner as much as the applicant.
+        // Because the UAE is absent from the list, an ineligible partner
+        // cannot be entered at all, which is why there is no "what happens if
+        // the partner is a UAE national" branch to write.
+        //
+        // The email is asked for twice. A typo in your own address is
+        // self-correcting, because nothing arrives; a typo in someone else's
+        // is not, and the partner's invitation would go silently nowhere.
+        if ($assessment->isMirror()) {
+            $countries = array_keys(
+                collect(config('countries.list'))
+                    ->except(config('countries.uae_code', 'AE'))
+                    ->all()
+            );
+
+            $rules += [
+                'partner_name' => 'required|string|max:120',
+                'partner_nationality' => ['required', 'string', Rule::in($countries)],
+                'partner_phone' => 'required|string|max:40',
+                'partner_email' => 'required|email:rfc|max:190|confirmed|different:contact_email',
+            ];
+
+            $names += [
+                'partner_name' => "partner's full name",
+                'partner_nationality' => "partner's nationality",
+                'partner_phone' => "partner's contact number",
+                'partner_email' => "partner's email address",
+            ];
+        }
+
+        $validated = $request->validate($rules, [
+            'partner_email.confirmed' => 'The two partner email addresses do not match.',
+            'partner_email.different' => 'Your partner needs their own email address, different from yours.',
+        ], $names);
 
         $assessment->update([...$validated, 'contact_captured_at' => now()]);
 
@@ -337,6 +380,18 @@ class AssessmentController extends Controller
             return Inertia::render('Assessment/Contact', [
                 'progress' => $engine->progress($answers)->toArray(),
                 'contact' => $assessment->contact(),
+                'isMirror' => $assessment->isMirror(),
+                'partner' => $assessment->partner(),
+                // Same list as the nationality question, minus the UAE.
+                'countries' => $assessment->isMirror()
+                    ? collect(config('countries.list'))
+                        ->except(config('countries.uae_code', 'AE'))
+                        ->map(fn ($name, $code) => ['code' => $code, 'name' => $name])
+                        ->values()
+                    : null,
+                'partnerNotice' => $assessment->isMirror()
+                    ? 'The Will services available through this platform are not available to UAE citizens.'
+                    : null,
             ]);
         }
 
