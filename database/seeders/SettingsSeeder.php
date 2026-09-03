@@ -99,7 +99,7 @@ class SettingsSeeder extends Seeder
         // ---------------------------------------------------------- analytics
         // Tags must not render before cookie consent. These being set is not
         // sufficient for them to load — see the consent gate.
-        $s->define(G::Analytics, 'analytics.ga4_measurement_id', '', T::String, 'GA4 measurement ID', 'Only loads after the visitor accepts analytics cookies.', true, 1);
+        $s->define(G::Analytics, 'analytics.ga4_measurement_id', '', T::String, 'GA4 measurement ID', 'Loads under Consent Mode: present on every page, but stores nothing until the visitor accepts analytics cookies.', true, 1);
         $s->define(G::Analytics, 'analytics.gtm_container_id', '', T::String, 'GTM container ID', 'Only loads after the visitor accepts analytics cookies.', true, 2);
         $s->define(G::Analytics, 'analytics.search_console_verification', '', T::String, 'Search Console verification', 'The meta-tag method. Paste only the content value, not the whole tag.', true, 3);
         // The other half of Search Console verification. Kept as a setting

@@ -93,25 +93,30 @@ function persist(choice) {
     applyTags();
 }
 
-/** Loads analytics ONLY where analytics consent is present. */
+/**
+ * Tells the Google tag what it is allowed to do.
+ *
+ * The tag itself is emitted server-side in app.blade.php and starts with every
+ * permission denied, so nothing is stored or read before this runs. This
+ * grants or withholds analytics storage according to the visitor's choice, and
+ * is called on every decision -- including a withdrawal, which must revoke
+ * permission rather than merely stop granting it.
+ */
 function applyTags() {
-    if (!prefs.analytics || !analyticsConfigured.value || window.__uewTags) return;
-
-    window.__uewTags = true;
-    const id = page.props.settings['analytics.ga4_measurement_id'];
-    if (!id) return;
-
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
-    document.head.appendChild(s);
+    if (!analyticsConfigured.value) return;
 
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { window.dataLayer.push(arguments); };
-    window.gtag('js', new Date());
-    // Page paths only. Analytics must never receive questionnaire answers,
-    // religion, family or beneficiary detail, or document names.
-    window.gtag('config', id, { anonymize_ip: true, allow_google_signals: false });
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+
+    window.gtag('consent', 'update', {
+        analytics_storage: prefs.analytics ? 'granted' : 'denied',
+        // Marketing storage stays denied outright: nothing on this site uses
+        // it, and a legal services platform should not be building
+        // advertising profiles from people researching their own death.
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+    });
 }
 
 const acceptAll = () => { prefs.prefs = true; prefs.analytics = true; prefs.marketing = true; persist('accept_all'); };
