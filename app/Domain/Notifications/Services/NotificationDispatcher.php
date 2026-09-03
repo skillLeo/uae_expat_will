@@ -96,8 +96,20 @@ class NotificationDispatcher
                 .setting('branding.ownership_line')."\n"
                 .'UAE Expat Wills and Summit Legal Consultancy UAE are not a court, registry, notary or government authority.';
 
-            Mail::raw($body.$footer, function ($message) use ($recipient, $subject) {
+            // A template may send from its own address. Correspondence about
+            // the Will itself goes out from the licensed firm's domain, which
+            // carries weight a marketing domain does not; everything
+            // administrative stays on the platform address. A null here means
+            // "use the global one", so the ordinary case needs nothing set.
+            $from = $template->from_address;
+            $fromName = $template->from_name ?: setting('mail.from_name');
+
+            Mail::raw($body.$footer, function ($message) use ($recipient, $subject, $from, $fromName) {
                 $message->to($recipient)->subject($subject);
+
+                if ($from) {
+                    $message->from($from, $fromName);
+                }
 
                 if ($replyTo = setting('mail.reply_to')) {
                     $message->replyTo($replyTo);

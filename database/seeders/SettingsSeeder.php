@@ -74,7 +74,7 @@ class SettingsSeeder extends Seeder
         $s->define(G::Mail, 'mail.username', '', T::String, 'SMTP username', null, false, 4);
         $s->define(G::Mail, 'mail.password', null, T::Encrypted, 'SMTP password', 'Encrypted at rest. Never displayed after saving.', false, 5);
         $s->define(G::Mail, 'mail.encryption', 'tls', T::String, 'Encryption', null, false, 6);
-        $s->define(G::Mail, 'mail.from_address', 'noreply@uaeexpatwills.com', T::String, 'From address', null, false, 7);
+        $s->define(G::Mail, 'mail.from_address', 'no-reply@uaeexpatwills.com', T::String, 'From address', null, false, 7);
         $s->define(G::Mail, 'mail.from_name', 'UAE Expat Wills', T::String, 'From name', null, false, 8);
         $s->define(G::Mail, 'mail.reply_to', 'info@uaeexpatwills.com', T::String, 'Reply-to address', null, false, 9);
 

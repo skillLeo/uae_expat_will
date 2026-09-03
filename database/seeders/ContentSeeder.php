@@ -424,7 +424,15 @@ class ContentSeeder extends Seeder
                 'subheading' => 'The authority — not UAE Expat Wills — sets and collects its registration or notarisation fee. The amount can change and may depend on the selected service, document or registration route.',
                 'settings' => [
                     'columns' => ['Possible route', 'Current expected authority charge', 'Important note'],
-                    'note' => 'These figures are not part of the AED {fee} professional fee and are not a promise that a particular route will apply. Before payment of our professional fee we identify the known categories and the current estimates available. After legal review confirms the recommended route, we explain the then-current authority fee before asking you to authorise or make that payment.',
+                    // The professional fee is deliberately NOT repeated here as a number.
+                    // This note sits directly beneath the last row of the authority
+                    // table, which is the DIFC one, so a bare "AED 10,000" printed
+                    // under it read as though it were the DIFC charge -- the client
+                    // said exactly that: "you added the 10,000 which is the DIFC
+                    // charge". It also named only the single fee, which is wrong for
+                    // anyone buying mirror Wills. Both figures are on the cards at the
+                    // top of this same page, where they belong.
+                    'note' => 'These are the authority\'s own charges, set and collected by the authority. They are separate from our professional fee shown above, and are not a promise that a particular route will apply. Before payment of our professional fee we identify the known categories and the current estimates available. After legal review confirms the recommended route, we explain the then-current authority fee before asking you to authorise or make that payment.',
                 ],
             ],
             [

@@ -39,7 +39,7 @@ class RuntimeMailer
             'timeout' => 15,
         ]);
         Config::set('mail.from', [
-            'address' => $this->settings->get('mail.from_address', 'noreply@uaeexpatwills.com'),
+            'address' => $this->settings->get('mail.from_address', 'no-reply@uaeexpatwills.com'),
             'name' => $this->settings->get('mail.from_name', 'UAE Expat Wills'),
         ]);
 

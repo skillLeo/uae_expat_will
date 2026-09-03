@@ -15,6 +15,7 @@ class NotificationTemplate extends Model
     protected $fillable = [
         'key', 'channel', 'subject', 'body', 'whatsapp_header', 'whatsapp_footer',
         'whatsapp_buttons', 'variables', 'meta_template_name', 'meta_status', 'is_active', 'locale',
+        'from_address', 'from_name',
     ];
 
     protected function casts(): array
