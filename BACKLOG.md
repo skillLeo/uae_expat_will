@@ -159,10 +159,23 @@ Target `200.234.43.188`, domain `uaeexpatwills.com`.
 
 ## Not started
 
-- [ ] **Mirror wills.** Partner link, one case with one reference and two forms,
-      first person pays for both. Needs a look at the case model, because drafts
-      are currently one per case and two people must approve separately.
-      3 to 5 days. Spec as agreed with Ahmed on 28 August:
+- [ ] **Mirror wills — partner details DONE 3 September, the rest open.**
+
+      Built and live: the partner block on the contact screen (name,
+      nationality, phone, email twice, all required), the nationality list
+      without the UAE, and the "not available to UAE citizens" line on the
+      partner field.
+
+      **The open question is answered.** Ahmed, 3 September: the partner
+      picks a nationality from a list that has no UAE in it and the notice
+      always shows, so an ineligible partner cannot be entered and there is
+      no branch to write.
+
+      Still to build: the invitation to the partner, and one case carrying one
+      reference with two separate forms. Needs a look at the case model,
+      because drafts are one per case today and two people must approve
+      separately. **The invitation cannot be tested until SMTP exists.**
+      2 to 4 days. Spec as agreed with Ahmed on 28 August:
       - Partner block on the contact details form: name, nationality, phone,
         email. All required — cannot continue without them.
       - Partner email entered twice and shown back, because a typo in your own
