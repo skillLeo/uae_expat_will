@@ -5,7 +5,7 @@
  * Neither step reveals whether the account exists — step one always advances,
  * and step two always returns the same message.
  */
-import { ref } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthLayout from '@/Layouts/AuthLayout.vue';
 
@@ -15,7 +15,41 @@ const props = defineProps({
 });
 
 const identify = useForm({ email: props.email ?? '' });
-const login = useForm({ email: props.email ?? '', password: '', session_length: 'standard' });
+const login = useForm({ password: '', session_length: 'standard' });
+
+const passwordField = ref(null);
+
+/**
+ * Sign in, with the email taken from the server on every submit.
+ *
+ * It used to live in the form's own state, seeded from props when the
+ * component was set up. Inertia reuses this component between the two steps —
+ * it swaps the props and never runs setup() again — so on step two the email
+ * was still the empty string captured on step one. Every sign-in therefore
+ * posted a blank email, failed validation on a field this form does not
+ * display, and looked to the person signing in like the button doing nothing.
+ * They clicked again, and again, and it only ever worked after a full reload.
+ *
+ * Reading it from props at submit time cannot drift, whatever Inertia does
+ * with the component.
+ */
+function submit() {
+    login
+        .transform((data) => ({ ...data, email: props.email }))
+        .post('/admin/login', { preserveScroll: true });
+}
+
+// autofocus only fires on mount, and this component is not remounted between
+// the two steps, so the password field has to be focused explicitly.
+watch(
+    () => props.step,
+    (step) => {
+        if (step === 'password') {
+            nextTick(() => passwordField.value?.focus());
+        }
+    },
+    { immediate: true },
+);
 
 const LENGTHS = [
     { value: 'short', label: '2 hours', hint: 'A shared or public computer' },
@@ -48,19 +82,25 @@ const LENGTHS = [
         </form>
 
         <!-- Step two -->
-        <form v-else @submit.prevent="login.post('/admin/login')">
+        <form v-else @submit.prevent="submit">
             <p class="help mb-6">Signing in as <span class="font-medium text-ink">{{ email }}</span></p>
-
-            <input v-model="login.email" type="hidden">
 
             <label class="label" for="password">Password</label>
             <input
-                id="password" v-model="login.password" type="password" class="field"
-                autocomplete="current-password" autofocus required
-                :aria-invalid="!!login.errors.password"
+                id="password" ref="passwordField" v-model="login.password" type="password" class="field"
+                autocomplete="current-password" required
+                :aria-invalid="!!login.errors.password || !!login.errors.email"
             >
             <div class="field-slot pt-1.5">
-                <p v-if="login.errors.password" class="error" role="alert">{{ login.errors.password }}</p>
+                <!--
+                    Every error is shown, not only the password one. A failure
+                    on any other field used to render nothing at all, so the
+                    button appeared to do nothing and people clicked it
+                    repeatedly.
+                -->
+                <p v-for="(message, field) in login.errors" :key="field" class="error" role="alert">
+                    {{ message }}
+                </p>
             </div>
 
             <!-- A stated session length rather than an opaque "remember me". -->
