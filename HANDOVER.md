@@ -200,6 +200,28 @@ it into chat.
 
 ---
 
+## 3a-ii. Two-factor, and the switch that used to lie
+
+Two-factor is enforced **per role**, in Settings → Security. Required if any
+of an account's roles requires it, so a second, laxer role is never a way out
+of a stricter one. A missing setting, or an account with no roles, defaults to
+required.
+
+**It is currently OFF for Super Administrator and Legal Reviewer** (5
+September), so Summit can sign in with an email and a password while setting
+up. That must be reversed before real matters are held here. The health panel
+reports it as critical and names the roles until it is.
+
+The switch shipped from the beginning and did nothing: `requiresTwoFactor()`
+ended in a bare `return true`, so it saved, showed the new state, and changed
+nothing. A switch that appears to work and does not is worse than no switch,
+because someone acts on the belief that they used it.
+
+Switching it off does not discard anyone's enrolment. The secret stays on the
+account, so switching back on restores the code with nothing to set up again.
+
+---
+
 ## 3b. The old address
 
 `will.skillleo.com` serves nothing but a permanent redirect to

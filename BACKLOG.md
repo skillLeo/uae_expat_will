@@ -94,6 +94,24 @@ Nothing here can be built without him. The first two block launch outright.
       One catch while SMTP is missing: an invited user is created with a random
       password they never learn and would normally set their own by email
       reset. Until mail works, use `artisan admin:password <email>`.
+- [x] **Summit edits its own prices, 5 September.** Settings → Commercial. The
+      authority-charge table was a raw JSON textarea, so in practice Summit
+      could not change their own prices and had to ask us — which is how a
+      number came to be argued about for four days. It is labelled rows now,
+      with add, remove and reorder, and the charge column takes words as well
+      as figures so "Varies by Will type" stays possible. Each price also says
+      on the form where it appears on the site.
+- [ ] **⚠ TWO-FACTOR IS CURRENTLY OFF for Super Administrator and Legal
+      Reviewer.** Switched off 5 September so Summit could sign in without
+      enrolling an authenticator first. Anyone with an email and a password can
+      reach the case files while it is off.
+
+      **It must go back on before real client matters are held here.**
+      Settings → Security → Enforce 2FA. The dashboard reports it as critical
+      and names the roles until it is.
+
+      Worth knowing: the switch existed from the beginning but did nothing —
+      `requiresTwoFactor()` ended in a bare `return true`. It works now.
 - [ ] **Set Ahmed a password.** He has never logged in — confirmed 31 August,
       `last_login_at` is null and no 2FA secret exists. This is the login
       complaint. There is no admin forgot-password route and no mail server, so
