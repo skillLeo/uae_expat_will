@@ -27,6 +27,10 @@ const nav = computed(() => [
     { label: 'Cases', href: '/admin/cases', icon: 'folder', show: can('cases.view.all') || can('cases.view.assigned') },
     { label: 'Payments', href: '/admin/payments', icon: 'card', show: can('payments.view') },
     { label: 'Content', href: '/admin/content', icon: 'doc', show: can('content.view') },
+    // Its own entry rather than a card inside Content. It was reachable only
+    // by knowing the blog lived under "Content", which nobody does, and the
+    // client reasonably reported it as missing.
+    { label: 'Blog', href: '/admin/content/posts', icon: 'pen', show: can('content.view') },
     { label: 'Questionnaire', href: '/admin/questionnaire', icon: 'list', show: can('questionnaire.view') },
     { label: 'Users', href: '/admin/users', icon: 'people', show: can('users.view') },
     { label: 'Settings', href: '/admin/settings', icon: 'cog', show: can('settings.view') },
@@ -37,8 +41,23 @@ const nav = computed(() => [
 // below 46px on a small phone.
 const tabs = computed(() => nav.value.slice(0, 5));
 
-const isActive = (href) =>
-    href === '/admin' ? page.url === '/admin' : page.url.startsWith(href);
+/**
+ * The most specific entry wins.
+ *
+ * A plain startsWith lights up Content as well as Blog whenever the blog is
+ * open, because /admin/content/posts starts with /admin/content. Two
+ * highlighted items is a small thing that makes the navigation feel broken.
+ */
+const isActive = (href) => {
+    if (href === '/admin') return page.url === '/admin';
+    if (!page.url.startsWith(href)) return false;
+
+    return !nav.value.some(
+        (item) => item.href !== href
+            && item.href.length > href.length
+            && page.url.startsWith(item.href),
+    );
+};
 
 const ICONS = {
     grid: 'M3 3h6v6H3zM11 3h6v6h-6zM3 11h6v6H3zM11 11h6v6h-6z',
@@ -49,6 +68,7 @@ const ICONS = {
     people: 'M7 9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5M2.5 16c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4M13 12c2 .4 3.5 1.8 3.5 4',
     cog: 'M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2',
     shield: 'M10 2.5 16 5v5c0 4-3 6.5-6 7.5-3-1-6-3.5-6-7.5V5z',
+    pen: 'M13.5 3.5 16.5 6.5 7 16H4v-3zM11.5 5.5 14.5 8.5',
 };
 
 const logout = () => router.post('/admin/logout');
