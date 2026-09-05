@@ -6,6 +6,7 @@ use App\Domain\Notifications\Contracts\WhatsAppClient;
 use App\Domain\Notifications\Services\RuntimeMailer;
 use App\Domain\Payments\Contracts\PaymentGateway;
 use App\Domain\Settings\Enums\SettingGroup;
+use App\Domain\Settings\RowSchemas;
 use App\Domain\Settings\Services\SettingsRepository;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
@@ -47,6 +48,10 @@ class SettingsController extends Controller
                 // A secret is never sent to the browser, only whether one is set.
                 'value' => $s->type->isSecret() ? null : $s->typedValue(),
                 'has_value' => $s->type->isSecret() ? filled($s->getAttributes()['value'] ?? null) : null,
+                // A table-shaped setting gets labelled fields instead of raw
+                // JSON, so the people whose prices these are can change them.
+                'row_schema' => RowSchemas::for($s->key),
+                'blank_row' => RowSchemas::for($s->key) ? RowSchemas::blankRow($s->key) : null,
             ])->values(),
             'history' => SettingHistory::with('changedBy:id,name', 'setting:id,key,label')
                 ->whereHas('setting', fn ($q) => $q->where('group', $group))

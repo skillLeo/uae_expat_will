@@ -52,18 +52,18 @@ class SettingsSeeder extends Seeder
         // define() only writes a default when the row does not exist, so the
         // two are set separately and drifting apart would mean tests pass
         // against a price the site does not charge.
-        $s->define(G::Commercial, 'commercial.standard_fee', 10000, T::Integer, 'Standard professional fee (AED)', 'Excluding VAT. One accepted standard Will.', true, 1);
+        $s->define(G::Commercial, 'commercial.standard_fee', 10000, T::Integer, 'Standard professional fee (AED)', 'What Summit charges for one Will, excluding VAT. Shown on the Pricing page, How It Works step 4, the FAQ answers, the UAE Will Options table and at checkout. Changing it here changes all of them.', true, 1);
         // Two coordinated but legally separate Wills. Not two times the single
         // fee — it is its own price, so it is its own setting.
-        $s->define(G::Commercial, 'commercial.mirror_fee', 15000, T::Integer, 'Mirror Wills professional fee (AED)', 'Excluding VAT. Two coordinated but legally separate standard Wills.', true, 2);
-        $s->define(G::Commercial, 'commercial.difc_starting_fee', 3999, T::Integer, 'DIFC starting fee (AED)', 'Never shown as a fixed purchasable price — always "from".', true, 3);
+        $s->define(G::Commercial, 'commercial.mirror_fee', 15000, T::Integer, 'Mirror Wills professional fee (AED)', 'What Summit charges a couple for two Wills, excluding VAT. Its own price, not the single fee doubled. Shown on the Mirror Wills card and at checkout when two Wills are chosen.', true, 2);
+        $s->define(G::Commercial, 'commercial.difc_starting_fee', 3999, T::Integer, 'DIFC starting fee (AED)', 'Shown only on the DIFC card, always as "From AED …". DIFC work is quoted individually and can never be paid for online.', true, 3);
         $s->define(G::Commercial, 'commercial.vat_rate', 5, T::Integer, 'VAT rate (%)', null, true, 4);
         $s->define(G::Commercial, 'commercial.currency', 'AED', T::String, 'Currency', null, true, 5);
         $s->define(G::Commercial, 'commercial.authority_fees', [
             ['route' => 'ADJD Civil Will', 'amount' => 'AED 950.00', 'note' => "For one regular Will, subject to ADJD's current service, eligibility and fee schedule"],
             ['route' => 'Dubai Courts Will', 'amount' => '≈ AED 2,100.00', 'note' => 'For one Will, subject to the service and fee confirmed by Dubai Courts'],
             ['route' => 'DIFC Courts Will', 'amount' => 'Varies by Will type', 'note' => 'Confirmed from the current DIFC fee schedule with the individual quotation'],
-        ], T::Json, 'Authority fee table', 'Open item 06 — re-check each figure against the authority schedule before launch.', true, 6);
+        ], T::Json, 'Authority fee table', 'The COURT\'S OWN CHARGES, not Summit\'s. Summit never receives this money — the authority sets and collects it. Shown in the "Why court fees are shown separately" table on the Pricing page. Nothing here has any connection to the professional fee above.', true, 6);
         $s->define(G::Commercial, 'commercial.amendment_allowance', 2, T::Integer, 'Amendment rounds included', 'Open item 07 — the specification says "as stated in your Service Confirmation" without fixing a number.', true, 7);
         $s->define(G::Commercial, 'commercial.first_draft_days', 2, T::Integer, 'First-draft target (business days)', 'Open item 09 — confirm Summit stands behind this, it appears in client-facing copy.', true, 8);
 

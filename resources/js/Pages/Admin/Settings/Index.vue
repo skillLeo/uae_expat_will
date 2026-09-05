@@ -4,6 +4,7 @@ import { Link, router, usePage } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import FormField from '@/Components/FormField.vue';
 import Sheet from '@/Components/Sheet.vue';
+import RowEditor from '@/Components/Admin/RowEditor.vue';
 
 const props = defineProps({
     group: { type: Object, required: true },
@@ -15,9 +16,14 @@ const props = defineProps({
 const page = usePage();
 const can = (p) => (page.props.auth?.permissions ?? []).includes(p);
 
+// A setting with a row schema is held as a real array, because RowEditor
+// edits it directly. Everything else keeps the JSON-string behaviour the
+// textarea needs.
 const values = reactive(Object.fromEntries(props.settings.map((s) => [
     s.key,
-    s.type === 'json' && s.value !== null ? JSON.stringify(s.value, null, 2) : s.value,
+    s.row_schema
+        ? (Array.isArray(s.value) ? s.value : [])
+        : (s.type === 'json' && s.value !== null ? JSON.stringify(s.value, null, 2) : s.value),
 ])));
 
 const saving = ref(false);
@@ -34,6 +40,9 @@ function save() {
 
         // A blank secret means "leave it alone", never "erase it".
         if (setting.is_secret && (raw === null || raw === '')) continue;
+
+        // Already an array — no parsing to fail.
+        if (setting.row_schema) { payload[setting.key] = raw ?? []; continue; }
 
         if (setting.type === 'json') {
             if (raw === null || raw === '') { payload[setting.key] = null; continue; }
@@ -112,6 +121,13 @@ const testGateway = () => router.post('/admin/settings/test/gateway', {}, { pres
                                 >
                                 <p class="help mt-1">Encrypted at rest. It is never sent back to this screen.</p>
                             </div>
+
+                            <RowEditor
+                                v-else-if="s.row_schema"
+                                v-model="values[s.key]"
+                                :schema="s.row_schema"
+                                :blank-row="s.blank_row || {}"
+                            />
 
                             <textarea v-else-if="s.type === 'json'" :id="s.key" v-model="values[s.key]" class="field min-h-[140px] font-mono text-body-s"></textarea>
                             <textarea v-else-if="s.type === 'text'" :id="s.key" v-model="values[s.key]" class="field min-h-[80px]"></textarea>
