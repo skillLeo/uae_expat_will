@@ -22,6 +22,17 @@ class EnsureTwoFactorChallengePassed
             return $next($request);
         }
 
+        // Enforcement switched off for this account's roles means exactly that:
+        // e-mail and password, no code. Otherwise an administrator who had
+        // already enrolled would still be challenged and the switch would look
+        // broken to whoever just turned it off.
+        //
+        // Their secret is left on the account, so switching enforcement back on
+        // restores the code immediately with nothing to set up again.
+        if (! $user->requiresTwoFactor()) {
+            return $next($request);
+        }
+
         if ($request->session()->get('2fa.passed') === true) {
             return $next($request);
         }

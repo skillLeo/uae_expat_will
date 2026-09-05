@@ -127,12 +127,25 @@ class User extends Authenticatable
 
     /**
      * Whether 2FA is mandatory for this account.
-     * Admin 2FA is contractual, so the default when unconfigured is TRUE.
+     *
+     * Required if ANY of the account's roles requires it, so holding a second
+     * role can never be used to escape the stricter one.
+     *
+     * The default when a setting is missing is TRUE, and an account with no
+     * roles at all is also treated as requiring it: an unknown state is not a
+     * reason to relax the requirement on a system holding clients' Wills.
+     *
+     * This used to end in a bare `return true`, which meant the per-role
+     * switches in Settings existed, appeared to save, and changed nothing.
      */
     public function requiresTwoFactor(): bool
     {
         if (! $this->isAdmin()) {
             return false;
+        }
+
+        if ($this->roles->isEmpty()) {
+            return true;
         }
 
         foreach ($this->roles as $role) {
@@ -141,6 +154,6 @@ class User extends Authenticatable
             }
         }
 
-        return true;
+        return false;
     }
 }

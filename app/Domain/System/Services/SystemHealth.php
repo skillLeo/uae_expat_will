@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
 use Throwable;
 
 /**
@@ -64,6 +65,7 @@ class SystemHealth
             $this->guard('retention', 'Data retention', fn () => $this->retention()),
             $this->guard('gateway', 'Payment gateway', fn () => $this->gateway()),
             $this->guard('mail', 'Outgoing email', fn () => $this->mail()),
+            $this->guard('two_factor', 'Administrator sign-in', fn () => $this->twoFactor()),
         ];
     }
 
@@ -412,6 +414,43 @@ class SystemHealth
     }
 
     // ----------------------------------------------------------------- helpers
+
+    /**
+     * Two-factor enforcement, per role.
+     *
+     * It can be switched off in Settings, which is legitimate during setup —
+     * enrolling an authenticator before the client has even signed in once is
+     * a real obstacle. What is not legitimate is launching that way, and a
+     * setting nobody can see is a setting nobody remembers. So it is reported
+     * here, by name, until it is switched back on.
+     */
+    private function twoFactor(): HealthCheck
+    {
+        $off = collect(Role::where('guard_name', 'admin')->pluck('name'))
+            ->reject(fn (string $role) => (bool) setting(
+                'security.enforce_2fa_'.str($role)->slug('_')->toString(),
+                true,
+            ))
+            ->values();
+
+        if ($off->isEmpty()) {
+            return new HealthCheck(
+                key: 'two_factor', label: 'Administrator sign-in', state: HealthState::Healthy,
+                summary: 'Two-factor required for every role.',
+            );
+        }
+
+        return new HealthCheck(
+            key: 'two_factor', label: 'Administrator sign-in',
+            state: HealthState::Critical,
+            summary: 'Two-factor is OFF for '.$off->implode(', ').'.',
+            detail: ['roles without two-factor' => $off->implode(', ')],
+            consequence: 'Anyone with only an email address and a password can sign in to the case files, '
+                .'the client documents and the audit log. A leaked or guessed password is then the whole '
+                .'of the security on this system.',
+            fix: 'Settings → Security → switch Enforce 2FA back on for each role listed.',
+        );
+    }
 
     private function hydrate(array $c): HealthCheck
     {
